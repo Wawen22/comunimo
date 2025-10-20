@@ -1,0 +1,52 @@
+# Node modules
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment files
+.env
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Legacy PHP files
+application/
+assets/
+extra/
+public/
+system/
+install/
+refresh/
+comingsoon_08/
+cgi-bin/
+softaculous/
+*.php
+*.sql
+*.html
+
