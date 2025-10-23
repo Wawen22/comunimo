@@ -9,9 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/lib/hooks/useUser';
-import { Plus, Search, Download, Filter } from 'lucide-react';
+import { Plus, Search, Download, Filter, Upload } from 'lucide-react';
 import { MemberStatusBadge } from './MemberStatusBadge';
 import { MemberFilters } from './MemberFilters';
+import { ExpiryAlert } from './ExpiryAlert';
+import { exportMembersToCSV } from '@/lib/utils/csvExport';
+import { BulkImportDialog } from './BulkImportDialog';
+import { SocietyMultiSelect } from './SocietyMultiSelect';
 
 interface MemberWithSociety extends Member {
   society?: {
@@ -22,8 +26,7 @@ interface MemberWithSociety extends Member {
 
 interface MemberFiltersState {
   search: string;
-  societyId: string;
-  organization: string;
+  societyIds: string[]; // Changed from societyId to societyIds (array)
   category: string;
   status: string;
   showExpiring: boolean;
@@ -33,19 +36,20 @@ export function MembersList() {
   const router = useRouter();
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
-  
+
   const [members, setMembers] = useState<MemberWithSociety[]>([]);
+  const [societies, setSocieties] = useState<{ id: string; name: string; society_code: string | null }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
   const [filters, setFilters] = useState<MemberFiltersState>({
     search: '',
-    societyId: '',
-    organization: '',
+    societyIds: [],
     category: '',
     status: '',
     showExpiring: false,
   });
-  
+
   // Pagination
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -53,8 +57,27 @@ export function MembersList() {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   useEffect(() => {
+    fetchSocieties();
+  }, []);
+
+  useEffect(() => {
     fetchMembers();
   }, [filters, page]);
+
+  const fetchSocieties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('societies')
+        .select('id, name, society_code')
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) throw error;
+      setSocieties(data || []);
+    } catch (error: any) {
+      console.error('Error fetching societies:', error);
+    }
+  };
 
   const fetchMembers = async () => {
     try {
@@ -76,12 +99,8 @@ export function MembersList() {
         query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,fiscal_code.ilike.%${filters.search}%,membership_number.ilike.%${filters.search}%`);
       }
 
-      if (filters.societyId) {
-        query = query.eq('society_id', filters.societyId);
-      }
-
-      if (filters.organization) {
-        query = query.eq('organization', filters.organization);
+      if (filters.societyIds.length > 0) {
+        query = query.in('society_id', filters.societyIds);
       }
 
       if (filters.category) {
@@ -95,7 +114,7 @@ export function MembersList() {
       if (filters.showExpiring) {
         const thirtyDaysFromNow = new Date();
         thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-        query = query.lte('card_expiry_date', thirtyDaysFromNow.toISOString());
+        query = query.lte('medical_certificate_expiry', thirtyDaysFromNow.toISOString());
       }
 
       const { data, error, count } = await query;
@@ -116,30 +135,63 @@ export function MembersList() {
     }
   };
 
-  const handleExport = () => {
-    // TODO: Implement export functionality
-    toast({
-      title: 'Info',
-      description: 'Funzionalità di export in arrivo',
-      variant: 'default',
-    });
-  };
+  const handleExport = async () => {
+    try {
+      // Fetch ALL members with current filters (no pagination) for export
+      let query = supabase
+        .from('members')
+        .select(`
+          *,
+          society:societies(id, name, society_code)
+        `)
+        .eq('is_active', true)
+        .order('last_name', { ascending: true });
 
-  const formatDate = (date: string | null) => {
-    if (!date) return '-';
-    return new Date(date).toLocaleDateString('it-IT');
-  };
+      // Apply same filters as the list
+      if (filters.search) {
+        query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,fiscal_code.ilike.%${filters.search}%,membership_number.ilike.%${filters.search}%`);
+      }
 
-  const getExpiryStatus = (expiryDate: string | null) => {
-    if (!expiryDate) return null;
-    
-    const expiry = new Date(expiryDate);
-    const today = new Date();
-    const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return 'expired';
-    if (diffDays <= 30) return 'expiring';
-    return 'valid';
+      if (filters.societyIds.length > 0) {
+        query = query.in('society_id', filters.societyIds);
+      }
+
+      if (filters.category) {
+        query = query.eq('category', filters.category);
+      }
+
+      if (filters.status) {
+        query = query.eq('membership_status', filters.status);
+      }
+
+      const { data: membersToExport, error } = await query;
+
+      if (error) throw error;
+
+      if (!membersToExport || membersToExport.length === 0) {
+        toast({
+          title: 'Attenzione',
+          description: 'Nessun atleta da esportare',
+          variant: 'default',
+        });
+        return;
+      }
+
+      exportMembersToCSV(membersToExport);
+
+      toast({
+        title: 'Successo',
+        description: `${membersToExport.length} atleti esportati in CSV`,
+        variant: 'default',
+      });
+    } catch (error: any) {
+      console.error('Error exporting members:', error);
+      toast({
+        title: 'Errore',
+        description: 'Impossibile esportare gli atleti',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -161,35 +213,66 @@ export function MembersList() {
             Esporta
           </Button>
           {isAdmin && (
-            <Link href="/dashboard/members/new">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Nuovo Atleta
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setShowImportDialog(true)}
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                Importa
               </Button>
-            </Link>
+              <Link href="/dashboard/members/new">
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nuovo Atleta
+                </Button>
+              </Link>
+            </>
           )}
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Cerca per nome, cognome, codice fiscale o numero tessera..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="pl-10"
+      <div className="flex flex-col gap-4 md:flex-row">
+        {/* Society Filter - Always Visible */}
+        <div className="w-full md:w-80">
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            Società
+          </label>
+          <SocietyMultiSelect
+            selectedIds={filters.societyIds}
+            onSelectionChange={(ids) => setFilters({ ...filters, societyIds: ids })}
+            societies={societies}
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <Filter className="mr-2 h-4 w-4" />
-          Filtri
-        </Button>
+
+        {/* Search Bar */}
+        <div className="relative flex-1">
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            Ricerca
+          </label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Cerca per nome, cognome, codice fiscale o numero tessera..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {/* Advanced Filters Button */}
+        <div className="flex items-end">
+          <Button
+            variant="outline"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Altri Filtri
+          </Button>
+        </div>
       </div>
 
       {/* Advanced Filters */}
@@ -214,7 +297,7 @@ export function MembersList() {
             <div className="text-center">
               <p className="text-lg font-medium text-gray-900">Nessun atleta trovato</p>
               <p className="mt-1 text-sm text-gray-500">
-                {filters.search || filters.societyId || filters.organization || filters.category || filters.status
+                {filters.search || filters.societyIds.length > 0 || filters.category || filters.status
                   ? 'Prova a modificare i filtri di ricerca'
                   : 'Inizia creando il primo atleta'}
               </p>
@@ -250,6 +333,9 @@ export function MembersList() {
                       Tessera
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      Scadenze
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Stato
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
@@ -259,8 +345,6 @@ export function MembersList() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {members.map((member) => {
-                    const expiryStatus = getExpiryStatus(member.card_expiry_date);
-                    
                     return (
                       <tr
                         key={member.id}
@@ -288,18 +372,16 @@ export function MembersList() {
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                           {member.category || '-'}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm">
-                          <div>
-                            <div className="text-gray-900">{member.membership_card_number || '-'}</div>
-                            {member.card_expiry_date && (
-                              <div className={`text-xs ${
-                                expiryStatus === 'expired' ? 'text-red-600' :
-                                expiryStatus === 'expiring' ? 'text-orange-600' :
-                                'text-gray-500'
-                              }`}>
-                                Scad: {formatDate(member.card_expiry_date)}
-                              </div>
-                            )}
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                          {member.membership_number || '-'}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <ExpiryAlert
+                              expiryDate={member.medical_certificate_expiry}
+                              label="Certificato Medico"
+                              compact
+                            />
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -377,6 +459,16 @@ export function MembersList() {
           </>
         )}
       </div>
+
+      {/* Bulk Import Dialog */}
+      <BulkImportDialog
+        isOpen={showImportDialog}
+        onClose={() => setShowImportDialog(false)}
+        onSuccess={() => {
+          setShowImportDialog(false);
+          fetchMembers();
+        }}
+      />
     </div>
   );
 }

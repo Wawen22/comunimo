@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Member } from '@/types/database';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,20 +22,16 @@ export default function MemberSelectionList({
   alreadyRegisteredIds = [],
 }: MemberSelectionListProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterOrg, setFilterOrg] = useState<'all' | 'FIDAL' | 'UISP'>('all');
 
-  // Filter members by search query
+  // Filter members by search query and organization
   const filteredMembers = members.filter((member) => {
     const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
     const query = searchQuery.toLowerCase();
-    return fullName.includes(query) || member.fiscal_code?.toLowerCase().includes(query);
+    const matchesSearch = fullName.includes(query) || member.fiscal_code?.toLowerCase().includes(query);
+    const matchesOrg = filterOrg === 'all' || member.organization === filterOrg;
+    return matchesSearch && matchesOrg;
   });
-
-  // Group members by organization
-  const fidalMembers = filteredMembers.filter((m) => m.organization === 'FIDAL');
-  const uispMembers = filteredMembers.filter((m) => m.organization === 'UISP');
-  const otherMembers = filteredMembers.filter(
-    (m) => m.organization !== 'FIDAL' && m.organization !== 'UISP'
-  );
 
   const handleToggleMember = (memberId: string) => {
     if (alreadyRegisteredIds.includes(memberId)) {
@@ -50,163 +45,206 @@ export default function MemberSelectionList({
     }
   };
 
-  const handleSelectAll = (memberIds: string[]) => {
-    const availableIds = memberIds.filter((id) => !alreadyRegisteredIds.includes(id));
+  const handleSelectAll = () => {
+    const availableMembers = filteredMembers.filter(
+      (m) => !alreadyRegisteredIds.includes(m.id)
+    );
+    const availableIds = availableMembers.map((m) => m.id);
     const allSelected = availableIds.every((id) => selectedMemberIds.includes(id));
 
     if (allSelected) {
-      // Deselect all
+      // Deselect all filtered members
       onSelectionChange(selectedMemberIds.filter((id) => !availableIds.includes(id)));
     } else {
-      // Select all
+      // Select all filtered members
       const newSelection = [...new Set([...selectedMemberIds, ...availableIds])];
       onSelectionChange(newSelection);
     }
   };
 
-  const renderMemberGroup = (
-    title: string,
-    groupMembers: Member[],
-    color: 'blue' | 'green' | 'gray'
-  ) => {
-    if (groupMembers.length === 0) return null;
-
-    const availableMembers = groupMembers.filter(
-      (m) => !alreadyRegisteredIds.includes(m.id)
-    );
-    const allSelected = availableMembers.every((m) => selectedMemberIds.includes(m.id));
-    const someSelected = availableMembers.some((m) => selectedMemberIds.includes(m.id));
-
-    return (
-      <Card key={title}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg">{title}</CardTitle>
-              <CardDescription>
-                {groupMembers.length} atleti
-                {availableMembers.length < groupMembers.length &&
-                  ` (${groupMembers.length - availableMembers.length} già iscritti)`}
-              </CardDescription>
-            </div>
-            {availableMembers.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleSelectAll(availableMembers.map((m) => m.id))}
-              >
-                {allSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {groupMembers.map((member) => {
-              const isRegistered = alreadyRegisteredIds.includes(member.id);
-              const isSelected = selectedMemberIds.includes(member.id);
-
-              return (
-                <div
-                  key={member.id}
-                  className={`flex items-center space-x-3 p-3 rounded-lg border ${
-                    isRegistered
-                      ? 'bg-gray-50 opacity-60 cursor-not-allowed'
-                      : isSelected
-                      ? 'bg-blue-50 border-blue-200'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <Checkbox
-                    id={member.id}
-                    checked={isSelected}
-                    disabled={isRegistered}
-                    onCheckedChange={() => handleToggleMember(member.id)}
-                  />
-                  <label
-                    htmlFor={member.id}
-                    className={`flex-1 cursor-pointer ${
-                      isRegistered ? 'cursor-not-allowed' : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">
-                          {member.first_name} {member.last_name}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          {member.category && (
-                            <Badge variant="outline" className="text-xs">
-                              {member.category}
-                            </Badge>
-                          )}
-                          {member.membership_number && (
-                            <span className="text-xs text-gray-500">
-                              Tessera: {member.membership_number}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {isRegistered && (
-                        <Badge variant="secondary">Già iscritto</Badge>
-                      )}
-                    </div>
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-
   // Calculate available members (not already registered)
   const availableMembers = members.filter((m) => !alreadyRegisteredIds.includes(m.id));
+  const availableFilteredMembers = filteredMembers.filter(
+    (m) => !alreadyRegisteredIds.includes(m.id)
+  );
+  const allFilteredSelected = availableFilteredMembers.length > 0 &&
+    availableFilteredMembers.every((m) => selectedMemberIds.includes(m.id));
 
   return (
-    <div className="space-y-6">
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          placeholder="Cerca atleta per nome o codice fiscale..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-
-      {/* Summary */}
-      <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
-        <Users className="h-5 w-5 text-blue-600" />
-        <div>
-          <p className="font-medium text-blue-900">
-            {selectedMemberIds.length} atleti selezionati
-          </p>
-          <p className="text-sm text-blue-700">
-            {availableMembers.length} atleti disponibili
-          </p>
+    <div className="space-y-4">
+      {/* Search and Filters */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Cerca atleta per nome o codice fiscale..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={filterOrg === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterOrg('all')}
+          >
+            Tutti ({members.length})
+          </Button>
+          <Button
+            variant={filterOrg === 'FIDAL' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterOrg('FIDAL')}
+          >
+            FIDAL ({members.filter((m) => m.organization === 'FIDAL').length})
+          </Button>
+          <Button
+            variant={filterOrg === 'UISP' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterOrg('UISP')}
+          >
+            UISP ({members.filter((m) => m.organization === 'UISP').length})
+          </Button>
         </div>
       </div>
 
-      {/* Member Groups */}
-      <div className="space-y-4">
-        {renderMemberGroup('ATLETI FIDAL', fidalMembers, 'blue')}
-        {renderMemberGroup('ATLETI UISP', uispMembers, 'green')}
-        {otherMembers.length > 0 &&
-          renderMemberGroup('ALTRI ATLETI', otherMembers, 'gray')}
+      {/* Summary */}
+      <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+        <div className="flex items-center gap-4">
+          <Users className="h-5 w-5 text-blue-600" />
+          <div>
+            <p className="font-medium text-blue-900">
+              {selectedMemberIds.length} atleti selezionati
+            </p>
+            <p className="text-sm text-blue-700">
+              {availableMembers.length} atleti disponibili
+            </p>
+          </div>
+        </div>
+        {availableFilteredMembers.length > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSelectAll}
+          >
+            {allFilteredSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
+          </Button>
+        )}
       </div>
 
-      {/* No results */}
-      {filteredMembers.length === 0 && (
-        <div className="text-center py-12">
+      {/* Members Table */}
+      {filteredMembers.length === 0 ? (
+        <div className="text-center py-12 border rounded-lg bg-white">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-500">
-            {searchQuery
+            {searchQuery || filterOrg !== 'all'
               ? 'Nessun atleta trovato con questi criteri'
               : 'Nessun atleta disponibile'}
           </p>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="border-b border-gray-200 bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left">
+                    <Checkbox
+                      checked={allFilteredSelected}
+                      onCheckedChange={handleSelectAll}
+                      disabled={availableFilteredMembers.length === 0}
+                    />
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Nome
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Data Nascita
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Ente
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Categoria
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Tessera
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Stato
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {filteredMembers.map((member) => {
+                  const isRegistered = alreadyRegisteredIds.includes(member.id);
+                  const isSelected = selectedMemberIds.includes(member.id);
+
+                  return (
+                    <tr
+                      key={member.id}
+                      className={`${
+                        isRegistered
+                          ? 'bg-gray-50 opacity-60'
+                          : isSelected
+                          ? 'bg-blue-50'
+                          : 'hover:bg-gray-50'
+                      } ${!isRegistered ? 'cursor-pointer' : ''}`}
+                      onClick={() => !isRegistered && handleToggleMember(member.id)}
+                    >
+                      <td className="px-4 py-4">
+                        <Checkbox
+                          checked={isSelected}
+                          disabled={isRegistered}
+                          onCheckedChange={() => handleToggleMember(member.id)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4">
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {member.first_name} {member.last_name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {member.fiscal_code || '-'}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                        {member.birth_date
+                          ? new Date(member.birth_date).toLocaleDateString('it-IT')
+                          : '-'}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4">
+                        <Badge
+                          variant={
+                            member.organization === 'FIDAL'
+                              ? 'default'
+                              : member.organization === 'UISP'
+                              ? 'secondary'
+                              : 'outline'
+                          }
+                        >
+                          {member.organization || '-'}
+                        </Badge>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                        {member.category || '-'}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                        {member.membership_number || '-'}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4">
+                        {isRegistered && (
+                          <Badge variant="secondary">Già iscritto</Badge>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

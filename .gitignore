@@ -16,6 +16,8 @@ build/
 # IDE
 .vscode/
 .idea/
+.gemini/
+.vs/
 *.swp
 *.swo
 
@@ -27,6 +29,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 yarn-debug.log*
+error_log
 
 # TypeScript
 *.tsbuildinfo
@@ -49,4 +52,11 @@ softaculous/
 *.php
 *.sql
 *.html
+
+# Server files
+.htaccess
+.user.ini
+*.pdf
+*.zip
+*:Zone.Identifier
 

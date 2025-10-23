@@ -59,6 +59,7 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
         document.body.style.overflow = 'unset';
       };
     }
+    return undefined;
   }, [open, onOpenChange]);
 
   if (!open) return null;

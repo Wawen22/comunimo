@@ -1,14 +1,13 @@
-import { Metadata } from 'next';
 import { MembersList } from '@/components/members/MembersList';
-
-export const metadata: Metadata = {
-  title: 'Atleti | ComUniMo',
-  description: 'Gestione atleti e iscrizioni gare',
-};
+import { MemberStats } from '@/components/members/MemberStats';
 
 export default function MembersPage() {
   return (
     <div className="space-y-6">
+      {/* Statistics */}
+      <MemberStats />
+
+      {/* Members List */}
       <MembersList />
     </div>
   );

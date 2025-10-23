@@ -25,6 +25,7 @@ export function DeleteMemberDialog({ member, onClose, onDeleted }: DeleteMemberD
       // Soft delete: set is_active to false
       const { error } = await supabase
         .from('members')
+        // @ts-expect-error - Supabase type inference issue
         .update({ is_active: false })
         .eq('id', member.id);
 
@@ -50,7 +51,7 @@ export function DeleteMemberDialog({ member, onClose, onDeleted }: DeleteMemberD
   };
 
   return (
-    <Dialog open onClose={onClose}>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
       <div className="sm:flex sm:items-start">
         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
           <AlertTriangle className="h-6 w-6 text-red-600" />

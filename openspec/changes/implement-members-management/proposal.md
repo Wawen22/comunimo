@@ -1,12 +1,13 @@
 # Proposal: Implement Members Management
 
-**Change ID**: `implement-members-management`  
-**Status**: 📝 Proposed  
-**Priority**: High  
-**Estimated Effort**: 3-4 days  
-**Dependencies**: 
-- `implement-societies-management` (completed)
-- `migrate-legacy-schema` (completed)
+**Change ID**: `implement-members-management`
+**Status**: ✅ COMPLETED (Opzione A - Core Features)
+**Priority**: High
+**Estimated Effort**: 3-4 days (Actual: ~15 hours)
+**Completion Date**: 2025-10-22
+**Dependencies**:
+- ✅ `implement-societies-management` (completed)
+- ✅ `migrate-legacy-schema` (completed)
 
 ---
 
@@ -247,42 +248,107 @@ The application needs a comprehensive member management system that:
 
 ---
 
-## Timeline
+## Timeline (Actual Implementation)
 
-### Week 1: Core CRUD
-- Day 1-2: Member list page with filtering
-- Day 3: Member detail page
-- Day 4-5: Member form (create/edit)
+### 2025-10-20: Setup & Core CRUD (Phases 1-2)
+- ✅ Member list page with filtering and pagination
+- ✅ Member detail page with tabs
+- ✅ Search and advanced filters
+- ✅ Society integration
 
-### Week 2: Athletic Features
-- Day 1-2: Category assignment and organization management
-- Day 3: Membership card tracking
-- Day 4: Medical certificate tracking
-- Day 5: Expiry notifications
+### 2025-10-21: Forms & Auto-Category (Phases 3-4)
+- ✅ Member form (create/edit) with multi-step wizard
+- ✅ Category assignment based on age and gender
+- ✅ Fiscal code validation
+- ✅ Delete functionality with soft delete
 
-### Week 3: Advanced Features
-- Day 1-2: Bulk import
-- Day 2-3: Bulk export
-- Day 4: Statistics dashboard
-- Day 5: Testing and refinement
+### 2025-10-22: Documents, Stats & Bulk Operations (Phases 5-8)
+- ✅ Document management (photo upload, expiry alerts)
+- ✅ Statistics dashboard (6 key metrics)
+- ✅ CSV Export (23 columns, UTF-8 BOM)
+- ✅ CSV Import (22 columns, validation, batch processing)
+
+**Total Time**: ~15 hours across 3 sessions
 
 ---
 
-## Open Questions
+## Implementation Summary
 
-1. Should we support multiple membership cards per member (historical tracking)?
-2. Should we integrate with external APIs for fiscal code validation?
-3. Should we send email notifications for expiring cards/certificates?
-4. Should we support member self-registration with admin approval?
-5. Should we track member attendance at events automatically?
+### ✅ Completed Features (Opzione A)
+
+**Core CRUD**:
+- ✅ Members list with pagination (20 per page)
+- ✅ Advanced search and filters (society, organization, category, status)
+- ✅ Member detail page (4 tabs: Anagrafica, Tesseramento, Dati Atletici, Note)
+- ✅ Member form (multi-step wizard with validation)
+- ✅ Soft delete with confirmation dialog
+
+**Athletic Features**:
+- ✅ Auto-category assignment (based on birth date and gender)
+- ✅ Organization management (FIDAL, UISP, CSI, RUNCARD)
+- ✅ Membership card tracking with expiry dates
+- ✅ Medical certificate tracking with expiry dates
+- ✅ Expiry indicators (color-coded badges: green/yellow/red/gray)
+
+**Document Management**:
+- ✅ Photo upload with Supabase Storage
+- ✅ Drag & drop interface
+- ✅ File validation (size, type)
+- ✅ Expiry alerts for tessera and certificato medico
+
+**Statistics**:
+- ✅ 6 key metrics (Total, Active, Expiring Soon, Average Age, By Organization, By Category)
+- ✅ Real-time aggregation
+- ✅ Responsive grid layout
+
+**Bulk Operations**:
+- ✅ CSV Export (23 columns, UTF-8 BOM, Excel compatible)
+- ✅ CSV Import (22 columns, validation, batch processing)
+- ✅ Template download
+- ✅ Progress tracking
+- ✅ Error reporting
+
+**Files Created**: 20 files (11 components, 5 utilities, 4 pages)
+
+---
+
+## 📝 Optional Features (Not Implemented)
+
+The following features were identified but marked as **optional** and **not implemented** in Opzione A:
+
+1. **Email Notifications**: Automatic emails for expiring cards/certificates
+2. **Member Self-Registration**: Public registration with admin approval
+3. **Historical Tracking**: Multiple membership cards per member
+4. **External API Integration**: Fiscal code validation via external services
+5. **Attendance Tracking**: Automatic tracking at events
+6. **Advanced Analytics**: Detailed reports and charts
+7. **Bulk Updates**: Mass edit of member fields
+8. **Member Portal**: Self-service area for members
+
+These features can be implemented in future phases if needed.
+
+---
+
+## Answered Questions
+
+1. **Multiple membership cards per member?** → Not implemented (single active card per member)
+2. **External fiscal code validation API?** → Not implemented (basic format validation only)
+3. **Email notifications for expiring documents?** → Not implemented (visual alerts only)
+4. **Member self-registration?** → Not implemented (admin-only creation)
+5. **Automatic attendance tracking?** → Not implemented (future feature)
 
 ---
 
 ## Next Steps
 
-1. Review and approve this proposal
-2. Create detailed design document
-3. Create task breakdown
-4. Begin implementation with Phase 1
-5. Iterate based on feedback
+1. ✅ ~~Review and approve this proposal~~
+2. ✅ ~~Create detailed design document~~
+3. ✅ ~~Create task breakdown~~
+4. ✅ ~~Implement Opzione A (Core Features)~~
+5. **NEW**: Proceed with next feature implementation:
+   - **Option B**: Races Management (Gestione Gare)
+   - **Option C**: Registrations Management (Gestione Iscrizioni)
+   - **Option D**: ~~Payments Management~~ (Not needed at this time)
+
+**Note**: Payments Management is marked as **future implementation** and will not be developed in the current phase.
 

@@ -47,6 +47,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps) {
     try {
       const { error } = await supabase
         .from('profiles')
+        // @ts-expect-error - Supabase type inference issue with profiles table
         .update({
           full_name: data.full_name,
           phone: data.phone || null,

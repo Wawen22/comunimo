@@ -13,6 +13,7 @@ import {
   Globe,
   Building2,
   User,
+  Hash,
 } from 'lucide-react';
 import { supabase } from '@/lib/api/supabase';
 import { Society } from '@/types/database';
@@ -71,6 +72,7 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
     try {
       const { error } = await supabase
         .from('societies')
+        // @ts-expect-error - Supabase type inference issue
         .update({ is_active: false })
         .eq('id', society.id);
 
@@ -144,6 +146,24 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{society.name}</h1>
+            <div className="mt-2 flex items-center gap-2">
+              {society.society_code && (
+                <Badge variant="outline" className="text-base">
+                  {society.society_code}
+                </Badge>
+              )}
+              {society.organization && (
+                <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold ${
+                  society.organization === 'FIDAL' ? 'bg-orange-100 text-orange-800 border-orange-200' :
+                  society.organization === 'UISP' ? 'bg-green-100 text-green-800 border-green-200' :
+                  society.organization === 'CSI' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                  society.organization === 'RUNCARD' ? 'bg-purple-100 text-purple-800 border-purple-200' :
+                  'bg-gray-100 text-gray-800 border-gray-200'
+                }`}>
+                  {society.organization}
+                </span>
+              )}
+            </div>
             {society.description && (
               <p className="mt-2 text-gray-600">{society.description}</p>
             )}
@@ -154,6 +174,17 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Society Code */}
+          {society.society_code && (
+            <div className="flex gap-3">
+              <Hash className="h-5 w-5 text-gray-400" />
+              <div>
+                <p className="text-sm font-medium text-gray-900">Codice Società</p>
+                <p className="mt-1 text-sm text-gray-600 font-mono">{society.society_code}</p>
+              </div>
+            </div>
+          )}
+
           {/* Address */}
           {(society.address || society.city) && (
             <div className="flex gap-3">

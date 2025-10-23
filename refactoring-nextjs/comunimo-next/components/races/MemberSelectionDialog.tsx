@@ -1,0 +1,363 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Member, Championship, Race } from '@/types/database';
+import { supabase } from '@/lib/api/supabase';
+import { useToast } from '@/components/ui/toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Loader2, UserPlus } from 'lucide-react';
+import MemberSelectionList from './MemberSelectionList';
+import { getNextBibNumbers } from '@/lib/utils/bibNumberUtils';
+
+interface MemberSelectionDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  championship: Championship;
+  societyId: string;
+  onSuccess?: () => void;
+}
+
+export default function MemberSelectionDialog({
+  open,
+  onOpenChange,
+  championship,
+  societyId,
+  onSuccess,
+}: MemberSelectionDialogProps) {
+  const { toast } = useToast();
+
+  const [members, setMembers] = useState<Member[]>([]);
+  const [races, setRaces] = useState<Race[]>([]);
+  const [alreadyRegisteredIds, setAlreadyRegisteredIds] = useState<string[]>([]);
+  const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [organizationFilter, setOrganizationFilter] = useState<'all' | 'FIDAL' | 'UISP'>('all');
+
+  useEffect(() => {
+    if (open) {
+      fetchData();
+    }
+  }, [open, championship.id, societyId]);
+
+  const fetchData = async () => {
+    try {
+      setIsFetching(true);
+
+      // Fetch society members
+      const { data: membersData, error: membersError } = await supabase
+        .from('members')
+        .select('*')
+        .eq('society_id', societyId)
+        .eq('is_active', true)
+        .order('last_name', { ascending: true });
+
+      if (membersError) throw membersError;
+
+      // Fetch championship races
+      const { data: racesData, error: racesError } = await supabase
+        .from('events')
+        .select('*')
+        .eq('championship_id', championship.id)
+        .eq('is_active', true)
+        .order('event_number', { ascending: true });
+
+      if (racesError) throw racesError;
+
+      // Fetch already registered members (only confirmed, not cancelled)
+      const { data: registrationsData, error: registrationsError } = await supabase
+        .from('championship_registrations')
+        .select('member_id, id, status')
+        .eq('championship_id', championship.id)
+        .eq('status', 'confirmed') as { data: any[] | null; error: any };
+
+      if (registrationsError) throw registrationsError;
+
+      setMembers(membersData || []);
+      setRaces(racesData || []);
+      setAlreadyRegisteredIds(
+        registrationsData?.map((r) => r.member_id) || []
+      );
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast({
+        title: 'Errore',
+        description: 'Impossibile caricare i dati. Riprova.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (selectedMemberIds.length === 0) {
+      toast({
+        title: 'Attenzione',
+        description: 'Seleziona almeno un atleta da iscrivere.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Check for existing cancelled registrations
+      const { data: existingCancelled, error: existingError } = await supabase
+        .from('championship_registrations')
+        .select('id, member_id, bib_number')
+        .eq('championship_id', championship.id)
+        .in('member_id', selectedMemberIds)
+        .eq('status', 'cancelled') as { data: any[] | null; error: any };
+
+      if (existingError) throw existingError;
+
+      const existingCancelledMap = new Map(
+        (existingCancelled || []).map((r) => [r.member_id, r])
+      );
+
+      // Separate members into those to update and those to insert
+      const membersToUpdate: string[] = [];
+      const membersToInsert: string[] = [];
+
+      selectedMemberIds.forEach((memberId) => {
+        if (existingCancelledMap.has(memberId)) {
+          membersToUpdate.push(memberId);
+        } else {
+          membersToInsert.push(memberId);
+        }
+      });
+
+      let champRegData: any[] = [];
+
+      // Update cancelled registrations
+      if (membersToUpdate.length > 0) {
+        for (const memberId of membersToUpdate) {
+          const existing = existingCancelledMap.get(memberId);
+          const member = members.find((m) => m.id === memberId);
+
+          const { data: updated, error: updateError } = await supabase
+            .from('championship_registrations')
+            // @ts-expect-error - Supabase type inference issue
+            .update({
+              status: 'confirmed',
+              organization: member?.organization || null,
+              category: member?.category || null,
+              society_id: societyId,
+            })
+            .eq('id', existing.id)
+            .select() as { data: any[] | null; error: any };
+
+          if (updateError) throw updateError;
+          if (updated) champRegData.push(...updated);
+        }
+      }
+
+      // Insert new registrations
+      if (membersToInsert.length > 0) {
+        // Get next available bib numbers only for new registrations
+        const nextBibNumbers = await getNextBibNumbers(
+          championship.id,
+          membersToInsert.length
+        );
+
+        const championshipRegistrations = membersToInsert.map((memberId, index) => {
+          const member = members.find((m) => m.id === memberId);
+          return {
+            championship_id: championship.id,
+            member_id: memberId,
+            society_id: societyId,
+            bib_number: nextBibNumbers[index],
+            organization: member?.organization || null,
+            category: member?.category || null,
+            status: 'confirmed',
+          };
+        });
+
+        const { data: inserted, error: insertError } = await supabase
+          .from('championship_registrations')
+          .insert(championshipRegistrations as any)
+          .select() as { data: any[] | null; error: any };
+
+        if (insertError) throw insertError;
+        if (inserted) champRegData.push(...inserted);
+      }
+
+      // Handle event registrations for all races
+      for (const race of races) {
+        // Check for existing cancelled event registrations
+        const { data: existingEventCancelled, error: existingEventError } = await supabase
+          .from('event_registrations')
+          .select('id, member_id, bib_number')
+          .eq('event_id', race.id)
+          .in('member_id', selectedMemberIds)
+          .eq('status', 'cancelled') as { data: any[] | null; error: any };
+
+        if (existingEventError) throw existingEventError;
+
+        const existingEventMap = new Map(
+          (existingEventCancelled || []).map((r) => [r.member_id, r])
+        );
+
+        // Update cancelled event registrations
+        for (const champReg of champRegData || []) {
+          if (existingEventMap.has(champReg.member_id)) {
+            // Update existing cancelled registration
+            const existing = existingEventMap.get(champReg.member_id);
+            const { error: updateError } = await supabase
+              .from('event_registrations')
+              // @ts-expect-error - Supabase type inference issue
+              .update({
+                status: 'confirmed',
+                bib_number: champReg.bib_number,
+                organization: champReg.organization,
+                category: champReg.category,
+                society_id: societyId,
+              })
+              .eq('id', existing.id);
+
+            if (updateError) throw updateError;
+          } else {
+            // Insert new event registration
+            const { error: insertError } = await supabase
+              .from('event_registrations')
+              .insert({
+                society_id: societyId,
+                event_id: race.id,
+                member_id: champReg.member_id,
+                bib_number: champReg.bib_number,
+                organization: champReg.organization,
+                category: champReg.category,
+                status: 'confirmed',
+              } as any);
+
+            if (insertError) throw insertError;
+          }
+        }
+      }
+
+      toast({
+        title: 'Iscrizioni completate',
+        description: `${selectedMemberIds.length} atleti iscritti con successo al campionato.`,
+      });
+
+      // Reset selection
+      setSelectedMemberIds([]);
+
+      // Close dialog
+      onOpenChange(false);
+
+      // Call onSuccess callback
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error: any) {
+      console.error('Error registering members:', error);
+
+      let errorMessage = 'Impossibile completare le iscrizioni. Riprova.';
+
+      if (error.code === '23505') {
+        // Unique constraint violation
+        errorMessage = 'Uno o più atleti sono già iscritti a questo campionato.';
+      }
+
+      toast({
+        title: 'Errore',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Filter members by organization
+  const filteredMembers = organizationFilter === 'all'
+    ? members
+    : members.filter((m) => m.organization === organizationFilter);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Iscrivi Atleti al Campionato</DialogTitle>
+          <DialogDescription>
+            Seleziona gli atleti da iscrivere. Verranno automaticamente iscritti a tutte le {races.length} tappe del campionato e riceveranno un numero pettorale persistente.
+          </DialogDescription>
+        </DialogHeader>
+
+        {isFetching ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Organization Filter Tabs */}
+            <Tabs value={organizationFilter} onValueChange={(value) => setOrganizationFilter(value as 'all' | 'FIDAL' | 'UISP')}>
+              <TabsList className="grid w-full max-w-md grid-cols-3">
+                <TabsTrigger value="all">
+                  Tutti ({members.length})
+                </TabsTrigger>
+                <TabsTrigger value="FIDAL">
+                  FIDAL ({members.filter((m) => m.organization === 'FIDAL').length})
+                </TabsTrigger>
+                <TabsTrigger value="UISP">
+                  UISP ({members.filter((m) => m.organization === 'UISP').length})
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <MemberSelectionList
+              members={filteredMembers}
+              selectedMemberIds={selectedMemberIds}
+              onSelectionChange={setSelectedMemberIds}
+              alreadyRegisteredIds={alreadyRegisteredIds}
+            />
+          </div>
+        )}
+
+        <DialogFooter className="flex items-center justify-between sm:justify-between">
+          <div className="text-sm text-gray-600">
+            {selectedMemberIds.length} atleti selezionati
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              Annulla
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={isLoading || selectedMemberIds.length === 0}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Iscrizione in corso...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Iscrivi {selectedMemberIds.length > 0 ? `(${selectedMemberIds.length})` : ''}
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+

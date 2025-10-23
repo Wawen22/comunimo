@@ -52,6 +52,7 @@ export function DropdownMenu({ children }: DropdownMenuProps) {
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
     }
+    return undefined;
   }, [open]);
 
   return (
@@ -105,6 +106,7 @@ export function DropdownMenuContent({
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
+    return undefined;
   }, [open, setOpen]);
 
   if (!open) return null;

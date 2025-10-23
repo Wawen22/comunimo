@@ -32,8 +32,7 @@ export function MemberCard({ member }: MemberCardProps) {
     return 'valid';
   };
 
-  const cardStatus = getExpiryStatus(member.card_expiry_date);
-  const certStatus = getExpiryStatus(member.medical_certificate_date);
+  const certStatus = getExpiryStatus(member.medical_certificate_expiry);
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6">
@@ -104,34 +103,19 @@ export function MemberCard({ member }: MemberCardProps) {
           </div>
 
           {/* Expiry Warnings */}
-          {(cardStatus === 'expired' || cardStatus === 'expiring' || certStatus === 'expired' || certStatus === 'expiring') && (
+          {(certStatus === 'expired' || certStatus === 'expiring') && (
             <div className="mt-4 space-y-2">
-              {/* Card Expiry */}
-              {member.card_expiry_date && (cardStatus === 'expired' || cardStatus === 'expiring') && (
-                <div className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm ${
-                  cardStatus === 'expired' 
-                    ? 'bg-red-50 text-red-800' 
-                    : 'bg-orange-50 text-orange-800'
-                }`}>
-                  <AlertTriangle className="h-4 w-4" />
-                  <span>
-                    Tessera {cardStatus === 'expired' ? 'scaduta' : 'in scadenza'} il{' '}
-                    {formatDate(member.card_expiry_date)}
-                  </span>
-                </div>
-              )}
-
               {/* Certificate Expiry */}
-              {member.medical_certificate_date && (certStatus === 'expired' || certStatus === 'expiring') && (
+              {member.medical_certificate_expiry && (certStatus === 'expired' || certStatus === 'expiring') && (
                 <div className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm ${
-                  certStatus === 'expired' 
-                    ? 'bg-red-50 text-red-800' 
+                  certStatus === 'expired'
+                    ? 'bg-red-50 text-red-800'
                     : 'bg-orange-50 text-orange-800'
                 }`}>
                   <AlertTriangle className="h-4 w-4" />
                   <span>
                     Certificato medico {certStatus === 'expired' ? 'scaduto' : 'in scadenza'} il{' '}
-                    {formatDate(member.medical_certificate_date)}
+                    {formatDate(member.medical_certificate_expiry)}
                   </span>
                 </div>
               )}
@@ -139,12 +123,12 @@ export function MemberCard({ member }: MemberCardProps) {
           )}
 
           {/* Valid Status */}
-          {cardStatus === 'valid' && member.card_expiry_date && (
+          {certStatus === 'valid' && member.medical_certificate_expiry && (
             <div className="mt-4">
               <div className="flex items-center gap-2 rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>
-                  Tessera valida fino al {formatDate(member.card_expiry_date)}
+                  Certificato medico valido fino al {formatDate(member.medical_certificate_expiry)}
                 </span>
               </div>
             </div>

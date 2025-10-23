@@ -1,6 +1,17 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+/**
+ * Middleware for route protection and role-based access control
+ *
+ * Note: Most auth protection is handled client-side via RequireAuth/RequireRole components
+ * This middleware provides basic routing and could be extended for server-side checks
+ *
+ * Role hierarchy:
+ * - society_admin: Can manage assigned societies
+ * - admin: Can manage all societies
+ * - super_admin: Full system access
+ */
 export async function middleware(request: NextRequest) {
   // For now, we'll handle auth protection on the client side
   // This middleware just ensures proper routing

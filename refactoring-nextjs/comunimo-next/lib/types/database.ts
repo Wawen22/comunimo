@@ -8,7 +8,7 @@
 // ENUMS
 // ============================================================================
 
-export type UserRole = 'user' | 'admin' | 'super_admin';
+export type UserRole = 'society_admin' | 'admin' | 'super_admin';
 
 export type MembershipStatus = 'active' | 'suspended' | 'expired' | 'cancelled';
 
@@ -46,7 +46,8 @@ export interface Profile {
 export interface Society {
   id: string;
   name: string;
-  society_code: string | null;           // Codice società (es. "MO001")
+  society_code: string | null;           // Codice società (es. "MO001F", "MO001U")
+  organization: OrganizationCode | null; // Ente di affiliazione (FIDAL, UISP, CSI, RUNCARD)
   description: string | null;
   address: string | null;
   city: string | null;
@@ -110,6 +111,7 @@ export interface Member {
   card_expiry_date: string | null;                // Data scadenza tessera
   is_foreign: boolean;                            // Atleta straniero
   medical_certificate_date: string | null;        // Data certificato medico
+  medical_certificate_expiry: string | null;      // Data scadenza certificato medico
   photo_url: string | null;                       // URL foto atleta
   
   // Additional Info

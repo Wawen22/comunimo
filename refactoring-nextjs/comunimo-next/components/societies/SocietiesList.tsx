@@ -68,10 +68,28 @@ export function SocietiesList() {
     const query = searchQuery.toLowerCase();
     return (
       society.name.toLowerCase().includes(query) ||
+      society.society_code?.toLowerCase().includes(query) ||
       society.city?.toLowerCase().includes(query) ||
-      society.email?.toLowerCase().includes(query)
+      society.email?.toLowerCase().includes(query) ||
+      society.organization?.toLowerCase().includes(query)
     );
   });
+
+  // Helper function to get organization badge color
+  const getOrganizationColor = (org: string | null) => {
+    switch (org) {
+      case 'FIDAL':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'UISP':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'CSI':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'RUNCARD':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
 
   const handleDelete = (society: Society) => {
     setSocietyToDelete(society);
@@ -84,6 +102,7 @@ export function SocietiesList() {
     try {
       const { error } = await supabase
         .from('societies')
+        // @ts-expect-error - Supabase type inference issue
         .update({ is_active: false })
         .eq('id', societyToDelete.id);
 
@@ -159,9 +178,10 @@ export function SocietiesList() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
+                <TableHead>Codice</TableHead>
+                <TableHead>Ente</TableHead>
                 <TableHead>Città</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Telefono</TableHead>
                 <TableHead>Stato</TableHead>
                 <TableHead className="text-right">Azioni</TableHead>
               </TableRow>
@@ -170,9 +190,24 @@ export function SocietiesList() {
               {filteredSocieties.map((society) => (
                 <TableRow key={society.id}>
                   <TableCell className="font-medium">{society.name}</TableCell>
+                  <TableCell>
+                    {society.society_code ? (
+                      <Badge variant="outline">{society.society_code}</Badge>
+                    ) : (
+                      '-'
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {society.organization ? (
+                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getOrganizationColor(society.organization)}`}>
+                        {society.organization}
+                      </span>
+                    ) : (
+                      '-'
+                    )}
+                  </TableCell>
                   <TableCell>{society.city || '-'}</TableCell>
                   <TableCell>{society.email || '-'}</TableCell>
-                  <TableCell>{society.phone || '-'}</TableCell>
                   <TableCell>
                     <Badge variant={society.is_active ? 'success' : 'secondary'}>
                       {society.is_active ? 'Attiva' : 'Inattiva'}

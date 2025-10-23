@@ -11,6 +11,7 @@ import { useIsAdmin } from '@/lib/hooks/useUser';
 import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import { MemberCard } from './MemberCard';
 import { DeleteMemberDialog } from './DeleteMemberDialog';
+import { PhotoUpload } from './PhotoUpload';
 
 interface MemberWithRelations extends Member {
   society?: {
@@ -80,6 +81,13 @@ export function MemberDetail({ memberId }: MemberDetailProps) {
       case 'M': return 'Maschio';
       case 'F': return 'Femmina';
       default: return gender;
+    }
+  };
+
+  const handlePhotoChange = (photoUrl: string | null) => {
+    // Update local state
+    if (member) {
+      setMember({ ...member, photo_url: photoUrl });
     }
   };
 
@@ -275,33 +283,30 @@ export function MemberDetail({ memberId }: MemberDetailProps) {
 
           {/* Documents Tab */}
           {activeTab === 'documents' && (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Numero Tessera Ente</p>
-                <p className="mt-1 text-sm text-gray-900">{member.membership_card_number || '-'}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Data Emissione Tessera</p>
-                <p className="mt-1 text-sm text-gray-900">{formatDate(member.card_issue_date)}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Data Scadenza Tessera</p>
-                <p className="mt-1 text-sm text-gray-900">{formatDate(member.card_expiry_date)}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Data Certificato Medico</p>
-                <p className="mt-1 text-sm text-gray-900">{formatDate(member.medical_certificate_date)}</p>
-              </div>
-              {member.photo_url && (
-                <div className="md:col-span-2">
-                  <p className="text-sm font-medium text-gray-500">Foto</p>
-                  <img
-                    src={member.photo_url}
-                    alt={`${member.first_name} ${member.last_name}`}
-                    className="mt-2 h-48 w-48 rounded-lg object-cover"
-                  />
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Data Certificato Medico</p>
+                  <p className="mt-1 text-sm text-gray-900">{formatDate(member.medical_certificate_date)}</p>
                 </div>
-              )}
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Data Scadenza Certificato</p>
+                  <p className="mt-1 text-sm text-gray-900">{formatDate(member.medical_certificate_expiry)}</p>
+                </div>
+              </div>
+
+              {/* Photo Upload Section */}
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Foto Atleta</h3>
+                <PhotoUpload
+                  currentPhotoUrl={member.photo_url}
+                  memberId={member.id}
+                  societyCode={member.society_code || undefined}
+                  onPhotoChange={handlePhotoChange}
+                  disabled={!isAdmin}
+                />
+              </div>
+
               {member.notes && (
                 <div className="md:col-span-2">
                   <p className="text-sm font-medium text-gray-500">Note</p>

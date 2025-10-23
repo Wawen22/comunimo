@@ -1,289 +1,306 @@
-# 🚀 Prompt per Continuare lo Sviluppo ComUniMo
+# ComUniMo - Next Session Prompt
 
-**Data Creazione**: 2025-10-20  
-**Progetto**: ComUniMo - Refactoring Next.js + Supabase  
-**Repository**: https://github.com/Wawen22/comunimo
-
----
-
-## 📋 Contesto Progetto
-
-Sto sviluppando il refactoring completo dell'applicazione **ComUniMo** (Comitato Unitario Modena) da PHP/CodeIgniter + MySQL a **Next.js 14 + Supabase**.
-
-L'applicazione gestisce:
-- **Società sportive** con codice società univoco
-- **Atleti** (non "soci") appartenenti alle società
-- **Iscrizioni alle gare** degli atleti
-- **Pagamenti** e **Eventi**
+**Last Updated**: 2025-10-22  
+**Project Status**: ~70% Complete  
+**Current Phase**: Races Management (Phase 4 Complete)  
 
 ---
 
-## ✅ Stato Attuale Implementazione
+## 🎯 Quick Start for AI Agent
 
-### Completato (100%)
+Hi! I'm continuing work on the **ComUniMo** project - a refactoring from PHP/CodeIgniter to **Next.js 14 + TypeScript + Supabase**.
 
-#### 1. Setup Iniziale
-- ✅ Next.js 14 con App Router e TypeScript strict
-- ✅ Tailwind CSS + shadcn/ui (componenti custom)
-- ✅ Supabase configurato
-- ✅ Database schema completo (11 tabelle)
-- ✅ TypeScript types per tutte le entità
-
-#### 2. Autenticazione e Autorizzazione
-- ✅ Login/Register/Forgot Password/Reset Password
-- ✅ RBAC con 3 ruoli: user, admin, super_admin
-- ✅ Route protection client-side
-- ✅ RLS policies con SECURITY DEFINER functions
-
-#### 3. Dashboard e Layout
-- ✅ Sidebar responsive con navigazione
-- ✅ Header con user menu
-- ✅ Profile page con edit e change password
-
-#### 4. Gestione Società
-- ✅ Lista società con search e filtri
-- ✅ Dettaglio società
-- ✅ Form creazione/modifica
-- ✅ Soft delete
-
-#### 5. Gestione Atleti (31% completato)
-- ✅ **Phase 1**: Lista atleti con filtri avanzati, paginazione, search
-- ✅ **Phase 2**: Pagina dettaglio con 4 tabs (Personal, Membership, Athletic, Documents)
-- ✅ **Phase 6**: Delete functionality con soft delete
-- ⏳ **Phase 3**: Form creazione/modifica (DA FARE)
-- ⏳ **Phase 4-10**: Altre funzionalità (DA FARE)
-
----
-
-## 🎯 Prossimo Obiettivo: Phase 3 - Member Form
-
-### Cosa Implementare
-
-Creare il form multi-step per creazione e modifica atleti.
-
-### File da Creare
-
-1. **`app/(dashboard)/dashboard/members/new/page.tsx`**
-   - Pagina per creare nuovo atleta
-   - Solo admin può accedere
-
-2. **`app/(dashboard)/dashboard/members/[id]/edit/page.tsx`**
-   - Pagina per modificare atleta esistente
-   - Solo admin può accedere
-
-3. **`components/members/MemberForm.tsx`**
-   - Form multi-step con 5 step:
-     - **Step 1**: Dati Personali (first_name*, last_name*, fiscal_code, birth_date*, birth_place, gender*)
-     - **Step 2**: Contatti e Indirizzo (email, phone, mobile, address, city, province, postal_code)
-     - **Step 3**: Tesseramento (society_id*, membership_number, membership_date, membership_type, membership_status)
-     - **Step 4**: Dati Atletici (organization, year, regional_code, category, society_code*, is_foreign)
-     - **Step 5**: Documenti (membership_card_number, card_issue_date, card_expiry_date, medical_certificate_date, photo_url, notes)
-   - Validazione Zod completa
-   - Auto-assegnazione categoria basata su età e sesso
-   - Indicatore progresso step
-   - Pulsanti "Indietro", "Avanti", "Salva"
-
-### Requisiti Importanti
-
-1. **Society Code**: 
-   - Quando si seleziona una società, auto-popolare `society_code` dal campo `societies.society_code`
-   - Campo obbligatorio
-
-2. **Category Auto-Assignment**:
-   - Calcolare categoria in base a `birth_date` e `gender`
-   - Categorie: SM, SF, AM, AF, BM, BF, CM, CF
-   - Permettere override manuale
-
-3. **Validazione**:
-   - Fiscal code: formato italiano (16 caratteri)
-   - Email: formato valido
-   - Date: formato valido
-   - Campi obbligatori marcati con *
-
-4. **Form State**:
-   - Usare React Hook Form + Zod
-   - Salvare stato tra gli step
-   - Mostrare errori di validazione
-
----
-
-## 📚 Documentazione di Riferimento
-
-### OpenSpec
-- **Overview**: `openspec/00-OVERVIEW.md`
-- **Members Management**: `openspec/changes/implement-members-management/`
-  - `proposal.md` - Proposta iniziale
-  - `design.md` - Design dettagliato con wireframes
-  - `tasks.md` - Task breakdown e progress
-  - `IMPLEMENTATION-SUMMARY.md` - Riepilogo implementazione
-
-### Database Schema
-- **Schema SQL**: `refactoring-nextjs/comunimo-next/supabase/schema.sql`
-- **TypeScript Types**: `refactoring-nextjs/comunimo-next/lib/types/database.ts`
-
-### Componenti Esistenti
-- **Members List**: `refactoring-nextjs/comunimo-next/components/members/MembersList.tsx`
-- **Member Detail**: `refactoring-nextjs/comunimo-next/components/members/MemberDetail.tsx`
-- **Member Card**: `refactoring-nextjs/comunimo-next/components/members/MemberCard.tsx`
-- **UI Components**: `refactoring-nextjs/comunimo-next/components/ui/`
-
----
-
-## 🔧 Tech Stack
-
-- **Frontend**: Next.js 14.2+, React 18.3+, TypeScript 5.3+
-- **Styling**: Tailwind CSS 3.4+, shadcn/ui (custom components)
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Forms**: React Hook Form + Zod
-- **Icons**: lucide-react
-- **State**: Client-side con hooks
-
----
-
-## 📝 Workflow da Seguire
-
-### 1. Ultrathink
-Usa il tool `sequentialthinking` per analizzare i requisiti prima di implementare.
-
-### 2. Aggiorna OpenSpec
-- Aggiorna `tasks.md` con task IN PROGRESS
-- Aggiorna `IMPLEMENTATION-SUMMARY.md` quando completi una fase
-
-### 3. Implementa
-- Crea i file necessari
-- Segui i pattern esistenti nel codebase
-- Usa componenti UI esistenti
-- Client-side data fetching con Supabase client
-
-### 4. Testa
-- Verifica che il form funzioni
-- Testa validazione
-- Testa creazione e modifica atleti
-- Verifica che society_code venga popolato correttamente
-
-### 5. Aggiorna Progress
-- Marca task come completati in `tasks.md`
-- Aggiorna percentuale progresso
-
----
-
-## 🎨 Design Pattern da Seguire
-
-### Form Multi-Step
-```typescript
-const [currentStep, setCurrentStep] = useState(1);
-const totalSteps = 5;
-
-const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
-const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
-
-// Progress indicator
-<div className="mb-8">
-  <div className="flex justify-between mb-2">
-    {[1, 2, 3, 4, 5].map(step => (
-      <div key={step} className={`h-2 flex-1 mx-1 rounded ${
-        step <= currentStep ? 'bg-blue-600' : 'bg-gray-200'
-      }`} />
-    ))}
-  </div>
-  <p className="text-sm text-gray-500 text-center">
-    Step {currentStep} di {totalSteps}
-  </p>
-</div>
-```
-
-### Zod Schema Example
-```typescript
-const memberSchema = z.object({
-  first_name: z.string().min(1, 'Nome obbligatorio'),
-  last_name: z.string().min(1, 'Cognome obbligatorio'),
-  fiscal_code: z.string().regex(/^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/, 'Codice fiscale non valido').optional(),
-  birth_date: z.string().min(1, 'Data di nascita obbligatoria'),
-  gender: z.enum(['M', 'F', 'other']),
-  society_id: z.string().uuid('Società obbligatoria'),
-  society_code: z.string().min(1, 'Codice società obbligatorio'),
-  // ... altri campi
-});
-```
-
-### Category Auto-Assignment
-```typescript
-const calculateCategory = (birthDate: string, gender: string): string => {
-  const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
-  const genderCode = gender === 'M' ? 'M' : 'F';
-  
-  if (age >= 18 && age < 35) return `S${genderCode}`; // Senior
-  if (age >= 35 && age < 50) return `A${genderCode}`; // Master A
-  if (age >= 50 && age < 60) return `B${genderCode}`; // Master B
-  if (age >= 60) return `C${genderCode}`; // Master C
-  
-  return `S${genderCode}`; // Default
-};
-```
-
----
-
-## 🚨 Cose Importanti da Ricordare
-
-1. **NON usare Server Actions** per Supabase (problemi con cookies)
-2. **Sempre client-side** data fetching con `'use client'`
-3. **Soft delete**: `is_active = false`, non hard delete
-4. **Society code**: campo obbligatorio, auto-popolato da società selezionata
-5. **Terminologia**: "Atleti" non "Soci"
-6. **Admin only**: form accessibile solo ad admin
-7. **Validazione**: sempre con Zod schema
-8. **Toast notifications**: per successo/errore
-9. **Loading states**: sempre mostrare spinner durante operazioni async
-10. **OpenSpec**: sempre aggiornare tasks.md e IMPLEMENTATION-SUMMARY.md
-
----
-
-## 🎯 Prompt da Usare
-
-```
-Ciao! Sto continuando lo sviluppo del refactoring ComUniMo.
-
-Ho letto il file NEXT-SESSION-PROMPT.md che contiene tutto il contesto.
-
-Procedi con l'implementazione di **Phase 3: Member Form** seguendo:
-1. Ultrathink per analizzare i requisiti
-2. Crea i 3 file necessari (new page, edit page, MemberForm component)
-3. Implementa form multi-step con 5 step
-4. Validazione Zod completa
-5. Auto-assegnazione categoria
-6. Society code auto-popolato
-7. Aggiorna OpenSpec (tasks.md e IMPLEMENTATION-SUMMARY.md)
-
-Ricordati:
-- Client-side data fetching
-- Admin only access
-- Soft delete pattern
-- Terminologia "Atleti"
-- Toast notifications
-- Loading states
-
-Inizia!
-```
-
----
-
-## 📊 Progress Attuale
-
-- **Overall**: 31% (10/32 tasks)
-- **Phase 1**: ✅ 100%
-- **Phase 2**: ✅ 100%
-- **Phase 3**: ⏳ 0% ← **PROSSIMO**
-- **Phase 4-10**: ⏳ 0%
-
----
-
-## 🔗 Link Utili
-
+### Project Context
 - **Repository**: https://github.com/Wawen22/comunimo
-- **Supabase Project**: ComUniMo (ID: rlhzsztbkfjpryhlojee)
-- **Local Dev**: http://localhost:3000
+- **Tech Stack**: Next.js 14, TypeScript, Supabase (PostgreSQL + Auth + Storage), shadcn/ui
+- **Purpose**: Athletic committee management system (societies, members, races, registrations)
+- **Language**: Italian (UI, comments, documentation)
+
+### What's Been Completed ✅
+
+1. **Infrastructure & Setup** (100%)
+2. **Authentication & Authorization** (100%) - Including multi-society model
+3. **Dashboard Layout** (100%)
+4. **Societies Management** (100%)
+5. **Members Management** (100%) - All 8 phases complete
+6. **Races Management** (77%) - Phases 1-4 complete
+
+### Current Status
+
+**Multi-Society Model**: ✅ FULLY IMPLEMENTED AND TESTED
+- Many-to-many user-society relationship via `user_societies` table
+- All legacy code migrated from old model (created_by, profile.society_id)
+- RLS policies working correctly
+- Admin UI for user-society management complete
+- ManagedSocietiesWidget in sidebar
+- All known bugs fixed (5 sessions of fixes)
+
+**Races Management**: 🟡 IN PROGRESS (77% complete)
+- ✅ Phase 1: Championships CRUD (12/12 tasks)
+- ✅ Phase 2: Races CRUD (8/8 tasks)
+- ✅ Phase 3: Championship Registrations (12/12 tasks)
+- ✅ Phase 4: Event Registrations (8/8 tasks)
+- 📝 Phase 5-6: Advanced features (results, stats, reports) - TODO
 
 ---
 
-**Buon lavoro! 🚀**
+## 📚 Essential Documentation to Read
+
+**ALWAYS read these files first**:
+
+1. **Project Overview**:
+   - `refactoring-nextjs/00-OVERVIEW.md` - Complete project context
+   - `refactoring-nextjs/REFACTORING-STATUS.md` - Current status (THIS IS CRITICAL!)
+
+2. **Multi-Society Model** (IMPORTANT - Read if working on auth/permissions):
+   - `openspec/changes/update-auth-model-multi-society/IMPLEMENTATION-LOG.md` - Complete implementation history (5 sessions)
+   - `openspec/changes/update-auth-model-multi-society/tasks.md` - All tasks (27/27 complete)
+   - `lib/utils/userSocietyUtils.ts` - 12 utility functions for society management
+
+3. **Races Management** (if continuing races work):
+   - `openspec/changes/implement-races-management/IMPLEMENTATION-LOG.md` - Phases 1-4 complete
+   - `openspec/changes/implement-races-management/tasks.md` - 40/52 tasks complete
+   - `refactoring-nextjs/RACES-MANAGEMENT-PLAN.md` - Overall plan
+
+4. **Members Management** (reference for patterns):
+   - `openspec/changes/implement-members-management/IMPLEMENTATION-SUMMARY.md` - Complete implementation
+
+---
+
+## 🔑 Critical Technical Concepts
+
+### Multi-Society Model (MUST UNDERSTAND!)
+
+**DO NOT use these deprecated patterns**:
+- ❌ `.eq('created_by', user.id)` - Field doesn't exist in new model
+- ❌ `profile.society_id` - Field removed from profiles table
+- ❌ Direct queries to societies table without checking user_societies
+
+**ALWAYS use these patterns**:
+- ✅ `getUserSocieties(userId)` - Get all societies for a user
+- ✅ `getUserFirstSociety(userId)` - Get first society (backward compatibility)
+- ✅ `canUserManageSociety(userId, societyId)` - Check permissions
+- ✅ RLS policies check `user_societies` table
+
+**Key Tables**:
+- `user_societies` - Junction table (user_id, society_id)
+- `profiles` - User profiles (role: 'society_admin' | 'admin' | 'super_admin')
+- `societies` - Society records
+
+**Role Hierarchy**:
+- `super_admin` - Full system access
+- `admin` - Committee administrator (sees all societies)
+- `society_admin` - Manages assigned societies only
+
+### Database & Supabase
+
+- **RLS Policies**: All tables have Row Level Security enabled
+- **Migrations**: Located in `supabase/migrations/`
+- **Schema**: `supabase/schema.sql` (local copy, sync with Supabase)
+- **Supabase Project**: ComUniMo (ID: rlhzsztbkfjpryhlojee, Region: eu-central-1)
+- **Auto-Approval**: Supabase MCP tools are auto-approved
+
+### TypeScript & Next.js
+
+- **Strict Mode**: Enabled (0 errors required)
+- **App Router**: Next.js 14 with client components (no Server Actions)
+- **Type Assertions**: Use `as { data: Type | null; error: any }` for Supabase queries
+- **Forms**: React Hook Form + Zod validation
+- **UI**: shadcn/ui components
+
+---
+
+## 🚀 Recommended Next Steps
+
+### Option 1: Continue Races Management (Recommended)
+
+**Phase 5: Results Management**
+- Results entry for races
+- Times, positions, categories
+- Automatic category rankings
+- Results validation
+
+**Phase 6: Advanced Features**
+- Race day management (check-in, start lists)
+- Reports and statistics
+- PDF export functionality
+- Integration testing
+
+**Files to Review**:
+- `openspec/changes/implement-races-management/tasks.md` - Tasks 41-52
+- `openspec/changes/implement-races-management/design.md` - Design specs
+
+### Option 2: Testing & Bug Fixes
+
+- Test all implemented features end-to-end
+- Fix any edge cases
+- Optimize performance
+- Improve UI/UX
+
+### Option 3: New Feature Implementation
+
+**Admin Panel**:
+- System settings
+- Audit logs
+- Data export/import
+- System health monitoring
+
+**CMS & Public Pages**:
+- Public homepage
+- News and announcements
+- Race calendar (public view)
+- Results publication
+
+---
+
+## 🛠️ Development Workflow
+
+### Before Making Changes
+
+1. **Read Documentation**: Always read relevant OpenSpec docs first
+2. **Use Codebase Retrieval**: Search for existing patterns before implementing
+3. **Check Types**: Verify interfaces and types in `types/database.ts`
+4. **Review RLS**: Check RLS policies if working with database queries
+
+### When Making Changes
+
+1. **Use Utility Functions**: Don't reinvent the wheel (check `lib/utils/`)
+2. **Follow Patterns**: Look at existing components for consistency
+3. **Update Types**: Keep TypeScript types in sync with database
+4. **Test Build**: Run `npm run build` before finishing
+
+### After Making Changes
+
+1. **Update Documentation**: Update OpenSpec docs (IMPLEMENTATION-LOG.md, tasks.md)
+2. **Update Status**: Update `REFACTORING-STATUS.md`
+3. **Create Migration**: If database changes, create migration file
+4. **Test Thoroughly**: Test with different user roles
+
+---
+
+## 📋 Common Tasks & Patterns
+
+### Creating a New Feature
+
+1. Read OpenSpec proposal and design docs
+2. Create/update tasks.md with task breakdown
+3. Implement database schema + migration
+4. Create TypeScript types
+5. Implement backend utilities
+6. Create UI components
+7. Create pages
+8. Update navigation (Sidebar.tsx)
+9. Test with different roles
+10. Update documentation
+
+### Fixing a Bug
+
+1. Reproduce the issue
+2. Check console for errors
+3. Review RLS policies if data access issue
+4. Check if using deprecated patterns (created_by, profile.society_id)
+5. Use correct utility functions
+6. Test fix with affected user roles
+7. Document fix in IMPLEMENTATION-LOG.md
+
+### Working with Supabase
+
+```typescript
+// ✅ CORRECT: Get user societies
+const userSocieties = await getUserSocieties(user.id);
+
+// ✅ CORRECT: Check permissions
+const canManage = await canUserManageSociety(user.id, societyId);
+
+// ✅ CORRECT: Query with RLS
+const { data, error } = await supabase
+  .from('members')
+  .select('*')
+  .eq('society_id', societyId);  // RLS will filter automatically
+
+// ❌ WRONG: Don't use deprecated fields
+const { data } = await supabase
+  .from('societies')
+  .eq('created_by', user.id);  // ❌ Field doesn't exist!
+```
+
+---
+
+## 🎨 Code Style & Conventions
+
+- **Language**: Italian for UI text, comments, and user-facing content
+- **File Naming**: kebab-case for files, PascalCase for components
+- **Component Structure**: Client components with 'use client' directive
+- **Error Handling**: Always handle Supabase errors with toast notifications
+- **Loading States**: Use Loader2 component from lucide-react
+- **Forms**: Use shadcn/ui form components + React Hook Form + Zod
+
+---
+
+## 🔍 Debugging Tips
+
+### Common Issues
+
+1. **406 Not Acceptable**: Usually RLS policy blocking access
+   - Check if using correct utility functions
+   - Verify RLS policies in schema.sql
+   - Test with different user roles
+
+2. **TypeScript Errors**: 
+   - Check types in `types/database.ts`
+   - Use proper type assertions for Supabase queries
+   - Run `npm run build` to see all errors
+
+3. **Data Not Showing**:
+   - Check RLS policies
+   - Verify user has assigned societies (for society_admin)
+   - Check console for Supabase errors
+
+4. **Build Failures**:
+   - Fix TypeScript errors first
+   - Check for missing imports
+   - Verify all components are properly exported
+
+---
+
+## 📞 Key Files Reference
+
+### Core Infrastructure
+- `middleware.ts` - Auth middleware
+- `lib/api/supabase.ts` - Supabase client
+- `lib/hooks/useUser.ts` - User hook with societies
+- `types/database.ts` - All TypeScript types
+
+### Utilities
+- `lib/utils/userSocietyUtils.ts` - Society management (12 functions)
+- `lib/utils/categoryAssignment.ts` - Athletic categories
+- `lib/utils/bibNumberUtils.ts` - Bib number management
+- `lib/utils/raceUtils.ts` - Race utilities
+
+### Layout
+- `components/layout/Sidebar.tsx` - Navigation
+- `components/layout/Header.tsx` - Top bar
+- `components/layout/ManagedSocietiesWidget.tsx` - Societies widget
+
+### Database
+- `supabase/schema.sql` - Complete schema
+- `supabase/migrations/` - All migrations
+
+---
+
+## ✅ Final Checklist Before Starting
+
+- [ ] Read `REFACTORING-STATUS.md`
+- [ ] Read relevant OpenSpec docs
+- [ ] Understand multi-society model
+- [ ] Know which utility functions to use
+- [ ] Understand RLS policies
+- [ ] Ready to update documentation after changes
+
+---
+
+**Good luck! 🚀**
+
+If you need clarification on anything, ask the user before proceeding.
+Always prioritize code quality, type safety, and following established patterns.
 

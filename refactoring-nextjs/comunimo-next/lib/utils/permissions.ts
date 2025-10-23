@@ -10,7 +10,7 @@ import type { UserRole } from '@/types/database';
  * Higher number = more permissions
  */
 const ROLE_HIERARCHY: Record<UserRole, number> = {
-  user: 1,
+  society_admin: 1,
   admin: 2,
   super_admin: 3,
 };
@@ -91,38 +91,41 @@ export type PermissionAction =
 
 /**
  * Permission matrix defining which roles can perform which actions
+ *
+ * Note: society_admin can manage their assigned societies
+ * RLS policies enforce society-level access control
  */
 const PERMISSIONS: Record<PermissionAction, UserRole[]> = {
   // Society permissions
   'society:create': ['admin', 'super_admin'],
-  'society:read': ['user', 'admin', 'super_admin'],
+  'society:read': ['society_admin', 'admin', 'super_admin'],
   'society:update': ['admin', 'super_admin'],
   'society:delete': ['super_admin'],
-  
-  // Member permissions
-  'member:create': ['admin', 'super_admin'],
-  'member:read': ['user', 'admin', 'super_admin'],
-  'member:update': ['admin', 'super_admin'],
-  'member:delete': ['admin', 'super_admin'],
-  
+
+  // Member permissions (society_admin can manage members of assigned societies)
+  'member:create': ['society_admin', 'admin', 'super_admin'],
+  'member:read': ['society_admin', 'admin', 'super_admin'],
+  'member:update': ['society_admin', 'admin', 'super_admin'],
+  'member:delete': ['society_admin', 'admin', 'super_admin'],
+
   // Payment permissions
-  'payment:create': ['admin', 'super_admin'],
-  'payment:read': ['user', 'admin', 'super_admin'],
-  'payment:update': ['admin', 'super_admin'],
+  'payment:create': ['society_admin', 'admin', 'super_admin'],
+  'payment:read': ['society_admin', 'admin', 'super_admin'],
+  'payment:update': ['society_admin', 'admin', 'super_admin'],
   'payment:delete': ['super_admin'],
-  
+
   // Event permissions
   'event:create': ['admin', 'super_admin'],
-  'event:read': ['user', 'admin', 'super_admin'],
+  'event:read': ['society_admin', 'admin', 'super_admin'],
   'event:update': ['admin', 'super_admin'],
   'event:delete': ['admin', 'super_admin'],
-  
+
   // User management permissions
   'user:create': ['super_admin'],
   'user:read': ['admin', 'super_admin'],
   'user:update': ['super_admin'],
   'user:delete': ['super_admin'],
-  
+
   // System permissions
   'system:settings': ['super_admin'],
   'system:logs': ['super_admin'],
@@ -176,11 +179,20 @@ export function canAccessAdmin(userRole: UserRole | null | undefined): boolean {
  */
 export function getRoleDisplayName(role: UserRole): string {
   const roleNames: Record<UserRole, string> = {
-    user: 'Utente',
+    society_admin: 'Amministratore Società',
     admin: 'Amministratore',
     super_admin: 'Super Amministratore',
   };
-  
+
   return roleNames[role];
+}
+
+/**
+ * Check if user is a society admin
+ * @param userRole - The user's current role
+ * @returns true if user is society_admin
+ */
+export function isSocietyAdmin(userRole: UserRole | null | undefined): boolean {
+  return userRole === 'society_admin';
 }
 

@@ -17,6 +17,9 @@ import { useAuth } from '@/lib/hooks/useAuth';
 const societySchema = z.object({
   name: z.string().min(2, 'Il nome deve contenere almeno 2 caratteri'),
   society_code: z.string().optional(),
+  organization: z.enum(['FIDAL', 'UISP', 'CSI', 'RUNCARD'], {
+    required_error: 'Ente obbligatorio'
+  }),
   description: z.string().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
@@ -54,6 +57,8 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
     defaultValues: society
       ? {
           name: society.name,
+          society_code: society.society_code || '',
+          organization: society.organization || 'FIDAL',
           description: society.description || '',
           address: society.address || '',
           city: society.city || '',
@@ -65,9 +70,25 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           vat_number: society.vat_number || '',
           fiscal_code: society.fiscal_code || '',
           legal_representative: society.legal_representative || '',
+          logo_url: society.logo_url || '',
           is_active: society.is_active,
         }
       : {
+          name: '',
+          society_code: '',
+          organization: 'FIDAL' as const,
+          description: '',
+          address: '',
+          city: '',
+          province: '',
+          postal_code: '',
+          phone: '',
+          email: '',
+          website: '',
+          vat_number: '',
+          fiscal_code: '',
+          legal_representative: '',
+          logo_url: '',
           is_active: true,
         },
   });
@@ -85,9 +106,9 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
               ...data,
               created_by: user?.id,
             },
-          ])
+          ] as any)
           .select()
-          .single();
+          .single() as { data: any; error: any };
 
         if (error) throw error;
 
@@ -102,6 +123,7 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
         // Update existing society
         const { error } = await supabase
           .from('societies')
+          // @ts-expect-error - Supabase type inference issue
           .update({
             ...data,
             updated_at: new Date().toISOString(),
@@ -161,16 +183,37 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           )}
         </div>
 
-        <div>
-          <Label htmlFor="society_code">Codice Società</Label>
-          <Input
-            id="society_code"
-            {...register('society_code')}
-            placeholder="Es: MO001"
-          />
-          {errors.society_code && (
-            <p className="mt-1 text-sm text-red-600">{errors.society_code.message}</p>
-          )}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="society_code">Codice Società</Label>
+            <Input
+              id="society_code"
+              {...register('society_code')}
+              placeholder="Es: MO001F"
+            />
+            {errors.society_code && (
+              <p className="mt-1 text-sm text-red-600">{errors.society_code.message}</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="organization">
+              Ente <span className="text-red-500">*</span>
+            </Label>
+            <select
+              id="organization"
+              {...register('organization')}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            >
+              <option value="FIDAL">FIDAL</option>
+              <option value="UISP">UISP</option>
+              <option value="CSI">CSI</option>
+              <option value="RUNCARD">RUNCARD</option>
+            </select>
+            {errors.organization && (
+              <p className="mt-1 text-sm text-red-600">{errors.organization.message}</p>
+            )}
+          </div>
         </div>
 
         <div>

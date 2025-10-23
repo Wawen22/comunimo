@@ -2,14 +2,17 @@
 
 import { NavItem } from './NavItem';
 import { RequireRole } from '@/components/auth/RequireRole';
+import { ManagedSocietiesWidget } from './ManagedSocietiesWidget';
 import {
   LayoutDashboard,
   Building2,
   Users,
   CreditCard,
   Calendar,
+  Trophy,
   Settings,
   Shield,
+  UserCog,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -59,6 +62,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <NavItem href="/dashboard/members" icon={Users} label="Atleti" />
 
             <NavItem
+              href="/dashboard/races/championships"
+              icon={Trophy}
+              label="Gare"
+            />
+
+            <NavItem
               href="/dashboard/payments"
               icon={CreditCard}
               label="Pagamenti"
@@ -72,6 +81,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Amministrazione
                 </div>
+
+                <NavItem
+                  href="/dashboard/users"
+                  icon={UserCog}
+                  label="Gestione Utenti"
+                />
 
                 <NavItem
                   href="/dashboard/settings"
@@ -89,6 +104,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
             </RequireRole>
           </nav>
+
+          {/* Managed Societies Widget (for society_admin) */}
+          <ManagedSocietiesWidget />
 
           {/* Footer */}
           <div className="border-t border-gray-200 p-4">
