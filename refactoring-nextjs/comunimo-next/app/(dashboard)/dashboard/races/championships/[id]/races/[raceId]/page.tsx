@@ -14,6 +14,7 @@ export default function RaceDetailPage() {
 
   const [race, setRace] = useState<Race | null>(null);
   const [championship, setChampionship] = useState<Championship | null>(null);
+  const [registrationsCount, setRegistrationsCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -44,8 +45,16 @@ export default function RaceDetailPage() {
 
       if (championshipError) throw championshipError;
 
+      // Fetch registrations count for this championship
+      const { count: regCount } = await supabase
+        .from('championship_registrations')
+        .select('*', { count: 'exact', head: true })
+        .eq('championship_id', championshipId)
+        .eq('status', 'confirmed');
+
       setRace(raceData);
       setChampionship(championshipData);
+      setRegistrationsCount(regCount || 0);
     } catch (error) {
       console.error('Error fetching race:', error);
     } finally {
@@ -80,7 +89,11 @@ export default function RaceDetailPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <RaceDetail race={race} championship={championship || undefined} />
+      <RaceDetail
+        race={race}
+        championship={championship || undefined}
+        registrationsCount={registrationsCount}
+      />
     </div>
   );
 }

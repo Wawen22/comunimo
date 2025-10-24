@@ -13,7 +13,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, UserPlus } from 'lucide-react';
 import MemberSelectionList from './MemberSelectionList';
 import { getNextBibNumbers } from '@/lib/utils/bibNumberUtils';
@@ -41,7 +40,6 @@ export default function MemberSelectionDialog({
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-  const [organizationFilter, setOrganizationFilter] = useState<'all' | 'FIDAL' | 'UISP'>('all');
 
   useEffect(() => {
     if (open) {
@@ -281,10 +279,7 @@ export default function MemberSelectionDialog({
     }
   };
 
-  // Filter members by organization
-  const filteredMembers = organizationFilter === 'all'
-    ? members
-    : members.filter((m) => m.organization === organizationFilter);
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -301,29 +296,12 @@ export default function MemberSelectionDialog({
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
           </div>
         ) : (
-          <div className="space-y-6">
-            {/* Organization Filter Tabs */}
-            <Tabs value={organizationFilter} onValueChange={(value) => setOrganizationFilter(value as 'all' | 'FIDAL' | 'UISP')}>
-              <TabsList className="grid w-full max-w-md grid-cols-3">
-                <TabsTrigger value="all">
-                  Tutti ({members.length})
-                </TabsTrigger>
-                <TabsTrigger value="FIDAL">
-                  FIDAL ({members.filter((m) => m.organization === 'FIDAL').length})
-                </TabsTrigger>
-                <TabsTrigger value="UISP">
-                  UISP ({members.filter((m) => m.organization === 'UISP').length})
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <MemberSelectionList
-              members={filteredMembers}
-              selectedMemberIds={selectedMemberIds}
-              onSelectionChange={setSelectedMemberIds}
-              alreadyRegisteredIds={alreadyRegisteredIds}
-            />
-          </div>
+          <MemberSelectionList
+            members={members}
+            selectedMemberIds={selectedMemberIds}
+            onSelectionChange={setSelectedMemberIds}
+            alreadyRegisteredIds={alreadyRegisteredIds}
+          />
         )}
 
         <DialogFooter className="flex items-center justify-between sm:justify-between">

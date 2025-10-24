@@ -70,10 +70,10 @@ export default function EditRacePage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
           <Calendar className="h-8 w-8" />
-          Modifica Gara
+          Modifica Tappa
         </h1>
         <p className="text-muted-foreground mt-2">
-          Modifica le informazioni della gara
+          Modifica le informazioni della tappa
         </p>
       </div>
 

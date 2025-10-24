@@ -64,7 +64,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <NavItem
               href="/dashboard/races/championships"
               icon={Trophy}
-              label="Gare"
+              label="Campionati"
             />
 
             <NavItem
@@ -111,7 +111,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Footer */}
           <div className="border-t border-gray-200 p-4">
             <p className="text-xs text-gray-500">
-              © 2024 ComUniMo
+              {/* Current year automatic */}
+              © {new Date().getFullYear()} ComUniMo
+
               <br />
               Comitato Unitario Modena
             </p>

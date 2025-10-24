@@ -27,7 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/toast';
-import { Search, Loader2, UserX, Users, Hash } from 'lucide-react';
+import { Search, Loader2, UserX, Users } from 'lucide-react';
 
 interface ChampionshipRegistrationsListProps {
   championshipId: string;
@@ -45,7 +45,6 @@ export default function ChampionshipRegistrationsList({
   const [registrations, setRegistrations] = useState<ChampionshipRegistrationWithDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterOrg, setFilterOrg] = useState<string>('all');
 
   useEffect(() => {
     fetchRegistrations();
@@ -55,7 +54,8 @@ export default function ChampionshipRegistrationsList({
     try {
       setIsLoading(true);
 
-      const { data, error } = await supabase
+      // Build query
+      let query = supabase
         .from('championship_registrations')
         .select(`
           *,
@@ -64,9 +64,14 @@ export default function ChampionshipRegistrationsList({
           championship:championships(*)
         `)
         .eq('championship_id', championshipId)
-        .eq('society_id', societyId)
-        .eq('status', 'confirmed')
-        .order('bib_number', { ascending: true });
+        .eq('status', 'confirmed');
+
+      // Only filter by society if not "all"
+      if (societyId !== 'all') {
+        query = query.eq('society_id', societyId);
+      }
+
+      const { data, error } = await query.order('bib_number', { ascending: true });
 
       if (error) throw error;
 
@@ -132,7 +137,7 @@ export default function ChampionshipRegistrationsList({
     }
   };
 
-  // Filter registrations
+  // Filter registrations by search query only
   const filteredRegistrations = registrations.filter((reg) => {
     const member = reg.member as any;
     const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
@@ -142,18 +147,8 @@ export default function ChampionshipRegistrationsList({
       reg.bib_number.includes(query) ||
       member.fiscal_code?.toLowerCase().includes(query);
 
-    const matchesOrg =
-      filterOrg === 'all' || reg.organization === filterOrg;
-
-    return matchesSearch && matchesOrg;
+    return matchesSearch;
   });
-
-  // Group by organization
-  const orgCounts = registrations.reduce((acc, reg) => {
-    const org = reg.organization || 'Altro';
-    acc[org] = (acc[org] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
   if (isLoading) {
     return (
@@ -165,105 +160,70 @@ export default function ChampionshipRegistrationsList({
 
   return (
     <div className="space-y-6">
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Totale Iscritti
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-blue-600" />
-              <span className="text-2xl font-bold">{registrations.length}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {Object.entries(orgCounts).map(([org, count]) => (
-          <Card key={org}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                {org}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <Hash className="h-5 w-5 text-green-600" />
-                <span className="text-2xl font-bold">{count}</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            placeholder="Cerca per nome, pettorale o codice fiscale..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant={filterOrg === 'all' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('all')}
-          >
-            Tutti
-          </Button>
-          <Button
-            variant={filterOrg === 'FIDAL' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('FIDAL')}
-          >
-            FIDAL
-          </Button>
-          <Button
-            variant={filterOrg === 'UISP' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('UISP')}
-          >
-            UISP
-          </Button>
-        </div>
-      </div>
+      {/* Search Card */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-5">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              placeholder="🔍 Cerca per nome, pettorale o codice fiscale..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-11 h-11 border-gray-300 focus:border-blue-500"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Atleti Iscritti</CardTitle>
-          <CardDescription>
-            {filteredRegistrations.length} atleti
-          </CardDescription>
+      <Card className="border-0 shadow-md">
+        <CardHeader className="bg-gradient-to-r from-gray-50 to-white border-b">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">Atleti Iscritti</CardTitle>
+              <CardDescription className="mt-1">
+                {filteredRegistrations.length} {filteredRegistrations.length === 1 ? 'atleta' : 'atleti'}
+                {searchQuery && ' trovati'}
+              </CardDescription>
+            </div>
+            {filteredRegistrations.length > 0 && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Users className="h-4 w-4" />
+                <span className="font-medium">{filteredRegistrations.length}</span>
+              </div>
+            )}
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {filteredRegistrations.length === 0 ? (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">
-                {searchQuery || filterOrg !== 'all'
-                  ? 'Nessun atleta trovato con questi filtri'
-                  : 'Nessun atleta iscritto'}
-              </p>
+            <div className="text-center py-16 px-4">
+              <div className="max-w-sm mx-auto">
+                <div className="h-20 w-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-10 w-10 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {searchQuery ? 'Nessun risultato' : 'Nessun atleta iscritto'}
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  {searchQuery
+                    ? 'Prova a modificare la ricerca'
+                    : 'Non ci sono ancora atleti iscritti a questo campionato'}
+                </p>
+              </div>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Pettorale</TableHead>
-                  <TableHead>Atleta</TableHead>
-                  <TableHead>Data Nascita</TableHead>
-                  <TableHead>Organizzazione</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Tessera</TableHead>
-                  <TableHead>Società</TableHead>
-                  <TableHead className="text-right">Azioni</TableHead>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  <TableHead className="font-semibold text-gray-700">Pettorale</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Atleta</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Data Nascita</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Organizzazione</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Categoria</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Tessera</TableHead>
+                  <TableHead className="font-semibold text-gray-700">Società</TableHead>
+                  <TableHead className="text-right font-semibold text-gray-700">Azioni</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -272,54 +232,55 @@ export default function ChampionshipRegistrationsList({
                   const society = reg.society as any;
 
                   return (
-                    <TableRow key={reg.id}>
+                    <TableRow key={reg.id} className="hover:bg-gray-50 transition-colors">
                       <TableCell>
-                        <Badge variant="outline" className="font-mono">
+                        <div className="inline-flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm min-w-[50px] font-mono">
                           {reg.bib_number}
-                        </Badge>
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-semibold text-gray-900">
                           {member.first_name} {member.last_name}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-xs text-gray-500 mt-0.5 font-mono">
                           {member.fiscal_code || '-'}
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm text-gray-700">
                         {member.birth_date
                           ? new Date(member.birth_date).toLocaleDateString('it-IT')
                           : '-'}
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant={
+                          className={
                             reg.organization === 'FIDAL'
-                              ? 'default'
+                              ? 'border-green-500 text-green-700 bg-green-50'
                               : reg.organization === 'UISP'
-                              ? 'secondary'
-                              : 'outline'
+                              ? 'border-purple-500 text-purple-700 bg-purple-50'
+                              : 'border-gray-300 text-gray-700 bg-gray-50'
                           }
+                          variant="outline"
                         >
                           {reg.organization || 'N/A'}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm text-gray-700 font-medium">
                         {reg.category || '-'}
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm text-gray-600 font-mono">
                         {member.membership_number || '-'}
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {society?.name || '-'}
+                      <TableCell className="text-sm">
+                        <div className="font-medium text-gray-900">{society?.name || '-'}</div>
                         {society?.society_code && (
-                          <span className="text-gray-400"> ({society.society_code})</span>
+                          <div className="text-xs text-gray-500 font-mono mt-0.5">{society.society_code}</div>
                         )}
                       </TableCell>
                       <TableCell className="text-right">
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                               <UserX className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>
@@ -351,7 +312,8 @@ export default function ChampionshipRegistrationsList({
                   );
                 })}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

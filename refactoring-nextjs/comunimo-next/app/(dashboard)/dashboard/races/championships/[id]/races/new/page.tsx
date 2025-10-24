@@ -14,10 +14,10 @@ export default function NewRacePage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
           <Calendar className="h-8 w-8" />
-          Nuova Gara
+          Nuova Tappa
         </h1>
         <p className="text-muted-foreground mt-2">
-          Crea una nuova gara per il campionato
+          Crea una nuova tappa per il campionato
         </p>
       </div>
 

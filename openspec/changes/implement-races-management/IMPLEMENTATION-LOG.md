@@ -475,6 +475,619 @@ All 8 tasks for Event Registrations Management are complete:
 
 ---
 
-**Last Updated**: 2025-10-22
-**Next Session**: Phase 5 - Results Management (if needed) or other features
+## Session 5: 2025-10-24 - Race Detail UI/UX Improvements
+
+### ✅ Completed Tasks
+
+#### 1. Enhanced Race Detail Page with Registrations Count
+- ✅ Modified `app/(dashboard)/dashboard/races/championships/[id]/races/[raceId]/page.tsx`
+  - Added query to fetch championship registrations count
+  - Pass registrations count to RaceDetail component
+  - Count only confirmed registrations for accuracy
+
+- ✅ Updated `components/races/RaceDetail.tsx`
+  - Added `registrationsCount` prop to component interface
+  - Created new "Informazioni Campionato" section with modern gradient cards
+  - Display championship name, total registrations, and available spots
+  - Added visual indicators with color-coded cards (blue for championship, green for registrations, purple for availability)
+  - Calculate and display available spots dynamically
+
+#### 2. Modern UI/UX Redesign
+- ✅ Redesigned main info card header
+  - Added gradient background for visual appeal
+  - Improved typography with larger, bolder title
+  - Enhanced badge styling for race number and status
+  - Better spacing and visual hierarchy
+
+- ✅ Enhanced Date & Location cards
+  - Converted to gradient cards with color coding (orange for date, teal for location)
+  - Added icons with matching colors
+  - Improved readability with better contrast
+  - Added time display with clock icon
+
+- ✅ Improved "Media e Risultati" section
+  - Added section header with icon
+  - Enhanced button styling with shadows and hover effects
+  - Better spacing and visual consistency
+
+#### 3. Prominent "Gestisci Iscrizioni" CTA
+- ✅ Completely redesigned registrations section
+  - Created prominent call-to-action card with gradient background
+  - Added large icon in circular badge
+  - Centered layout with clear hierarchy
+  - Large, prominent button with shadow effects
+  - Added stats preview section showing:
+    - Total registrations count
+    - Available spots
+    - Fill percentage
+  - Different layouts for championship vs standalone races
+  - Improved messaging and user guidance
+
+#### 4. Visual Improvements
+- ✅ Consistent color scheme across all cards
+  - Blue gradient for championship info
+  - Green gradient for registrations
+  - Purple gradient for availability
+  - Orange gradient for date/time
+  - Teal gradient for location
+  - Primary gradient for CTA sections
+
+- ✅ Enhanced dark mode support
+  - All gradient cards support dark mode
+  - Proper color contrast in both themes
+  - Consistent visual experience
+
+### 📊 Impact
+- **User Experience**: Significantly improved visual appeal and information hierarchy
+- **Accessibility**: Better contrast and larger touch targets for buttons
+- **Information Architecture**: Key information (registrations count) now prominently displayed
+- **Call-to-Action**: "Gestisci Iscrizioni" button is now impossible to miss
+- **Data Visibility**: Users can see at a glance how many people are registered and spots available
+
+### 🎨 Design Principles Applied
+- **Visual Hierarchy**: Most important actions are most prominent
+- **Color Psychology**: Green for positive (registrations), purple for capacity, orange for time-sensitive info
+- **Progressive Disclosure**: Stats preview gives quick overview, full management in dedicated page
+- **Consistency**: All cards follow same design pattern with gradients and icons
+- **Responsiveness**: Layout adapts well to mobile and desktop screens
+
+---
+
+## Session 6: 2025-10-24 - Championship Detail UI/UX Improvements & Terminology Updates
+
+### ✅ Completed Tasks
+
+#### 1. Enhanced Championship Detail Page with Modern UI
+- ✅ Modified `components/races/ChampionshipDetail.tsx`
+  - Added query to fetch championship registrations count
+  - Redesigned header with gradient background
+  - Larger title (text-4xl) and better visual hierarchy
+  - Moved admin buttons to header section
+
+- ✅ Redesigned Championship Info Card
+  - Created 4 gradient stat cards:
+    - Data Inizio (blue gradient)
+    - Data Fine (purple gradient)
+    - Tappe (orange gradient) - shows race count
+    - Iscritti (green gradient) - shows registrations count
+  - Modern card design with icons and color coding
+  - Responsive grid layout (4 columns on desktop)
+
+#### 2. Prominent "Gestisci Iscrizioni" CTA in Championship Page
+- ✅ Created dedicated CTA section
+  - Large gradient card with border accent
+  - Circular icon badge with Users icon
+  - Clear heading and descriptive text
+  - Large prominent button with shadow effects
+  - Stats preview section with 3 metrics:
+    - Iscritti Totali
+    - Tappe del Campionato
+    - Media Iscritti/Tappa (calculated)
+  - Centered layout for maximum visibility
+
+#### 3. Improved Races List Section
+- ✅ Renamed "Gare del Campionato" to "Tappe del Campionato"
+- ✅ Enhanced race cards:
+  - Added hover effects with group styling
+  - Display event time with clock icon
+  - Improved typography and spacing
+  - Better visual feedback on hover
+- ✅ Updated empty state:
+  - Circular icon badge
+  - Better messaging
+  - Improved button styling
+
+#### 4. Terminology Updates Across Application
+- ✅ Updated `components/layout/Sidebar.tsx`
+  - Changed "Gare" to "Campionati" in navigation menu
+
+- ✅ Updated page titles and labels:
+  - `app/(dashboard)/dashboard/races/championships/[id]/races/new/page.tsx`
+    - "Nuova Gara" → "Nuova Tappa"
+    - "Crea una nuova gara" → "Crea una nuova tappa"
+
+  - `app/(dashboard)/dashboard/races/championships/[id]/races/[raceId]/edit/page.tsx`
+    - "Modifica Gara" → "Modifica Tappa"
+    - "Modifica le informazioni della gara" → "Modifica le informazioni della tappa"
+
+  - `components/races/RaceForm.tsx`
+    - "Titolo Gara" → "Titolo Tappa"
+    - "informazioni principali della gara" → "informazioni principali della tappa"
+
+  - `components/races/ChampionshipDetail.tsx`
+    - "Gare del Campionato" → "Tappe del Campionato"
+    - "Aggiungi Gara" → "Aggiungi Tappa"
+    - "Nessuna gara" → "Nessuna tappa"
+    - "gara/gare" → "tappa/tappe" throughout
+
+### 📊 Impact
+- **User Experience**: Championship page now has clear visual hierarchy and prominent CTA
+- **Information Architecture**: Key stats (registrations, races) immediately visible
+- **Terminology Clarity**: "Campionati" and "Tappe" are more descriptive than generic "Gare"
+- **Consistency**: Same modern design language as Race Detail page
+- **Call-to-Action**: "Gestisci Iscrizioni" is now impossible to miss
+
+### 🎨 Design Consistency
+Both Championship Detail and Race Detail pages now share:
+- Gradient card designs with color coding
+- Prominent CTA sections for "Gestisci Iscrizioni"
+- Stats preview with key metrics
+- Modern typography and spacing
+- Full dark mode support
+- Responsive layouts
+
+### 📝 Terminology Mapping
+| Old Term | New Term | Context |
+|----------|----------|---------|
+| Gare | Campionati | Main navigation menu |
+| Gare del Campionato | Tappe del Campionato | Championship races list |
+| Nuova Gara | Nuova Tappa | Create race page |
+| Modifica Gara | Modifica Tappa | Edit race page |
+| Titolo Gara | Titolo Tappa | Form field label |
+
+---
+
+## Session 7: 2025-10-24 - Registrations Management Improvements
+
+### 🎯 Objective
+Improve the registrations management page with:
+1. **Admin "All Societies" option**: Allow admins to view all registrations across all societies
+2. **Searchable dropdown**: Make society selector searchable for better UX
+3. **Better permissions handling**: Clear distinction between admin and society_admin views
+
+### ✅ Completed Tasks
+
+#### 1. Enhanced Society Selector with Search
+- ✅ Replaced standard Select with custom searchable dropdown
+  - Added search input with real-time filtering
+  - Implemented custom dropdown with backdrop and keyboard navigation
+  - Added visual feedback (checkmarks) for selected society
+  - Smooth open/close animations
+
+**File**: `app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`
+- Added state: `searchQuery`, `isDropdownOpen`, `userIsAdmin`
+- Imported icons: `Search`, `Check`, `ChevronsUpDown`
+- Created custom dropdown UI with:
+  - Search input at the top
+  - Scrollable options list (max-height: 60)
+  - Hover states and selection indicators
+  - "No results" message when search yields nothing
+
+#### 2. "All Societies" Option for Admins
+- ✅ Added special "Tutte le Società" option for admin users
+  - Only visible to users with `admin` or `super_admin` role
+  - Set as default selection for admins (`societyId = 'all'`)
+  - Displayed with bold font and separator from other options
+  - Shows count of all registrations across all societies
+
+**File**: `app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`
+- Modified `fetchData()` to set `societyId = 'all'` for admins by default
+- Added `userIsAdmin` state to track admin status
+- Conditional rendering of "Tutte le Società" option in dropdown
+
+#### 3. Updated Query Logic for "All Societies"
+- ✅ Modified `ChampionshipRegistrationsList` to handle `societyId === 'all'`
+  - Conditional query building: only filter by `society_id` if not "all"
+  - Fetches all confirmed registrations when "all" is selected
+  - Maintains existing functionality for specific society selection
+
+**File**: `components/races/ChampionshipRegistrationsList.tsx`
+```typescript
+// Build query
+let query = supabase
+  .from('championship_registrations')
+  .select(...)
+  .eq('championship_id', championshipId)
+  .eq('status', 'confirmed');
+
+// Only filter by society if not "all"
+if (societyId !== 'all') {
+  query = query.eq('society_id', societyId);
+}
+```
+
+#### 4. Conditional "New Registration" Button
+- ✅ Hide "Nuova Iscrizione" button when viewing all societies
+  - Button only shown when specific society is selected
+  - Added informative text: "Visualizzazione di tutte le iscrizioni"
+  - Prevents confusion about which society to register for
+
+**File**: `components/races/ChampionshipRegistrations.tsx`
+- Conditional rendering: `{societyId !== 'all' && <Button>...}`
+- Added subtitle when viewing all: "Visualizzazione di tutte le iscrizioni"
+- MemberSelectionDialog only rendered for specific society
+
+### 🎨 UI/UX Improvements
+
+#### Searchable Dropdown Features
+- **Search Input**:
+  - Placeholder: "Cerca società..."
+  - Icon: Search icon on the left
+  - Auto-focus when dropdown opens
+  - Real-time filtering (case-insensitive)
+
+- **Visual Design**:
+  - Clean white background with border
+  - Hover states on options (gray-100)
+  - Selected option highlighted with checkmark
+  - Smooth transitions and animations
+  - Backdrop click to close
+
+- **Accessibility**:
+  - Keyboard navigation ready
+  - Clear visual indicators
+  - Proper focus management
+  - Escape key to close (via backdrop)
+
+#### Admin Experience
+- **Default View**: Admins see all registrations by default
+- **Clear Labeling**: "Tutte le Società" option is bold and separated
+- **Informative**: Shows total count across all societies
+- **Flexible**: Can still select specific society if needed
+
+#### Society Admin Experience
+- **Unchanged**: Society admins see only their assigned societies
+- **Auto-select**: If only one society, it's auto-selected
+- **Searchable**: Can search through their societies if multiple
+
+### 📊 Impact
+
+**For Admins**:
+- ✅ Can now view all registrations at once (overview)
+- ✅ Can search and filter through all societies easily
+- ✅ Better data visibility for reporting and management
+- ✅ Still can select specific society when needed
+
+**For Society Admins**:
+- ✅ Improved UX with searchable dropdown
+- ✅ Faster society selection with search
+- ✅ No change in permissions (security maintained)
+
+**Technical**:
+- ✅ No breaking changes to existing functionality
+- ✅ Backward compatible with existing data
+- ✅ Efficient queries (conditional filtering)
+- ✅ Clean separation of concerns
+
+### 🔒 Security & Permissions
+
+**Admin Users** (`admin` or `super_admin`):
+- Can select "Tutte le Società" to view all registrations
+- Can select any specific society
+- Can search through all societies
+- Default view: all registrations
+
+**Society Admin Users**:
+- Can only see their assigned societies
+- Cannot see "Tutte le Società" option
+- Can search through their societies
+- Default view: first assigned society (if only one)
+
+**Query Security**:
+- RLS policies still enforced at database level
+- Client-side filtering only for UX
+- No exposure of unauthorized data
+
+### 📝 Files Modified
+
+1. **`app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`**
+   - Added searchable dropdown UI
+   - Added "Tutte le Società" option for admins
+   - Enhanced state management
+   - Improved user experience
+
+2. **`components/races/ChampionshipRegistrations.tsx`**
+   - Conditional "Nuova Iscrizione" button
+   - Added informative text for "all societies" view
+   - Conditional MemberSelectionDialog rendering
+
+3. **`components/races/ChampionshipRegistrationsList.tsx`**
+   - Updated query logic to handle `societyId === 'all'`
+   - Conditional society filtering
+   - Maintained existing functionality
+
+### 🧪 Testing Checklist
+
+- [ ] Admin can see "Tutte le Società" option
+- [ ] Admin can view all registrations when "all" selected
+- [ ] Society admin cannot see "Tutte le Società" option
+- [ ] Society admin sees only assigned societies
+- [ ] Search filters societies correctly
+- [ ] Dropdown closes on backdrop click
+- [ ] Selected society shows checkmark
+- [ ] "Nuova Iscrizione" hidden when "all" selected
+- [ ] "Nuova Iscrizione" shown for specific society
+- [ ] Registrations load correctly for "all"
+- [ ] Registrations load correctly for specific society
+- [ ] No console errors
+- [ ] Responsive on mobile/tablet/desktop
+
+### 🎉 Result
+
+The registrations management page is now significantly improved:
+- **More powerful** for admins with "all societies" view
+- **More usable** with searchable dropdown
+- **More intuitive** with clear visual feedback
+- **More flexible** with better filtering options
+
+---
+
+## Session 8: 2025-10-24 - Registrations Page UI/UX Optimization
+
+### 🎯 Objective
+Complete redesign of the registrations management page with modern UI/UX:
+1. **Improved visual hierarchy** with gradient backgrounds and better spacing
+2. **Enhanced statistics display** with colorful gradient cards
+3. **Optimized table design** with better readability and hover effects
+4. **Better empty states** with helpful messaging
+5. **Modern dropdown design** with improved search experience
+
+### ✅ Completed Tasks
+
+#### 1. Page Layout Optimization
+**File**: `app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`
+
+- ✅ Added gradient background to entire page
+  - `bg-gradient-to-br from-gray-50 via-white to-gray-50`
+  - Creates subtle depth and modern feel
+
+- ✅ Improved container spacing
+  - Max width: `max-w-7xl` for better readability
+  - Reduced padding: `py-6` for more content space
+
+- ✅ Enhanced society selector card
+  - Wrapped in white card with border and shadow
+  - Better visual separation from content
+  - Improved label styling (font-semibold)
+
+#### 2. Searchable Dropdown Enhancement
+**File**: `app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`
+
+- ✅ Modernized trigger button
+  - Increased height: `h-11`
+  - Border: `border-2` with hover effects
+  - Rounded corners: `rounded-lg`
+  - Added emoji icon for "Tutte le Società" (🏢)
+  - Smooth transitions on hover and focus
+
+- ✅ Enhanced dropdown menu
+  - Increased border: `border-2`
+  - Better shadow: `shadow-xl`
+  - Rounded corners: `rounded-lg`
+
+- ✅ Improved search input area
+  - Background: `bg-gray-50` for visual separation
+  - Increased padding: `p-3`
+  - Larger icon: `h-4 w-4`
+
+- ✅ Better option styling
+  - Increased padding: `py-2.5`
+  - Rounded options: `rounded-md`
+  - Hover: `hover:bg-blue-50`
+  - Selected: `bg-blue-50 text-blue-700`
+  - Smooth transitions
+
+- ✅ Enhanced "no results" state
+  - Added search icon
+  - Better spacing: `py-8`
+  - Centered layout
+
+- ✅ Improved empty state
+  - Large icon in colored circle
+  - Clear heading and description
+  - Better spacing and layout
+
+#### 3. Header Component Redesign
+**File**: `components/races/ChampionshipRegistrations.tsx`
+
+- ✅ Created gradient header card
+  - Gradient: `from-blue-600 via-blue-500 to-indigo-600`
+  - White text for contrast
+  - Trophy icon for visual interest
+  - Calendar icon for championship info
+
+- ✅ Enhanced "Nuova Iscrizione" button
+  - White background with blue text
+  - Larger icon: `h-5 w-5`
+  - Shadow for depth
+  - Hover effect: `hover:bg-blue-50`
+
+- ✅ Added badge for "all societies" view
+  - Pill shape with backdrop blur
+  - White/20 background
+  - Emoji icon (🏢)
+
+#### 4. Statistics Cards Redesign
+**File**: `components/races/ChampionshipRegistrationsList.tsx`
+
+- ✅ Gradient stat cards
+  - **Total Registrations**: Blue gradient (`from-blue-500 to-blue-600`)
+  - **FIDAL**: Green gradient (`from-green-500 to-green-600`)
+  - **UISP**: Purple gradient (`from-purple-500 to-purple-600`)
+  - **Others**: Orange gradient (`from-orange-500 to-orange-600`)
+
+- ✅ Card structure
+  - Icon in rounded badge with white/20 background
+  - Large number: `text-3xl font-bold`
+  - Descriptive subtitle in lighter color
+  - Consistent padding: `p-5`
+  - No border, shadow only: `border-0 shadow-md`
+
+#### 5. Filters Section Enhancement
+**File**: `components/races/ChampionshipRegistrationsList.tsx`
+
+- ✅ Wrapped in card
+  - Clean white background
+  - Subtle shadow: `shadow-sm`
+  - Padding: `p-5`
+
+- ✅ Improved search input
+  - Larger icon: `h-5 w-5`
+  - Emoji in placeholder (🔍)
+  - Increased height: `h-11`
+  - Better border color
+
+- ✅ Enhanced filter buttons
+  - Size: `default` instead of `sm`
+  - Min width: `min-w-[80px]`
+  - Better spacing with flex-wrap
+
+#### 6. Table Redesign
+**File**: `components/races/ChampionshipRegistrationsList.tsx`
+
+- ✅ Enhanced table card
+  - No border: `border-0`
+  - Better shadow: `shadow-md`
+
+- ✅ Gradient header
+  - Background: `from-gray-50 to-white`
+  - Border bottom for separation
+  - Better title size: `text-xl`
+  - Count badge with icon
+
+- ✅ Improved table header
+  - Background: `bg-gray-50`
+  - Font weight: `font-semibold`
+  - Text color: `text-gray-700`
+  - No hover effect on header row
+
+- ✅ Enhanced table rows
+  - Hover effect: `hover:bg-gray-50`
+  - Smooth transitions
+
+- ✅ Better bib number display
+  - Gradient badge: `from-blue-500 to-blue-600`
+  - White text
+  - Rounded: `rounded-lg`
+  - Shadow: `shadow-sm`
+  - Min width: `min-w-[50px]`
+  - Font: `font-mono`
+
+- ✅ Improved athlete info
+  - Name: `font-semibold`
+  - Fiscal code: smaller, mono font
+
+- ✅ Color-coded organization badges
+  - FIDAL: Green (`border-green-500 text-green-700 bg-green-50`)
+  - UISP: Purple (`border-purple-500 text-purple-700 bg-purple-50`)
+  - Others: Gray
+
+- ✅ Enhanced society display
+  - Name: `font-medium`
+  - Code: smaller, mono font, separate line
+
+- ✅ Better action button
+  - Hover: `hover:bg-red-50 hover:text-red-600`
+  - Smooth transition
+
+- ✅ Improved empty state
+  - Large icon in gray circle
+  - Clear heading
+  - Helpful description
+  - Better spacing: `py-16`
+
+- ✅ Added horizontal scroll
+  - Wrapped table in `overflow-x-auto`
+  - Ensures mobile responsiveness
+
+### 🎨 Design System
+
+#### Color Palette
+- **Primary Blue**: Gradients from blue-500 to blue-600
+- **Success Green**: Gradients from green-500 to green-600
+- **Info Purple**: Gradients from purple-500 to purple-600
+- **Warning Orange**: Gradients from orange-500 to orange-600
+- **Neutral Gray**: Various shades for backgrounds and text
+
+#### Typography
+- **Headers**: Bold, larger sizes (text-3xl, text-xl)
+- **Body**: Medium weight, readable sizes
+- **Mono**: For codes, numbers (font-mono)
+- **Hierarchy**: Clear distinction between primary and secondary text
+
+#### Spacing
+- **Consistent padding**: p-5, p-6 for cards
+- **Generous gaps**: gap-4, gap-6 between sections
+- **Breathing room**: Increased from previous tight spacing
+
+#### Shadows & Borders
+- **Cards**: shadow-sm, shadow-md for depth
+- **Dropdowns**: shadow-xl for prominence
+- **Borders**: Mostly removed in favor of shadows
+- **Rounded corners**: rounded-lg, rounded-md throughout
+
+### 📊 Impact
+
+**Visual Improvements**:
+- ✅ **More modern**: Gradient cards and smooth transitions
+- ✅ **Better hierarchy**: Clear visual flow from header to content
+- ✅ **More colorful**: Color-coded elements for quick scanning
+- ✅ **More spacious**: Better breathing room, less cramped
+
+**Usability Improvements**:
+- ✅ **Easier scanning**: Color-coded badges and larger text
+- ✅ **Better feedback**: Hover states and transitions
+- ✅ **Clearer states**: Improved empty and no-results states
+- ✅ **More accessible**: Better contrast and larger touch targets
+
+**Performance**:
+- ✅ **No impact**: All changes are CSS-only
+- ✅ **Smooth animations**: Hardware-accelerated transitions
+- ✅ **Responsive**: Works on all screen sizes
+
+### 📝 Files Modified
+
+1. **`app/(dashboard)/dashboard/races/championships/[id]/registrations/page.tsx`**
+   - Page layout with gradient background
+   - Society selector card design
+   - Enhanced dropdown UI
+   - Better empty states
+
+2. **`components/races/ChampionshipRegistrations.tsx`**
+   - Gradient header card
+   - Enhanced button styling
+   - Badge for "all societies" view
+
+3. **`components/races/ChampionshipRegistrationsList.tsx`**
+   - Gradient statistics cards
+   - Enhanced filters section
+   - Redesigned table with better styling
+   - Improved empty states
+   - Color-coded badges
+
+### 🎉 Result
+
+The registrations management page is now:
+- **Visually stunning** with modern gradients and colors
+- **Highly usable** with clear hierarchy and feedback
+- **Professional** with consistent design language
+- **Responsive** on all devices
+- **Accessible** with good contrast and spacing
+
+The page now matches the quality of the Championship and Race detail pages, creating a cohesive and modern experience throughout the application.
+
+---
+
+**Last Updated**: 2025-10-24
+**Next Session**: Phase 5 - Results Management or additional features as needed
 

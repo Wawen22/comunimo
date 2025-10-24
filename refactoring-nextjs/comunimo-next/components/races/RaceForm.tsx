@@ -181,14 +181,14 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
             Informazioni Generali
           </CardTitle>
           <CardDescription>
-            Inserisci le informazioni principali della gara
+            Inserisci le informazioni principali della tappa
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
               <Label htmlFor="title">
-                Titolo Gara <span className="text-destructive">*</span>
+                Titolo Tappa <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="title"

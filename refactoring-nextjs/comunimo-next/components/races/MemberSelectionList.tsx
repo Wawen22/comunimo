@@ -22,15 +22,13 @@ export default function MemberSelectionList({
   alreadyRegisteredIds = [],
 }: MemberSelectionListProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterOrg, setFilterOrg] = useState<'all' | 'FIDAL' | 'UISP'>('all');
 
-  // Filter members by search query and organization
+  // Filter members by search query only
   const filteredMembers = members.filter((member) => {
     const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
     const query = searchQuery.toLowerCase();
     const matchesSearch = fullName.includes(query) || member.fiscal_code?.toLowerCase().includes(query);
-    const matchesOrg = filterOrg === 'all' || member.organization === filterOrg;
-    return matchesSearch && matchesOrg;
+    return matchesSearch;
   });
 
   const handleToggleMember = (memberId: string) => {
@@ -72,40 +70,15 @@ export default function MemberSelectionList({
 
   return (
     <div className="space-y-4">
-      {/* Search and Filters */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            placeholder="Cerca atleta per nome o codice fiscale..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant={filterOrg === 'all' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('all')}
-          >
-            Tutti ({members.length})
-          </Button>
-          <Button
-            variant={filterOrg === 'FIDAL' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('FIDAL')}
-          >
-            FIDAL ({members.filter((m) => m.organization === 'FIDAL').length})
-          </Button>
-          <Button
-            variant={filterOrg === 'UISP' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilterOrg('UISP')}
-          >
-            UISP ({members.filter((m) => m.organization === 'UISP').length})
-          </Button>
-        </div>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <Input
+          placeholder="Cerca atleta per nome o codice fiscale..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
       {/* Summary */}
@@ -137,7 +110,7 @@ export default function MemberSelectionList({
         <div className="text-center py-12 border rounded-lg bg-white">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-500">
-            {searchQuery || filterOrg !== 'all'
+            {searchQuery
               ? 'Nessun atleta trovato con questi criteri'
               : 'Nessun atleta disponibile'}
           </p>

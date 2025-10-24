@@ -374,31 +374,72 @@ function generateSlug(name: string): string {
 
 ### Race Detail Page
 
-**Layout**: Header + Tabs
+**Layout**: Modern card-based layout with gradient accents
 
-**Header**:
-- Race title (h1)
+**Header Section** (Gradient background):
+- Race title (h1, large and bold)
 - Race number badge (e.g., "Tappa 1")
-- Championship name (link)
-- Status badge
+- Championship name with icon (if part of championship)
+- Status badge with color coding
+- Back to Championship button
 - Edit/Delete buttons (admin only)
 
-**Tabs**:
-1. **Info**:
-   - Description
-   - Date & Time
-   - Location
-   - Poster (if available)
-   - Registration dates
-   - Max participants
-   
-2. **Registrations** (future):
-   - List of registered athletes
-   - Statistics by society, category, organization
-   
-3. **Results** (future):
-   - Link to results_url
-   - Results table (if implemented)
+**Main Info Card**:
+1. **Description Section**:
+   - Full race description with proper formatting
+
+2. **Date & Location** (Gradient cards):
+   - Date card (orange gradient):
+     - Event date with calendar icon
+     - Event time with clock icon
+   - Location card (teal gradient):
+     - Location with map pin icon
+
+3. **Championship Info Section** (if part of championship):
+   - Championship name card (blue gradient)
+   - Total registrations count card (green gradient):
+     - Large number display
+     - "Iscrizioni Totali" label
+   - Available spots card (purple gradient):
+     - Remaining spots / max participants
+     - Only shown if max_participants is set
+
+4. **Registration Period**:
+   - Registration start date
+   - Registration end date
+
+5. **Media & Results**:
+   - Poster link button (with external link icon)
+   - Results link button (with external link icon)
+   - Enhanced styling with shadows
+
+6. **Additional Info**:
+   - Visibility status (Public/Private)
+   - Multiple specialties indicator
+   - Created date
+   - Last modified date
+
+**Registrations CTA Section** (Prominent gradient card):
+- Large icon in circular badge
+- "Gestisci Iscrizioni" heading (h3)
+- Descriptive text explaining the action
+- Large, prominent action button with shadow effects
+- Stats preview (for championship races):
+  - Total registrations
+  - Available spots
+  - Fill percentage
+- Different layouts for:
+  - Championship races → Link to championship registrations
+  - Standalone races → Link to event registrations
+
+**Design Features**:
+- Gradient backgrounds for visual hierarchy
+- Color-coded cards for different information types
+- Large, accessible buttons for primary actions
+- Responsive grid layout (adapts to mobile/desktop)
+- Dark mode support for all gradient cards
+- Consistent spacing and typography
+- Shadow effects for depth and emphasis
 
 **Breadcrumb**: Dashboard > Gare > Campionati > [Championship] > Gare > [Race]
 
