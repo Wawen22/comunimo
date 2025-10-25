@@ -27,7 +27,9 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/toast';
-import { Search, Loader2, UserX, Users } from 'lucide-react';
+import { Search, Loader2, UserX, Users, LayoutGrid, List } from 'lucide-react';
+import { RegistrationCard } from './RegistrationCard';
+import { RegistrationsFilters } from './RegistrationsFilters';
 
 interface ChampionshipRegistrationsListProps {
   championshipId: string;
@@ -45,6 +47,11 @@ export default function ChampionshipRegistrationsList({
   const [registrations, setRegistrations] = useState<ChampionshipRegistrationWithDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOrganizations, setSelectedOrganizations] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [registrationToCancel, setRegistrationToCancel] = useState<string | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   useEffect(() => {
     fetchRegistrations();
@@ -88,19 +95,27 @@ export default function ChampionshipRegistrationsList({
     }
   };
 
-  const handleCancelRegistration = async (registrationId: string) => {
+  const handleCancelRegistration = (registrationId: string) => {
+    setRegistrationToCancel(registrationId);
+  };
+
+  const confirmCancelRegistration = async () => {
+    if (!registrationToCancel) return;
+
     try {
+      setIsCancelling(true);
+
       // Update championship registration status
       const { error: champError } = await supabase
         .from('championship_registrations')
         // @ts-expect-error - Supabase type inference issue
         .update({ status: 'cancelled' })
-        .eq('id', registrationId);
+        .eq('id', registrationToCancel);
 
       if (champError) throw champError;
 
       // Also cancel all event registrations for this member in this championship
-      const registration = registrations.find((r) => r.id === registrationId);
+      const registration = registrations.find((r) => r.id === registrationToCancel);
       if (registration) {
         // Get event IDs for this championship
         const eventsResult = await supabase
@@ -125,6 +140,7 @@ export default function ChampionshipRegistrationsList({
         description: 'L\'iscrizione è stata cancellata con successo.',
       });
 
+      setRegistrationToCancel(null);
       await fetchRegistrations();
       if (onUpdate) onUpdate();
     } catch (error) {
@@ -134,20 +150,33 @@ export default function ChampionshipRegistrationsList({
         description: 'Impossibile cancellare l\'iscrizione. Riprova.',
         variant: 'destructive',
       });
+    } finally {
+      setIsCancelling(false);
     }
   };
 
-  // Filter registrations by search query only
+  // Get available categories
+  const availableCategories = Array.from(new Set(registrations.map(r => r.category).filter(Boolean))) as string[];
+
+  // Filter registrations
   const filteredRegistrations = registrations.filter((reg) => {
     const member = reg.member as any;
     const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
     const query = searchQuery.toLowerCase();
+
     const matchesSearch =
       fullName.includes(query) ||
       reg.bib_number.includes(query) ||
-      member.fiscal_code?.toLowerCase().includes(query);
+      member.fiscal_code?.toLowerCase().includes(query) ||
+      member.membership_number?.toLowerCase().includes(query);
 
-    return matchesSearch;
+    const matchesOrganization = selectedOrganizations.length === 0 ||
+      (reg.organization && selectedOrganizations.includes(reg.organization));
+
+    const matchesCategory = selectedCategories.length === 0 ||
+      (reg.category && selectedCategories.includes(reg.category));
+
+    return matchesSearch && matchesOrganization && matchesCategory;
   });
 
   if (isLoading) {
@@ -160,164 +189,142 @@ export default function ChampionshipRegistrationsList({
 
   return (
     <div className="space-y-6">
-      {/* Search Card */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="p-5">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <Input
-              placeholder="🔍 Cerca per nome, pettorale o codice fiscale..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-11 h-11 border-gray-300 focus:border-blue-500"
+      {/* Header with Filters and View Toggle */}
+      <Card className="border-2 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {/* Title and View Mode Toggle */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Atleti Iscritti
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {filteredRegistrations.length} {filteredRegistrations.length === 1 ? 'atleta' : 'atleti'}
+                  {registrations.length !== filteredRegistrations.length && ` su ${registrations.length} totali`}
+                </p>
+              </div>
+              {filteredRegistrations.length > 0 && (
+                <div className="flex items-center gap-2 bg-gray-50 border-2 border-gray-200 rounded-lg p-1">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className="gap-2"
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                    Card
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="gap-2"
+                  >
+                    <List className="h-4 w-4" />
+                    Lista
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Filters */}
+            <RegistrationsFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedOrganizations={selectedOrganizations}
+              onOrganizationsChange={setSelectedOrganizations}
+              selectedCategories={selectedCategories}
+              onCategoriesChange={setSelectedCategories}
+              availableCategories={availableCategories}
+              totalCount={registrations.length}
+              filteredCount={filteredRegistrations.length}
             />
           </div>
         </CardContent>
       </Card>
 
-      {/* Table */}
-      <Card className="border-0 shadow-md">
-        <CardHeader className="bg-gradient-to-r from-gray-50 to-white border-b">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-xl">Atleti Iscritti</CardTitle>
-              <CardDescription className="mt-1">
-                {filteredRegistrations.length} {filteredRegistrations.length === 1 ? 'atleta' : 'atleti'}
-                {searchQuery && ' trovati'}
-              </CardDescription>
-            </div>
-            {filteredRegistrations.length > 0 && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Users className="h-4 w-4" />
-                <span className="font-medium">{filteredRegistrations.length}</span>
+      {/* Registrations Display */}
+      {filteredRegistrations.length === 0 ? (
+        <Card className="border-2 border-dashed border-gray-300">
+          <CardContent className="text-center py-16 px-4">
+            <div className="max-w-sm mx-auto">
+              <div className="h-20 w-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-10 w-10 text-gray-400" />
               </div>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          {filteredRegistrations.length === 0 ? (
-            <div className="text-center py-16 px-4">
-              <div className="max-w-sm mx-auto">
-                <div className="h-20 w-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-10 w-10 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {searchQuery ? 'Nessun risultato' : 'Nessun atleta iscritto'}
-                </h3>
-                <p className="text-gray-500 text-sm">
-                  {searchQuery
-                    ? 'Prova a modificare la ricerca'
-                    : 'Non ci sono ancora atleti iscritti a questo campionato'}
-                </p>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {searchQuery || selectedOrganizations.length > 0 || selectedCategories.length > 0
+                  ? 'Nessun risultato'
+                  : 'Nessun atleta iscritto'}
+              </h3>
+              <p className="text-gray-500 text-sm">
+                {searchQuery || selectedOrganizations.length > 0 || selectedCategories.length > 0
+                  ? 'Prova a modificare i filtri di ricerca'
+                  : 'Non ci sono ancora atleti iscritti a questo campionato'}
+              </p>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="font-semibold text-gray-700">Pettorale</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Atleta</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Data Nascita</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Organizzazione</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Categoria</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Tessera</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Società</TableHead>
-                  <TableHead className="text-right font-semibold text-gray-700">Azioni</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredRegistrations.map((reg) => {
-                  const member = reg.member as any;
-                  const society = reg.society as any;
+          </CardContent>
+        </Card>
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredRegistrations.map((reg) => (
+            <RegistrationCard
+              key={reg.id}
+              registration={reg}
+              onCancel={handleCancelRegistration}
+              showActions={true}
+            />
+          ))}
+        </div>
+      ) : (
+        <Card className="border-2 shadow-md">
+          <CardContent className="p-0">
+            <div className="space-y-2 p-4">
+              {filteredRegistrations.map((reg) => (
+                <RegistrationCard
+                  key={reg.id}
+                  registration={reg}
+                  onCancel={handleCancelRegistration}
+                  showActions={true}
+                  compact={true}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-                  return (
-                    <TableRow key={reg.id} className="hover:bg-gray-50 transition-colors">
-                      <TableCell>
-                        <div className="inline-flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm min-w-[50px] font-mono">
-                          {reg.bib_number}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-semibold text-gray-900">
-                          {member.first_name} {member.last_name}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-0.5 font-mono">
-                          {member.fiscal_code || '-'}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-700">
-                        {member.birth_date
-                          ? new Date(member.birth_date).toLocaleDateString('it-IT')
-                          : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          className={
-                            reg.organization === 'FIDAL'
-                              ? 'border-green-500 text-green-700 bg-green-50'
-                              : reg.organization === 'UISP'
-                              ? 'border-purple-500 text-purple-700 bg-purple-50'
-                              : 'border-gray-300 text-gray-700 bg-gray-50'
-                          }
-                          variant="outline"
-                        >
-                          {reg.organization || 'N/A'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-700 font-medium">
-                        {reg.category || '-'}
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600 font-mono">
-                        {member.membership_number || '-'}
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        <div className="font-medium text-gray-900">{society?.name || '-'}</div>
-                        {society?.society_code && (
-                          <div className="text-xs text-gray-500 font-mono mt-0.5">{society.society_code}</div>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
-                              <UserX className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Cancellare iscrizione?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Questa azione cancellerà l&apos;iscrizione di{' '}
-                                <strong>
-                                  {member.first_name} {member.last_name}
-                                </strong>{' '}
-                                da tutte le tappe del campionato.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annulla</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleCancelRegistration(reg.id)}
-                              >
-                                Cancella Iscrizione
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Cancel Registration Dialog */}
+      <AlertDialog open={!!registrationToCancel} onOpenChange={() => setRegistrationToCancel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Conferma Annullamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sei sicuro di voler annullare questa iscrizione? L'azione non può essere annullata.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (registrationToCancel) {
+                  confirmCancelRegistration();
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isCancelling ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Annullamento...
+                </>
+              ) : (
+                'Conferma Annullamento'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
-

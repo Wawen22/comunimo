@@ -170,3 +170,47 @@ export function DropdownMenuLabel({ children, className }: DropdownMenuLabelProp
   );
 }
 
+interface DropdownMenuCheckboxItemProps {
+  children: React.ReactNode;
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  className?: string;
+}
+
+export function DropdownMenuCheckboxItem({
+  children,
+  checked = false,
+  onCheckedChange,
+  className,
+}: DropdownMenuCheckboxItemProps) {
+  const handleClick = () => {
+    onCheckedChange?.(!checked);
+  };
+
+  return (
+    <div
+      className={cn(
+        'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100',
+        className
+      )}
+      onClick={handleClick}
+    >
+      <div className="mr-2 flex h-4 w-4 items-center justify-center rounded border border-gray-300">
+        {checked && (
+          <svg
+            className="h-3 w-3 text-brand-blue"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}

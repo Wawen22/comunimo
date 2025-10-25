@@ -3,18 +3,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import { EventRegistrationWithDetails } from '@/types/database';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +16,9 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/toast';
-import { Search, Loader2, UserX, Users, Hash, Download } from 'lucide-react';
+import { Loader2, Users, LayoutGrid, List } from 'lucide-react';
+import { RegistrationCard } from './RegistrationCard';
+import { RegistrationsFilters } from './RegistrationsFilters';
 
 interface EventRegistrationsListProps {
   eventId: string;
@@ -44,8 +36,9 @@ export default function EventRegistrationsList({
   const [registrations, setRegistrations] = useState<EventRegistrationWithDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterOrg, setFilterOrg] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [selectedOrganizations, setSelectedOrganizations] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [registrationToCancel, setRegistrationToCancel] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
@@ -100,6 +93,10 @@ export default function EventRegistrationsList({
     }
   };
 
+  const handleCancelClick = (registrationId: string) => {
+    setRegistrationToCancel(registrationId);
+  };
+
   const handleCancelRegistration = async (registrationId: string) => {
     try {
       setIsCancelling(true);
@@ -142,85 +139,33 @@ export default function EventRegistrationsList({
     }
   };
 
-  const handleExportCSV = () => {
-    // Prepare CSV data
-    const headers = [
-      'Pettorale',
-      'Cognome',
-      'Nome',
-      'Società',
-      'Organizzazione',
-      'Categoria',
-      'Stato',
-    ];
+  // Get available categories
+  const availableCategories = Array.from(new Set(registrations.map(r => r.category).filter(Boolean))) as string[];
 
-    const rows = filteredRegistrations.map((reg) => [
-      reg.bib_number || '',
-      reg.member.last_name,
-      reg.member.first_name,
-      reg.society?.name || '',
-      reg.organization || '',
-      reg.category || '',
-      reg.status,
-    ]);
+  // Filter registrations - only show confirmed
+  const confirmedRegistrations = registrations.filter(r => r.status === 'confirmed');
 
-    // Create CSV content
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
-    ].join('\n');
-
-    // Add UTF-8 BOM for Excel compatibility
-    const BOM = '\uFEFF';
-    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    // Download file
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `iscrizioni_gara_${eventId}_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    toast({
-      title: 'Successo',
-      description: 'Export CSV completato',
-    });
-  };
-
-  // Filter registrations
-  const filteredRegistrations = registrations.filter((reg) => {
+  const filteredRegistrations = confirmedRegistrations.filter((reg) => {
     // Search filter
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch =
       !searchQuery ||
       reg.member.first_name.toLowerCase().includes(searchLower) ||
       reg.member.last_name.toLowerCase().includes(searchLower) ||
+      reg.member.fiscal_code?.toLowerCase().includes(searchLower) ||
+      reg.member.membership_number?.toLowerCase().includes(searchLower) ||
       reg.bib_number?.toLowerCase().includes(searchLower);
 
     // Organization filter
-    const matchesOrg = filterOrg === 'all' || reg.organization === filterOrg;
+    const matchesOrganization = selectedOrganizations.length === 0 ||
+      (reg.organization && selectedOrganizations.includes(reg.organization));
 
-    // Status filter
-    const matchesStatus = filterStatus === 'all' || reg.status === filterStatus;
+    // Category filter
+    const matchesCategory = selectedCategories.length === 0 ||
+      (reg.category && selectedCategories.includes(reg.category));
 
-    return matchesSearch && matchesOrg && matchesStatus;
+    return matchesSearch && matchesOrganization && matchesCategory;
   });
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-        return <Badge variant="default">Confermata</Badge>;
-      case 'pending':
-        return <Badge variant="secondary">In Attesa</Badge>;
-      case 'cancelled':
-        return <Badge variant="destructive">Annullata</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
 
   if (isLoading) {
     return (
@@ -232,200 +177,129 @@ export default function EventRegistrationsList({
 
   return (
     <div className="space-y-6">
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Totale Iscritti
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-blue-600" />
-              <span className="text-2xl font-bold">
-                {registrations.filter((r) => r.status !== 'cancelled').length}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              FIDAL
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {registrations.filter((r) => r.organization === 'FIDAL' && r.status !== 'cancelled').length}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              UISP
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {registrations.filter((r) => r.organization === 'UISP' && r.status !== 'cancelled').length}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Iscrizioni</CardTitle>
-          <CardDescription>
-            Lista degli atleti iscritti alla gara
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Cerca per nome o pettorale..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+      {/* Header with Filters and View Toggle */}
+      <Card className="border-2 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {/* Title and View Mode Toggle */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Atleti Iscritti
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {filteredRegistrations.length} {filteredRegistrations.length === 1 ? 'atleta' : 'atleti'}
+                  {confirmedRegistrations.length !== filteredRegistrations.length && ` su ${confirmedRegistrations.length} totali`}
+                </p>
               </div>
+              {filteredRegistrations.length > 0 && (
+                <div className="flex items-center gap-2 bg-gray-50 border-2 border-gray-200 rounded-lg p-1">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className="gap-2"
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                    Card
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="gap-2"
+                  >
+                    <List className="h-4 w-4" />
+                    Lista
+                  </Button>
+                </div>
+              )}
             </div>
-            <div className="flex gap-2">
-              <select
-                value={filterOrg}
-                onChange={(e) => setFilterOrg(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">Tutte le organizzazioni</option>
-                <option value="FIDAL">FIDAL</option>
-                <option value="UISP">UISP</option>
-              </select>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">Tutti gli stati</option>
-                <option value="confirmed">Confermata</option>
-                <option value="pending">In Attesa</option>
-                <option value="cancelled">Annullata</option>
-              </select>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExportCSV}
-                disabled={filteredRegistrations.length === 0}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Esporta CSV
-              </Button>
-            </div>
-          </div>
 
-          {/* Table */}
-          {filteredRegistrations.length === 0 ? (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">Nessuna iscrizione trovata</p>
-            </div>
-          ) : (
-            <div className="border rounded-lg overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-24">Pettorale</TableHead>
-                    <TableHead>Atleta</TableHead>
-                    <TableHead>Data Nascita</TableHead>
-                    <TableHead>Org.</TableHead>
-                    <TableHead>Categoria</TableHead>
-                    <TableHead>Tessera</TableHead>
-                    <TableHead>Società</TableHead>
-                    <TableHead>Stato</TableHead>
-                    <TableHead className="text-right">Azioni</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredRegistrations.map((registration) => (
-                    <TableRow key={registration.id}>
-                      <TableCell className="font-mono font-semibold">
-                        {registration.bib_number || '-'}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">
-                          {registration.member.first_name} {registration.member.last_name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {registration.member.fiscal_code || '-'}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {registration.member.birth_date
-                          ? new Date(registration.member.birth_date).toLocaleDateString('it-IT')
-                          : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{registration.organization || '-'}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {registration.category || '-'}
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {registration.member.membership_number || '-'}
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {registration.society?.name || '-'}
-                        {registration.society?.society_code && (
-                          <span className="text-gray-400"> ({registration.society.society_code})</span>
-                        )}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(registration.status)}</TableCell>
-                      <TableCell className="text-right">
-                        {registration.status !== 'cancelled' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setRegistrationToCancel(registration.id)}
-                          >
-                            <UserX className="h-4 w-4 mr-2" />
-                            Annulla
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+            {/* Filters */}
+            <RegistrationsFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedOrganizations={selectedOrganizations}
+              onOrganizationsChange={setSelectedOrganizations}
+              selectedCategories={selectedCategories}
+              onCategoriesChange={setSelectedCategories}
+              availableCategories={availableCategories}
+              totalCount={confirmedRegistrations.length}
+              filteredCount={filteredRegistrations.length}
+            />
+          </div>
         </CardContent>
       </Card>
 
-      {/* Cancel Confirmation Dialog */}
-      <AlertDialog
-        open={!!registrationToCancel}
-        onOpenChange={(open) => !open && setRegistrationToCancel(null)}
-      >
+      {/* Registrations Display */}
+      {filteredRegistrations.length === 0 ? (
+        <Card className="border-2 border-dashed border-gray-300">
+          <CardContent className="text-center py-16 px-4">
+            <div className="max-w-sm mx-auto">
+              <div className="h-20 w-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-10 w-10 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {searchQuery || selectedOrganizations.length > 0 || selectedCategories.length > 0
+                  ? 'Nessun risultato'
+                  : 'Nessun atleta iscritto'}
+              </h3>
+              <p className="text-gray-500 text-sm">
+                {searchQuery || selectedOrganizations.length > 0 || selectedCategories.length > 0
+                  ? 'Prova a modificare i filtri di ricerca'
+                  : 'Non ci sono ancora atleti iscritti a questo evento'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredRegistrations.map((reg) => (
+            <RegistrationCard
+              key={reg.id}
+              registration={reg}
+              onCancel={handleCancelClick}
+              showActions={true}
+            />
+          ))}
+        </div>
+      ) : (
+        <Card className="border-2 shadow-md">
+          <CardContent className="p-0">
+            <div className="space-y-2 p-4">
+              {filteredRegistrations.map((reg) => (
+                <RegistrationCard
+                  key={reg.id}
+                  registration={reg}
+                  onCancel={handleCancelClick}
+                  showActions={true}
+                  compact={true}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Cancel Registration Dialog */}
+      <AlertDialog open={!!registrationToCancel} onOpenChange={() => setRegistrationToCancel(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Conferma Annullamento</AlertDialogTitle>
             <AlertDialogDescription>
-              Sei sicuro di voler annullare questa iscrizione? L'azione può essere annullata.
+              Sei sicuro di voler annullare questa iscrizione? L'azione non può essere annullata.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isCancelling}>Annulla</AlertDialogCancel>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => registrationToCancel && handleCancelRegistration(registrationToCancel)}
-              disabled={isCancelling}
+              onClick={() => {
+                if (registrationToCancel) {
+                  handleCancelRegistration(registrationToCancel);
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
             >
               {isCancelling ? (
                 <>
@@ -433,7 +307,7 @@ export default function EventRegistrationsList({
                   Annullamento...
                 </>
               ) : (
-                'Conferma'
+                'Conferma Annullamento'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -442,4 +316,3 @@ export default function EventRegistrationsList({
     </div>
   );
 }
-

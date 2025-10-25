@@ -13,6 +13,7 @@ import { useIsAdmin } from '@/lib/hooks/useUser';
 import { ArrowLeft, Edit, Trash2, Plus, Calendar, MapPin, Users, Trophy, Flag, UserPlus, Clock } from 'lucide-react';
 import { DeleteChampionshipDialog } from './DeleteChampionshipDialog';
 import { getRaceStatus, getStatusColor, getStatusLabel } from '@/lib/utils/raceUtils';
+import { RaceTimeline } from './RaceTimeline';
 
 interface ChampionshipWithRaces extends Championship {
   races: Event[];
@@ -32,6 +33,7 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [registrationsCount, setRegistrationsCount] = useState<number>(0);
+  const [raceRegistrationCounts, setRaceRegistrationCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     fetchChampionship();
@@ -69,6 +71,23 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
         .eq('status', 'confirmed');
 
       setRegistrationsCount(regCount || 0);
+
+      // Fetch registration counts for each race
+      if (racesData && racesData.length > 0) {
+        const raceIds = racesData.map(race => race.id);
+        const { data: eventRegistrations } = await supabase
+          .from('event_registrations')
+          .select('event_id')
+          .in('event_id', raceIds)
+          .eq('status', 'confirmed');
+
+        // Count registrations per race
+        const counts: Record<string, number> = {};
+        eventRegistrations?.forEach(reg => {
+          counts[reg.event_id] = (counts[reg.event_id] || 0) + 1;
+        });
+        setRaceRegistrationCounts(counts);
+      }
 
       if (championshipData) {
         setChampionship({
@@ -273,50 +292,30 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
         </CardContent>
       </Card>
 
-      {/* Registrations CTA */}
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5">
-        <CardContent className="pt-6">
-          <div className="text-center space-y-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
-              <Users className="h-8 w-8 text-primary" />
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold">Gestisci Iscrizioni</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Gestisci tutte le iscrizioni degli atleti al campionato <strong>{championship.name}</strong>.
-                Visualizza, modifica e organizza i partecipanti.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-2">
-              <Link href={`/dashboard/races/championships/${championship.id}/registrations`}>
-                <Button size="lg" className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all">
-                  <UserPlus className="h-5 w-5 mr-2" />
-                  Vai alle Iscrizioni
-                </Button>
-              </Link>
-            </div>
-
-            {/* Stats Preview */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{registrationsCount}</div>
-                <div className="text-xs text-muted-foreground">Iscritti Totali</div>
+      {/* Registrations CTA - Compact */}
+      <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Left: Icon + Title */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
+                <Users className="h-6 w-6 text-primary" />
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{championship.race_count}</div>
-                <div className="text-xs text-muted-foreground">Tappe del Campionato</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {championship.race_count > 0
-                    ? Math.round(registrationsCount / championship.race_count)
-                    : 0}
-                </div>
-                <div className="text-xs text-muted-foreground">Media Iscritti/Tappa</div>
+              <div>
+                <h3 className="text-lg font-bold">Gestisci Iscrizioni</h3>
+                <p className="text-sm text-muted-foreground">
+                  {registrationsCount} {registrationsCount === 1 ? 'iscritto' : 'iscritti'} • {championship.race_count} {championship.race_count === 1 ? 'tappa' : 'tappe'}
+                </p>
               </div>
             </div>
+
+            {/* Right: Action Button */}
+            <Link href={`/dashboard/races/championships/${championship.id}/registrations`}>
+              <Button size="default" className="shadow-md hover:shadow-lg transition-all">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Vai alle Iscrizioni
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
@@ -366,55 +365,11 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
               )}
             </div>
           ) : (
-            <div className="space-y-3">
-              {championship.races.map((race) => {
-                const status = getRaceStatus(race);
-                return (
-                  <Link
-                    key={race.id}
-                    href={`/dashboard/races/championships/${championship.id}/races/${race.id}`}
-                  >
-                    <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer group">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            {race.event_number && (
-                              <Badge variant="outline" className="font-semibold">
-                                Tappa {race.event_number}
-                              </Badge>
-                            )}
-                            <Badge className={getStatusColor(status)}>
-                              {getStatusLabel(status)}
-                            </Badge>
-                          </div>
-                          <h4 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                            {race.title}
-                          </h4>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {formatDate(race.event_date)}
-                            </span>
-                            {race.event_time && (
-                              <span className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
-                                {race.event_time}
-                              </span>
-                            )}
-                            {race.location && (
-                              <span className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                {race.location}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            <RaceTimeline
+              races={championship.races}
+              championshipId={championship.id}
+              registrationCounts={raceRegistrationCounts}
+            />
           )}
         </CardContent>
       </Card>
