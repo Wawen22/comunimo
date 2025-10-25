@@ -1,41 +1,72 @@
+'use client';
+
+import { HeroSection } from '@/components/landing/HeroSection';
+import { NextEventSection } from '@/components/landing/NextEventSection';
+import { CalendarSection } from '@/components/landing/CalendarSection';
+import { RankingsSection } from '@/components/landing/RankingsSection';
+import { LandingFooter } from '@/components/landing/LandingFooter';
+import { ScrollProgress } from '@/components/landing/ScrollProgress';
+import { ScrollToTop } from '@/components/landing/ScrollToTop';
+import { useLandingData } from '@/lib/hooks/useLandingData';
+
+/**
+ * Landing page - Public-facing homepage
+ * Displays championship information, registration status, calendar, and rankings
+ */
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
-        <h1 className="text-4xl font-bold text-center mb-8 text-brand-blue-dark">
-          ComUniMo - Comitato Unitario Modena
-        </h1>
-        <p className="text-center text-lg text-muted-foreground">
-          Sistema di gestione modernizzato con Next.js 14 + Supabase
-        </p>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-6 border rounded-lg bg-card">
-            <h2 className="text-xl font-semibold mb-2 text-brand-blue">
-              Next.js 14
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              App Router con Server Components
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg bg-card">
-            <h2 className="text-xl font-semibold mb-2 text-brand-blue">
-              TypeScript
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Type safety completa
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg bg-card">
-            <h2 className="text-xl font-semibold mb-2 text-brand-blue">
-              Tailwind CSS
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Design system moderno
-            </p>
-          </div>
+  const { championship, stages, registrationStatus, loading, error } = useLandingData();
+
+  // Error state
+  if (error && !loading) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-destructive">
+            Errore nel caricamento dei dati
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            Si è verificato un errore. Riprova più tardi.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 rounded-lg bg-brand-blue px-6 py-2 text-white hover:bg-brand-blue/90"
+          >
+            Ricarica la pagina
+          </button>
         </div>
-      </div>
-    </main>
+      </main>
+    );
+  }
+
+  return (
+    <>
+      {/* Scroll Progress Indicator */}
+      <ScrollProgress />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <HeroSection
+          championship={championship}
+          registrationStatus={registrationStatus}
+          loading={loading}
+        />
+
+        {/* Next Event Section */}
+        <NextEventSection events={stages} loading={loading} />
+
+        {/* Calendar Section */}
+        <CalendarSection stages={stages} loading={loading} />
+
+        {/* Rankings Section */}
+        <RankingsSection />
+
+        {/* Footer */}
+        <LandingFooter />
+      </main>
+    </>
   );
 }
 
