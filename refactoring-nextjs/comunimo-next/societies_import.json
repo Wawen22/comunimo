@@ -1,0 +1,5896 @@
+[
+  {
+    "society_code": "A010019",
+    "name": "Uisp Comitato Terr.le Alessandria-asti",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A012039",
+    "name": "A.s.d.g.s Centro Down Asti",
+    "province": "AT",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A012044",
+    "name": "A.s.d.gate-cral Inps",
+    "province": "AT",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A017064",
+    "name": "Asd Pol.ticineto",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A017154",
+    "name": "G.s. Vallemme",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A017193",
+    "name": "Asd Black & White",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018067",
+    "name": "A.s.d. Gli Orsi",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018082",
+    "name": "A.s.d. Azalai",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018083",
+    "name": "Asd Ciclo Amateurs Gavi",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018142",
+    "name": "Gruppo Podistico Dilett. Cartotecnica Piem.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018143",
+    "name": "Ass.pol.dil. Clf Cuccarese",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018152",
+    "name": "A.s.d. Voltaggio",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018195",
+    "name": "Nonsolobiketortona A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018234",
+    "name": "\"\"\"\"\"\"\"acquirunners\"\"\"\" A.s.d.\"\"\"",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018237",
+    "name": "G.p. Solvay  A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018252",
+    "name": "Maratoneti Capriatesi A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018272",
+    "name": "A.s.d. Sange Running",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018278",
+    "name": "A.s.d. Frecce Bianche Triathlon",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018289",
+    "name": "Atletica Novese",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018306",
+    "name": "Pol. La Fenice A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018363",
+    "name": "Assoc. Fubinesiamo",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018370",
+    "name": "A.p.s. La Fenice A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A018642",
+    "name": "A.s.d. A.t.a. ",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A019007",
+    "name": "Asd Bio Correndo Avis",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A019010",
+    "name": "Enjoy The Trail A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A019044",
+    "name": "Nordic Walking Colli Tortonesi Asd",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A019045",
+    "name": "Circolo Lunassese",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A019068",
+    "name": "Made Of A.s.d.",
+    "province": "AL",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040019",
+    "name": "Uisp Comitato Terr.le Novara",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040155",
+    "name": "Alcarotti  S.s.d. ",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040188",
+    "name": "A.s.d. Sportcity Galliate",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040194",
+    "name": "A.s.d. Compagnia Delle Acque Correnti ",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040209",
+    "name": "A.s.d. Podismo Avis Novara",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040232",
+    "name": "A.s.d. Deejay Running",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A040337",
+    "name": "Centro Sportivo Alcarotti A.s.d.",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050019",
+    "name": "Uisp Comitato Terr.le Torino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050125",
+    "name": "A.r.c. E S. Jolly 38 A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050135",
+    "name": "A.s.d. Nichelino Hesperia",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050171",
+    "name": "A.s.d. Associazione Freestyle Torino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050172",
+    "name": "A.s.d. G.p. A.t.p. Torino ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050185",
+    "name": "A.s.d. Centrocampo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050277",
+    "name": "Michelin Sport Club A.s.d. Torino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050293",
+    "name": "Cral Gruppo Reale Mutua Assicurazioni A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050294",
+    "name": "A.s.d. Giordana Lombardi",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050324",
+    "name": "C.c.r.s. Alpini Trofarello A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050329",
+    "name": "A.s.d. Speranza",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050376",
+    "name": "A.s.d. Sporting Team",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050386",
+    "name": "C.r.a.l. A.m.i.a.t. A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050408",
+    "name": "A.s.d. Gruppo Sportivo Interforze - Torino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050411",
+    "name": "A.s.d. Compagnia Del Pomo E Della Punta",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050423",
+    "name": "Cral G.t.t.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050452",
+    "name": "A.p.d. Filadelfia Moncalieri",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050519",
+    "name": "Gym Fizz",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050567",
+    "name": "Circolo Ricreativo Dipendenti Provinciali",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050668",
+    "name": "Dai Mon Dojo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050797",
+    "name": "A.m.e.c.e.  - Club Ajal A.p.s.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050821",
+    "name": "A.s.d.c. Gatto Nero",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050874",
+    "name": "A.s.d. Circuit Training - Giannone Running",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A050990",
+    "name": "Sisport S.p.a. S.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051289",
+    "name": "Rana Runner Villastellone A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051322",
+    "name": "Gli Amici Di Giovanni Onlus",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051325",
+    "name": "Camminarte A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051334",
+    "name": "Asd Babyrun 2013",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051343",
+    "name": "A.s.d. Tapporosso",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051347",
+    "name": "Power Sport Torino Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051360",
+    "name": "A.s.d. Fiamma Azzurra",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051372",
+    "name": "A.p.d. New Moncalieri Basket",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051410",
+    "name": "A.s.d. G.s. Atl. Nichelino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051411",
+    "name": "Podistica Vinovo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051415",
+    "name": "Associazione Culturale Amici",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051443",
+    "name": "A.s.d. Admo Ppr Running",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051455",
+    "name": "Apnea Tavolara A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051467",
+    "name": "A.s.d.c Atletica Balon",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051501",
+    "name": "A.s.d. Superunners Team",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051509",
+    "name": "G.a.bessanese  A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051510",
+    "name": "A.s.d. Next 42,195",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051522",
+    "name": "A.s.d. Polisportiva Montagnard Stura Valley",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051526",
+    "name": "A.s.d. Polisportiva Dynamica Vallette",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051551",
+    "name": "A.s.d. + Sport 8",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051566",
+    "name": "Ronchiverdi S.s.d. A. R.l.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051580",
+    "name": "A.s.d. Podistica Torino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051582",
+    "name": "Freesport Moncalieri",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051590",
+    "name": "A.s.d. Autismo E Sport Onlus",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051599",
+    "name": "Runnerpillar Team A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051629",
+    "name": "Auxilium Valdocco A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051644",
+    "name": "In Motus A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051646",
+    "name": "A.v.i.s. Nichelino",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051649",
+    "name": "Base Running A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051654",
+    "name": "A.s.d. Granbike Velo Club",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051659",
+    "name": "A.s.d. Girasole Sportivo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051666",
+    "name": "Body Lab Training A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051672",
+    "name": "Kappadue A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A051691",
+    "name": "Cascina Nonna Mariuccia A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060019",
+    "name": "Uisp Comitato Terr.le Vercelli",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060127",
+    "name": "G. P. D. Borgovercelli",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060128",
+    "name": "A. S. D. Gruppo Podistico Trinese",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060132",
+    "name": "A.s.d. Sport E Salute",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060155",
+    "name": "A.s.d. Polisportiva Moncrivellese",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060164",
+    "name": "Meraviglia A.s.d.",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060165",
+    "name": "Gymnasium Academy S.s.d.",
+    "province": "NO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060169",
+    "name": "Archimede Idee In Movimento A.s.d.",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060173",
+    "name": "A.s.d. Giugla Jym",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060177",
+    "name": "A.s.d. Atletica Vercelli 78",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060178",
+    "name": "M&c Multisport School A.s.d.",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060185",
+    "name": "A.s.d. Sport Cultura E Vita",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060186",
+    "name": "A.s.d. Sesia Running",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A060187",
+    "name": "A.s.d. Gruppo Podistico Alicese",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A070019",
+    "name": "Uisp Comitato Terr.le Verbano-cusio-ossola",
+    "province": "VB",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A070144",
+    "name": "Sport Training A.s.d.",
+    "province": "VB",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A070148",
+    "name": "Asd Motty Team Bike",
+    "province": "VB",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A070151",
+    "name": "Trilake A.s.d.",
+    "province": "VB",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090019",
+    "name": "Uisp Comitato Terr.le Biella",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090205",
+    "name": "Asd Polisportiva Roasio",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090309",
+    "name": "S.s.d. Arcobaleno",
+    "province": "VC",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090319",
+    "name": "Asd Sport & Natura ",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090352",
+    "name": "Asd Mountain Motion",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090353",
+    "name": "Shark Italia Asd",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090358",
+    "name": "Asd Esprit Fitness Biella",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090368",
+    "name": "Atletica Candelo Asd",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090369",
+    "name": "Sportyvita Asd ",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090371",
+    "name": "Winter Brich Valdengo Asd",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A090372",
+    "name": "Gs Donato Asd",
+    "province": "BI",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120118",
+    "name": "A.s.d. E Culturale Nuova Europa",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120138",
+    "name": "Atletica Venturoli",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120166",
+    "name": "A.s.d. Polisp. Pedaggio Castiglione T.se",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120183",
+    "name": "Polisportiva Uisp River Borgaro",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120191",
+    "name": "Tennis Club Le Piramidi",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120279",
+    "name": "A.s.d. Filmar",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120361",
+    "name": "Lilliput Pallavolo S.s.d. A R.l.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120370",
+    "name": "U.s. Atletica Cafasse",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120494",
+    "name": "A.s.d. Atletica Settimese ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120574",
+    "name": "Fitime A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120595",
+    "name": "A.s.d. Nordic Walking Volpiano",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A12059501",
+    "name": "A.s.d. Nordic Walking Volpiano",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120641",
+    "name": "A.s.d. Atletica Morenica",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120653",
+    "name": "A.s.d. Olimpiatletica",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120682",
+    "name": "A.s.d. Equilibra Running Team",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120685",
+    "name": "A.s.d. Valli Di Lanzo Sport",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120688",
+    "name": "A.s.d. Polisportiva Valmalone",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120691",
+    "name": "I Corridoi Mandria A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120697",
+    "name": "In Ricordo Di Enzo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120723",
+    "name": "A.s.d. Settimo Chilometro",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120724",
+    "name": "C.r.a.l. Polo Ind.le Pirelli",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120728",
+    "name": "A.s. New Nordic Walking",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120733",
+    "name": "Ass. La Rondine Bianca",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A120747",
+    "name": "A.s.d. Bertolo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130019",
+    "name": "Uisp Comitato Terr.le Valle Susa",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130031",
+    "name": "Pol. Dil. Atlavir",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130033",
+    "name": "A.s.d. Susa Bike",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130050",
+    "name": "Asd Sm Taurus Nuoto",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130052",
+    "name": "A.s.d. Podistica Degli Amici Pianezza",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130056",
+    "name": "Valsusa Running Team Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130058",
+    "name": "A.s.d. Caprie Verticale",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130071",
+    "name": "Freemount A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130083",
+    "name": "Podistica Bussoleno Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130088",
+    "name": "Original Gram Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130098",
+    "name": "Unione Sportgioco Cultura  A.s.d",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130100",
+    "name": "A.s.d. Restate In Movimento  ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130107",
+    "name": "Pol. Dil. Olimpica Grugliasco",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130115",
+    "name": "Viandanti Sportivi Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130207",
+    "name": "C.lo Ricr. Cult. Assist. Chianocco",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130283",
+    "name": "A.s.d.pol. Venaria",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130347",
+    "name": "A.s.d. Moncenisio",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130534",
+    "name": "A.s.d. Atletica Venaria Reale",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130537",
+    "name": "A.s.d Azzurra Sport",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130567",
+    "name": "Club Gio 22 Rivera",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130572",
+    "name": "A.s.d. Cuori Sportivi Ets",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130579",
+    "name": "A.p.d. Sportinsieme Val Della Torre",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130588",
+    "name": "\"\"\"\"\"\"\"a. Rocci\"\"\"\" Asd Pol Villarfocchiardo\"\"\"",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130601",
+    "name": "Asd G.s. Orsiera",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130609",
+    "name": "G.s. Atletica Rivoli Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130646",
+    "name": "A.s.d. Doratletica",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130705",
+    "name": "A.s.d. Oasi Laura Vicuna ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130746",
+    "name": "A.s.d.  U.s. San Michele",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130747",
+    "name": "G.s.p.t. 75",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130748",
+    "name": "\"\"\"Asd Atletica \"\"\"\"la Certosa\"\"\"\"\"\"\"",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130753",
+    "name": "A.s.d. To 021",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130757",
+    "name": "A.s.d. Oulx Trailers - Sport E Montagna",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130797",
+    "name": "Gli Orchi Trailers Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130798",
+    "name": "Tiger Sport Running Team Asd",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A130801",
+    "name": "Comitato Di Quartiere Belvedere",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140019",
+    "name": "Uisp Comitato Terr.le Ivrea - Canavese",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140188",
+    "name": "A.s.d. Sci Fondo Eporedia",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140340",
+    "name": "A.s.d. Podistica Dora Baltea",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140358",
+    "name": "Pol. Dil. Bairese ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140403",
+    "name": "A.s.d. Samone",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140406",
+    "name": "A.s.d. G. S. Avis Ivrea",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140423",
+    "name": "A.s.d. Nordic Walking Andrate ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140466",
+    "name": "A.s.d. Atletica Monterosa Arnad Mauro E Giuseppe Fogu ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140467",
+    "name": "A.p.d. Pont Saint Martin",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140468",
+    "name": "A.s.d. Podistica Valchiusella",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140475",
+    "name": "A.s.d. Pan & Sport",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140476",
+    "name": "A.s.d. Campo Canavese",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140509",
+    "name": "\"\"\"A.s.d. Libertas Forno \"\"\"\"sergio Benetti\"\"\"\"\"\"\"",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140513",
+    "name": "A.s.d. Mandala Trail",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140528",
+    "name": "A.s.d. Castlerun",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140529",
+    "name": "A.s.d. Pont Donnas Atletica",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140534",
+    "name": "Comitato Organizzatore Eporedia Active Days",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140536",
+    "name": "A.s.d. Sport Rider",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140540",
+    "name": "Canavese Triathlon A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140541",
+    "name": "Durbano Gas Energy Rivarolo 77",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140560",
+    "name": "Sicuramente Montagna A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140562",
+    "name": "Academy Canavese",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140571",
+    "name": "A.c.r.s. Anto",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140575",
+    "name": "A.s.d. Team Peretti",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140576",
+    "name": "A.s.d. Trailaghi",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140577",
+    "name": "Whispers Cafe",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140587",
+    "name": "A.s.d. Gran Paradiso Valleorco",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140588",
+    "name": "Arte E Corpo Associazione Sportiva Dilettantistica",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140589",
+    "name": "G.p.d.  Aldo Berardo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140590",
+    "name": "A.s.d. Area + Sport",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140591",
+    "name": "A.s.d. Sangiustese",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A140592",
+    "name": "A.s.d. Me4me2 Fitwalking",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160019",
+    "name": "Uisp Comitato Terr.le Pinerolo",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160129",
+    "name": "Gruppo Sportivo Pomaretto 80 A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160135",
+    "name": "A.s.d. Pol.  Atletica Pinerolo ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160160",
+    "name": "A.s.d. Podistica None",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160173",
+    "name": "Ass. A. Franzin Val Noce",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160190",
+    "name": "Sport Club Angrogna A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160225",
+    "name": "Athletics Piossasco",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160265",
+    "name": "A.s.d. Gruppo Sportivo Porte",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160276",
+    "name": "A.s.d. Atletica Valpellice",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160279",
+    "name": "A.s.d. G.s. Riv-skf E. Agnelli",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160284",
+    "name": "U. S. San Secondo A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160299",
+    "name": "A.s.d. Semplicemente Cumiana",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160303",
+    "name": "A.s.d. Sport Fun Safety",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160308",
+    "name": "S.d. Baudenasca",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160313",
+    "name": "A. P. D. Bobbiese",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160314",
+    "name": "A. D. Agoda",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160315",
+    "name": "Sport-training-center A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160318",
+    "name": "Passi Liberi A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160323",
+    "name": "A.s.d. Heracle Gym Perosa",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160324",
+    "name": "Associazione Gruppo Amici Santa Margherita A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160325",
+    "name": "A. S. D. Monviso Bike",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160326",
+    "name": "A.s.d. Vigonechecorre",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160327",
+    "name": "Applerun Team A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160328",
+    "name": "A.s.d. Escuriosando Trekking ",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A160334",
+    "name": "Seven - A.s.d.",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180019",
+    "name": "Uisp Comitato Terr.le Bra-cuneo",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180495",
+    "name": "A.s.d. Sport-time",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180647",
+    "name": "A.s.d. W.w.p. Organization",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180685",
+    "name": "A.s.d. Podistica Valle Infernotto",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180720",
+    "name": "Sportification A.s.d.",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180749",
+    "name": "G.s.d. Valtanaro",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180753",
+    "name": "A.s.d. Dynamic Center Valle Belbo",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180780",
+    "name": "A.s.d. Team Marguareis",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180783",
+    "name": " A.s.d. Gruppo Podisti Albesi",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180803",
+    "name": "Running Carmagnola. A.s.d.",
+    "province": "TO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180804",
+    "name": "A.s.d. Boves Run",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "A180805",
+    "name": "A.s.d. Le Mulattiere",
+    "province": "CN",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG051",
+    "name": "A.s.d. Pol. Athlon Ribera",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG052",
+    "name": "A.s. Dil. Pol.agat0cle Sciacca",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG075",
+    "name": "A.s.d.g.s. Valle Dei Templi Ag",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG200",
+    "name": "A.s.d. Marathon Club Sciacca",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG289",
+    "name": "A.s.d. Airone Casteltermini",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG447",
+    "name": "A.s.d. Pro Sport Ravanusa",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG463",
+    "name": "A.s.d. Atletica Canicatti",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG487",
+    "name": "A.s.d. Passione Corsa Ribera",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG489",
+    "name": "Atleticarosamaria",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG495",
+    "name": "Atletica Licata",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG503",
+    "name": "A.s. Dilett. La Tartaruga",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AG644",
+    "name": "A.s. Dilett. Amatori Aragona",
+    "province": "AG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL001",
+    "name": "Atl. Alessandria",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL002",
+    "name": "A.t.a.",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL003",
+    "name": "Derthona Atletica",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL004",
+    "name": "A.s.d. Atl. Serravallese",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL005",
+    "name": "Atl. Ovadese Ormig",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL006",
+    "name": "A.s. Atl. Valenza",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL007",
+    "name": "Atl. Novese",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL010",
+    "name": "G.p. Boggeri Arquata Scrivia",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL011",
+    "name": "G.p. Cartotecnica Piemontese A",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL012",
+    "name": "G.s.d. Sai  Frecce Bianche Pod",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL017",
+    "name": "Junioratletica Ass. Spor. Dile",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL026",
+    "name": "G.p. Solvay",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL028",
+    "name": "Acquirunners",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL030",
+    "name": "Azalai A.s.d.",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL031",
+    "name": "Bio Correndo Avis",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AL032",
+    "name": "Aps La Fenice Asd",
+    "province": "AL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN001",
+    "name": "Atletica Osimo",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN002",
+    "name": "A.atl. Fabriano",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN003",
+    "name": "A.s.atletica Falconara",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN005",
+    "name": "Atl. Vallesina",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN007",
+    "name": "Atl. Chiaravalle",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN009",
+    "name": "Atl. Amat. Avis Castelfidardo",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN010",
+    "name": "S.e.f. Stamura Ancona A.s.d.",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN015",
+    "name": "Sport D.l.f. Ancona",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN016",
+    "name": "Atl.castelfidardo Criminesi",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN017",
+    "name": "Nuova Podistica Loreto",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN018",
+    "name": "Atl.amat.osimo",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN019",
+    "name": "Pol.candia Baraccola Aspio",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN022",
+    "name": "S.atl. Senigallia",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN028",
+    "name": "G.s. Giannino Pieralisi",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN032",
+    "name": "Atl. Jesi",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN038",
+    "name": "G.s. Dinamis",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN039",
+    "name": "Cral Angelini Ass.sport.dil.",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN045",
+    "name": "Atletica Filottrano Asd",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN046",
+    "name": "Upr Montemarciano Asd",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN047",
+    "name": "Conero Wellness S.s.d. A R.l.",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AN048",
+    "name": "A.s.d.podistica Avis Fabriano",
+    "province": "AN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO001",
+    "name": "Atletica Cogne Aosta",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO002",
+    "name": "Atletica Pont Donnas",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO003",
+    "name": "Atletica Monterosa Fogu Arnad",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO004",
+    "name": "Atletica Sandro Calvesi",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO010",
+    "name": "C.s. Guardia Di Finanza",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO013",
+    "name": "A.p.d. Pont-saint-martin",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO023",
+    "name": "Assva - Associazione Delle Soc",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO025",
+    "name": "Atletica Saint-christophe",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AO028",
+    "name": "Asd Inrun",
+    "province": "AO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP005",
+    "name": "Asa Ascoli Piceno",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP007",
+    "name": "Mezzofondo Club Ascoli",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP009",
+    "name": "Atl. Avis S.benedetto Del Tr.",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP019",
+    "name": "A.s.d. Comodo Sport",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP033",
+    "name": "Nuova Pod. Centobuchi",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP034",
+    "name": "Collection Atletica Sambenedet",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP038",
+    "name": "Avis Ascoli Marathon",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP040",
+    "name": "G.p. Avis Spinetoli Pagliare",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP053",
+    "name": "Asd Sport & Vita",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP057",
+    "name": "Offida Atletica A.s.d.",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AP058",
+    "name": "Asd Nuova Atletica Picena",
+    "province": "AP",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ005",
+    "name": "A.s.d. Usa Runners Avezzano",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ009",
+    "name": "Asd Podistica Luco Dei Marsi",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ014",
+    "name": "A.s.d.amat.atletica Serafini",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ035",
+    "name": "Asd Plus Ultra Trasacco",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ103",
+    "name": "A.s. Athletics Promotion Aq",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ144",
+    "name": "A.s.d. Pescasseroli",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ171",
+    "name": "Asd Magic Runners Tagliacozzo",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ172",
+    "name": "G.p. Runners Sulmona",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ174",
+    "name": "Asd Usa Sporting Club Avezzano",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AQ175",
+    "name": "G.s. Avezzano",
+    "province": "AQ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR051",
+    "name": "Atl. Sestini Fiamme Verdi Ar",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR053",
+    "name": "Alga Etruscatletica",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR054",
+    "name": "Atl.sangiovannese 1967",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR056",
+    "name": "G.s.amatori Pod. Arezzo",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR058",
+    "name": "Pol. Rinascita Montevarchi",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR060",
+    "name": "U. P.policiano Arezzo Atletica",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR062",
+    "name": "S.s. Atl. Casentino Poppi",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR353",
+    "name": "Podistica Il Campino",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR364",
+    "name": "Asd Subbiano Marathon",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR419",
+    "name": "Atletica Avis Sansepolcro",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR422",
+    "name": "Free Runners Arezzo",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR446",
+    "name": "Trail Running Project Asd",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AR464",
+    "name": "Filirun Team Asd",
+    "province": "AR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT001",
+    "name": "S.s. Vittorio Alfieri Asti",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT003",
+    "name": "A.s.d. Brancaleone  Asti",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT005",
+    "name": "D-l-f Dopo Lavoro Ferroviario",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT006",
+    "name": "Mezzaluna A.p.d.",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT007",
+    "name": "Us Costigliole G. Giordano",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT014",
+    "name": "A.s.d. Gate-cral Inps",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT015",
+    "name": "Atleticanelli",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AT017",
+    "name": "A.s.d. Hammer Team",
+    "province": "AT",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV011",
+    "name": "Asd Montemiletto Team Runners",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV016",
+    "name": "A.s.d. C.f.f.s. Atl. Avellino",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV175",
+    "name": "Avellino Runner",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV573",
+    "name": "Asd Marathon Cl. Ariano Irpino",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV700",
+    "name": "Asd Irpinia Italia",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "AV801",
+    "name": "Lions Valle Ufita",
+    "province": "AV",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010019",
+    "name": "Uisp Comitato Terr.le Aosta",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010116",
+    "name": "A.s.d. Circolo Territoriale Quartiere Dora",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010161",
+    "name": "Courmayeur Trailers",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010188",
+    "name": "A.s.d.  Cervino Trailers",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010202",
+    "name": "A.s.d. Atletica Sandro Calvesi",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010221",
+    "name": "Polisportiva Saint Christophe",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010231",
+    "name": "Trail Mountain",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010232",
+    "name": "Atletica Saint-christophe",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010253",
+    "name": "A.s.d. Utopie Concrete",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "B010260",
+    "name": "A.s.d. Train Out",
+    "province": "AO",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA005",
+    "name": "Amatori Atl. Acquaviva",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA006",
+    "name": "U.s. Giovani Atleti Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA007",
+    "name": "Cus Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA008",
+    "name": "Asd Athletic Academy Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA011",
+    "name": "A.s. Atletica Castellana",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA015",
+    "name": "A.s. Olimpia Club Molfetta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA020",
+    "name": "Fiamma Olimpia Palo",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA023",
+    "name": "Atletica Giovanile Acquaviva",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA025",
+    "name": "A.s. Amatori Putignano",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA039",
+    "name": "A.s.d. Amici Strada Del Tesoro",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA041",
+    "name": "Atletica Pro Canosa",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA043",
+    "name": "G.s.atletica Amatori Corato",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA047",
+    "name": "Nuova Atl. Femm. Acquaviva",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA049",
+    "name": "G.s.p. Iii Regione Aerea Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA052",
+    "name": "Bari Road Runners Club",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA057",
+    "name": "Athletic Marathon Santeramo",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA058",
+    "name": "Atletica  Monopoli",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA068",
+    "name": "Athletic Team Barletta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA082",
+    "name": "Atletica Tommaso Assi Trani",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA089",
+    "name": "Alteratletica Locorotondo",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA091",
+    "name": "Atl. Aden  Exprivia Molfetta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA093",
+    "name": "Atletic Club Altamura",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA096",
+    "name": "A.s. Atl Sprint  Barletta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA097",
+    "name": "Sport Center A.s.d.",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA502",
+    "name": "A.s.d. Montedoro Noci",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA505",
+    "name": "A.s. Quelli Della Pineta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA507",
+    "name": "A.maratoneti Andriesi",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA509",
+    "name": "Pod. Canusium 2004",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA521",
+    "name": "A.s. Dof Amatori Turi",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA526",
+    "name": "Podistica Alberobello A.s.d.",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA529",
+    "name": "A.s. Trani Marathon",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA533",
+    "name": "Euratletica Bisceglie",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA535",
+    "name": "A.s. Atletica Polignano",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA541",
+    "name": "Alteatletica Altamura",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA543",
+    "name": "Marathon Club Minervino",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA544",
+    "name": "Atletica Disfida Di Barletta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA545",
+    "name": "Amatori Atletica Triggiano",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA550",
+    "name": "Avis In Corsa Conversano",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA551",
+    "name": "Ass. Nazionale Bersaglieri Bar",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA553",
+    "name": "Atletica Adelfia",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA554",
+    "name": "Free Runners Molfetta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA555",
+    "name": "Avis Podistica Mola",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA557",
+    "name": "Ass. S. D. Pink Panther",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA581",
+    "name": "A.s.d. Atletica Bitritto",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA582",
+    "name": "A.s.d. Bisceglie Running",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA586",
+    "name": "A.s.d. Asopico Running Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA587",
+    "name": "La Pietra",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA592",
+    "name": "Barletta Sportiva",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA594",
+    "name": "Pedone-riccardi Bisceglie",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA596",
+    "name": "A.s.d. Andria Runs",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA599",
+    "name": "Running People Noicattaro",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA700",
+    "name": "A.s.d. Nadir On The Road - Put",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA702",
+    "name": "Murgia Marathon Santeramo",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA703",
+    "name": "Happy Runners Altamura",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA704",
+    "name": "Asd Per Aspera Ad Astra Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA705",
+    "name": "Bitonto Runners",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA706",
+    "name": "Atletica 2010",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA707",
+    "name": "Dream Team Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA708",
+    "name": "Caringella Sannicandro Di Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA710",
+    "name": "A.s.d. Gravina Festina Lente!",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA711",
+    "name": "Bio Ambra New Age",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA713",
+    "name": "Gioia Running A.s.d.",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA714",
+    "name": "Alberobello Running Asd",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA715",
+    "name": "Atletica Altamura",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA716",
+    "name": "Barile Flower F.r.terlizzi Asd",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA719",
+    "name": "Runners Del Levante",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA720",
+    "name": "Atletica Mediterranea Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA721",
+    "name": "La Fabrica Di Corsa",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA723",
+    "name": "S.s.d. A.r.l. Dynamyk Fitness",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA724",
+    "name": "Road Runners Trani",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA725",
+    "name": "A.s.d. Atletica Azzurra",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA726",
+    "name": "Bitonto Sportiva",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA727",
+    "name": "Puglia Marathon",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA728",
+    "name": "Sei Sport",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA729",
+    "name": "A.s.d.  La Fenice",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA730",
+    "name": "Strarunners Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA731",
+    "name": "A.s.d. Road Running Molfetta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA732",
+    "name": "Acquamarina Palese",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA733",
+    "name": "Allenamenti",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA734",
+    "name": "Atleticamente",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA735",
+    "name": "Asd New Athletic Project",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA737",
+    "name": "Amici Del Cammino Barletta",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA738",
+    "name": "Frontrunners",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA739",
+    "name": "Asd Smart Fit Gravina",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA741",
+    "name": "Futurathletic Team Apulia",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA742",
+    "name": "All Tri Sports A.s.d.",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA743",
+    "name": "Nuovatletica Bisceglie",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA749",
+    "name": "Pila Atletica Bari",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA750",
+    "name": "Smart Runners Gravina",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA751",
+    "name": "Nuova Atletica Bitonto",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BA752",
+    "name": "Asd Atletica Fiamma Giovinazzo",
+    "province": "BA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG003",
+    "name": "Atl. Bergamo 1959 Oriocenter",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG004",
+    "name": "U.s. Scanzorosciate",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG005",
+    "name": "Atl. Presezzo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG036",
+    "name": "Atl. Saletti",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG045",
+    "name": "Atl. Pianura Bergamasca",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG105",
+    "name": "Pol. D. Oratorio Clusone",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG134",
+    "name": "Atl. La Torre",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG135",
+    "name": "G. Alpinistico Vertovese",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG138",
+    "name": "U.s. Olimpia Bergamo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG140",
+    "name": "Libertas Atl. Caravaggio",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG141",
+    "name": "Atl. Pol. Ardesio",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG147",
+    "name": "Atl. Villongo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG149",
+    "name": "Atl. Valli Bergamasche Leffe",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG166",
+    "name": "Gs Avis Treviglio G.brusaferri",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG222",
+    "name": "Pol. Bolgare Sez. Atl.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG223",
+    "name": "Atl. Valle Brembana",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG224",
+    "name": "Atl. Curno",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG225",
+    "name": "Atl. Casazza",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG228",
+    "name": "U.s. Rogno",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG232",
+    "name": "Pol. Atl. Brembate Sopra",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG236",
+    "name": "La Recastello Radici Group",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG237",
+    "name": "G.s. Orezzo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG248",
+    "name": "Atl. Estrada",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG282",
+    "name": "Atl. Castel Rozzone",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG283",
+    "name": "Atl. Ciserano",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG288",
+    "name": "Atl. Urgnano",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG291",
+    "name": "Pol. Cappuccinese",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG300",
+    "name": "Atl. Treviglio",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG339",
+    "name": "Bigacc De Ela",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG343",
+    "name": "U.s. Mozzo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG351",
+    "name": "G.s. A.marinelli Comenduno",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG353",
+    "name": "Pool Soc.atl.alta Valseriana",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG371",
+    "name": "Sporting Club Alzano",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG390",
+    "name": "Atl. Cologno Al Serio",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG420",
+    "name": "Marathon Team Bg",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG425",
+    "name": "Medirun Cus Bergamo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG472",
+    "name": "Runners Bergamo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG479",
+    "name": "G.s. Orobie",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG511",
+    "name": "Atl. Valle Imagna",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG520",
+    "name": "Gruppo Sportivo Orobico",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG542",
+    "name": "Atl. Brusaporto",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG572",
+    "name": "Oratorio Albino Atl.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG582",
+    "name": "Sport & Wellness S.r.l.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG584",
+    "name": "Pol. Villese",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG594",
+    "name": "Club Pantera Rosa",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG605",
+    "name": "Atl. Valbreno",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG627",
+    "name": "Centro Sportivo Ranica",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG658",
+    "name": "Atletica Marathon Almenno S.s.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG689",
+    "name": "A.s.d. Atletica Sarnico",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG705",
+    "name": "Atl. E Podistica Pol.bottanuco",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG726",
+    "name": "Romano Running",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG737",
+    "name": "Polisportiva Imiberg",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG738",
+    "name": "X-bionic Running Team",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG747",
+    "name": "Atletica Dalmine Educando",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG754",
+    "name": "Altitude Race",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG762",
+    "name": "Frecce Giallo Blu",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG772",
+    "name": "Asd Atletica Stezzano",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG775",
+    "name": "A.s.d. Lake Run Events",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG795",
+    "name": "Bergamo Stars Atletica",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG800",
+    "name": "Podisti Faresi",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG822",
+    "name": "Pol. Comunale Di Endine Gaiano",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG826",
+    "name": "Asd Runners Valcalepio",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG841",
+    "name": "Gruppo Sportivo Alpini Sovere",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG855",
+    "name": "Gruppo Podistico Arcene A.s.d.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG858",
+    "name": "Polisportiva Cral Bpb A.s.d.",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG865",
+    "name": "Carvico Skyrunning",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG869",
+    "name": "Atletica Cral Banco Popolare",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG875",
+    "name": "Dynamic Club Bergamo",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG891",
+    "name": "Elle Erre Asd",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BG893",
+    "name": "Canto Di Corsa",
+    "province": "BG",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL001",
+    "name": "Atl.longarone",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL004",
+    "name": "G.s. Quantin",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL005",
+    "name": "Atl. Trichiana",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL008",
+    "name": "Gs La Piave 2000",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL009",
+    "name": "Athletic Club Firex Belluno",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL010",
+    "name": "A.atl.dolomiti Belluno",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL011",
+    "name": "Bellunoatletica M.g.b.",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL012",
+    "name": "Ana Atl.feltre",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL017",
+    "name": "G.s.vv.ff.-de Vecchi-bl",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL019",
+    "name": "Atl.agordina",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL021",
+    "name": "Giro Delle Mura Citta Feltre",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL025",
+    "name": "Polisportiva Caprioli",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL029",
+    "name": "Atl. Cortina C. Rurale Cortina",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL030",
+    "name": "Atl.fiori Barp",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL041",
+    "name": "A.s.d. Gruppo Sportivo Astra",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL042",
+    "name": "Polisportiva Vodo Di Cadore",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL044",
+    "name": "Atleticadore - Giocallena Asd",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL046",
+    "name": "Run&fun Oltre Team",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BL047",
+    "name": "Alpago Tornado Run",
+    "province": "BL",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN050",
+    "name": "Asd Running Telese Terme",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN100",
+    "name": "Pod. Valle Caudina",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN208",
+    "name": "Asd Enterprise Sport & Service",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN286",
+    "name": "Asd Pol. Astro 2000 Benevento",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN300",
+    "name": "A.s.d. Atl. Dugenta",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN450",
+    "name": "Sannio Runners",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN514",
+    "name": "Asd Amatori Podismo Benevento",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN600",
+    "name": "Asd G.s. Podisti Dlf Benevento",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN702",
+    "name": "A.s.d. Podismo Benevento",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BN800",
+    "name": "Libertas Amatori Atletica Legg",
+    "province": "BN",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO002",
+    "name": "Acquadela Bologna",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO005",
+    "name": "G.s. Gabbi",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO007",
+    "name": "S.e.f. Virtus Emilsider Bo",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO008",
+    "name": "C.u.s. Bologna A.s.d.",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO009",
+    "name": "Podistica Pontelungo Bologna",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO011",
+    "name": "C.s. Carabinieri Sez. Atletica",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO014",
+    "name": "Atl. Imola Sacmi Avis",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO015",
+    "name": "A.s.d. Francesco Francia",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO017",
+    "name": "Asd Pod. Lippo Calderara",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO021",
+    "name": "G.p. I Cagnon",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO023",
+    "name": "Atl. Avis Castel S.pietro",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO037",
+    "name": "Pol.  Dil. Sanrafel",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO038",
+    "name": "Asd Team Granarolo",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO041",
+    "name": "Atl. Gnarro Jet Mattei",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO091",
+    "name": "Pod. Ozzanese",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO124",
+    "name": "Atl. Castenaso  Celtic Druid",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO138",
+    "name": "Pol. Porta Saragozza",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO150",
+    "name": "Lolliauto Asd",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO214",
+    "name": "Persicetana Podistica",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO239",
+    "name": "A.s.d. Lumegaltoreno",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO263",
+    "name": "Nuova Atletica Molinella",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO332",
+    "name": "Pol. Avis Bolognese",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO334",
+    "name": "Pol. Circolo Dozza Asd",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO395",
+    "name": "Circolo Ghinelli",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO427",
+    "name": "Csi Sasso Marconi",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO429",
+    "name": "Pol. Zola Sez. Atletica",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO434",
+    "name": "Atletica Blizzard",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO437",
+    "name": "S.g. Persicetana",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO468",
+    "name": "Triiron",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO506",
+    "name": "A.s.d. Pontevecchio Bologna",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO508",
+    "name": "Pol. Monte San Pietro",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO516",
+    "name": "Polisportiva Progresso Asd",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO522",
+    "name": "Polisportiva Atletico Borgo Pa",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO527",
+    "name": "A.s.d Team Spartans",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO535",
+    "name": "Amica Asd - I Sssian",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO536",
+    "name": "Asd Atletica Melito Bologna",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO544",
+    "name": "Passo Capponi Asd",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO545",
+    "name": "9,92 Running Asd",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO554",
+    "name": "Bushido Tri&run",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BO563",
+    "name": "Polisportiva Monteveglio A.s.d",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BO613",
+    "name": "ATLETICA SAN GIORGIO DI PIANO",
+    "province": "BO",
+    "organization": "Fidal",
+    "is_managed": true
+  },
+  {
+    "society_code": "BR103",
+    "name": "Atletica Amatori Brindisi",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR104",
+    "name": "Atl. Amatori Cisternino",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR109",
+    "name": "Top Running  Brindisi",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR113",
+    "name": "Atletica Casalini",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR131",
+    "name": "A.s. Atletica Latiano",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR134",
+    "name": "Ass. Amici Atl.villa Castelli",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR138",
+    "name": "A.s. Team Francavilla",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR139",
+    "name": "Gymnasium S. Pancrazio",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR141",
+    "name": "Polisport Ciclo Club Fasano",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR143",
+    "name": "A.s.d. Atletica Carovigno",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR144",
+    "name": "Atalas San Vito Dei Normanni",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR145",
+    "name": "A.s.d. Atletica Mesagne - Avis",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR147",
+    "name": "Folgore Brindisi",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR153",
+    "name": "Asd Apuliathletica",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR154",
+    "name": "Atletica Ceglie Messapica",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR155",
+    "name": "Apd Runners San Michele Salent",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR157",
+    "name": "Asd Laboratorio Del Benessere",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR159",
+    "name": "Dorando Pietri",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR160",
+    "name": "Podismo Spv My Domo",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR162",
+    "name": "Olimpo Latiano",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BR163",
+    "name": "Ecolservizi Runners",
+    "province": "BR",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS049",
+    "name": "Atl. Pontoglio 92",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS082",
+    "name": "Polisportiva G.b. Vighenzi",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS176",
+    "name": "Young Running",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS178",
+    "name": "S.s. Robur Barbarano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS179",
+    "name": "Atletica Lonato",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS181",
+    "name": "Atl. Brescia 1950 Ispa Group",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS183",
+    "name": "C.s. S.rocchino",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS184",
+    "name": "Oratorio Roe Volciano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS186",
+    "name": "C.s. Lib. Gussago",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS191",
+    "name": "U.s. Serle",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS196",
+    "name": "Ass. Pol.capriolese",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS199",
+    "name": "Atl. Vallecamonica",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS201",
+    "name": "U.s. Audaces Nave",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS202",
+    "name": "G.p. S.angela Avis Desenzano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS243",
+    "name": "Atl. Rebo Gussago",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS256",
+    "name": "Padile Running Team",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS274",
+    "name": "G.p. Pellegrinelli",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS278",
+    "name": "Atl. Carpenedolo",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS297",
+    "name": "Atl. Club 10 + 7 Salo",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS303",
+    "name": "Atl. Villa Carcina",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS304",
+    "name": "Atl. Di Lumezzane C.s.p.",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS316",
+    "name": "G.p. Orzivecchi",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS318",
+    "name": "Atl. Chiari 1964 Lib.",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS319",
+    "name": "Atl. Rodengo Saiano Mico",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS341",
+    "name": "Fg. Atl. Falegnameria Guerrini",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS355",
+    "name": "U. Atl. Valtrompia",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS362",
+    "name": "G.s. Montegargnano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS364",
+    "name": "G.s. Atl. Rezzato",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS368",
+    "name": "U.s. Malonno",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS377",
+    "name": "Atl. Bedizzole",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS397",
+    "name": "U.s. La Sportiva",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS442",
+    "name": "Atl. Lib. Castegnato",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS465",
+    "name": "New Athletics Sulzano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS508",
+    "name": "Pro Desenzano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS521",
+    "name": "Free-zone",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS535",
+    "name": "Running & Adventure",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS545",
+    "name": "Atl. Franciacorta",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS562",
+    "name": "Atl. Paratico",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS575",
+    "name": "Atl. Virtus Castenedolo",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS607",
+    "name": "Atl. Pompiano",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS612",
+    "name": "Pol. Vobarno",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS626",
+    "name": "Circolo Amatori Podisti",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS640",
+    "name": "Av Sporting Team",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS652",
+    "name": "Motus Atletica Castegnato",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS655",
+    "name": "Atletica Proai Golem A.s.d.",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS657",
+    "name": "Corrintime",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS660",
+    "name": "Arieni Team",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS684",
+    "name": "Atletica Concesio 2009",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS688",
+    "name": "Atletica Brescia Marathon",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS692",
+    "name": "A.s.d. C.u.s. Brescia",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS702",
+    "name": "G.p. Over Pontevico",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS707",
+    "name": "Running  Cazzago San Martino",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS712",
+    "name": "A.s.d. S.s. Limonese",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS714",
+    "name": "Atletica Pertica Bassa",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS716",
+    "name": "Gruppo Podisti Lograto",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS717",
+    "name": "Runners Capriolese",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS722",
+    "name": "Ssd Bagolino",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS742",
+    "name": "Garda Running A.s.d.",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS748",
+    "name": "Running Prealpino Asd",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS757",
+    "name": "Atletica Poncarale Borgo",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS769",
+    "name": "Libertas Vallesabbia",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS773",
+    "name": "Sport Fitness & Co. Srl Ssd",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS777",
+    "name": "Esc Ssd Srl Europa Sc",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS783",
+    "name": "A.s.d. San Filippo Runners",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS786",
+    "name": "Brixia Atletica 2014 Ssd Srl",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS797",
+    "name": "Straleno",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS803",
+    "name": "Zerotrenta Triathlon Brescia",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS806",
+    "name": "Kinetik Progettiamo Salute Srl",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS812",
+    "name": "Sopralapanca Srl Soc.sport.dil",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS818",
+    "name": "Asd Cycling Ghedese",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS836",
+    "name": "F.o.running Team",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS846",
+    "name": "Athletic Academy A.s.d.",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS852",
+    "name": "G.s. Croce Verde Orzinuovi Asd",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS854",
+    "name": "Atletica Montichiari",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS874",
+    "name": "Venus Fitness & Wellness",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS879",
+    "name": "Fiesse Run Asd",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS883",
+    "name": "Bione Trailers Team",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BS886",
+    "name": "I Lupi Lumezzane",
+    "province": "BS",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ001",
+    "name": "A.s. Merano",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ008",
+    "name": "Ssv Bruneck Brunico Volksbank",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ009",
+    "name": "Asv Rennerclub Vinschgau",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ011",
+    "name": "Asv S.v. Lana - Raika",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ012",
+    "name": "A.s.d. Atl.club 2000 Dobbiaco",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ013",
+    "name": "Asv Sterzing Volksbank",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ014",
+    "name": "Asv Jenesien Soltnflitzer",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ018",
+    "name": "S.a.f. Bolzano",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ019",
+    "name": "Sportclub Merano",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ020",
+    "name": "Asv Lac Vinschgau Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ023",
+    "name": "Asv L.c. Bozen Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ026",
+    "name": "A.s.d. S.a.f. Laives",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ027",
+    "name": "Asv Dorf Tirol",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ028",
+    "name": "Asc L.f.sarntal Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ031",
+    "name": "A.s.d.ssv Brixen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ033",
+    "name": "A.s.d. Pol. Avi Vipiteno",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ036",
+    "name": "A.s.d. Ssv Leifers  L.a.",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ042",
+    "name": "Amateur S.c. Algund/raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ043",
+    "name": "S.v. Moelten Raiffeisen A.s.v.",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ050",
+    "name": "Atletica Gherdeina Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ052",
+    "name": "A.s.dil. Full Sport Meran",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ056",
+    "name": "Asv L.g. Schlern  Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ058",
+    "name": "A.s.c. Berg",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ060",
+    "name": "Ass.sport.dilettant.dribbling",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ062",
+    "name": "A.s.v. Niederdorf Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ066",
+    "name": "Athletic Club 96 Alperia",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ067",
+    "name": "Suedtiroler Laufverein Amateur",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ068",
+    "name": "S.g Eisacktal Raiffeisen Asv",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ071",
+    "name": "C.s.s. Leonardo Da Vinci",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ073",
+    "name": "A.s.d. Suedtirol Team Club",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ074",
+    "name": "Asv Telmekom Team Suedtirol",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ079",
+    "name": "Asc Laas Raiffeisen",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ085",
+    "name": "Asv Gherdeina Runners",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ086",
+    "name": "L.g. Brixen-bressanone",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ087",
+    "name": "Sportler Team",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ096",
+    "name": "Laufclub Pustertal",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "BZ098",
+    "name": "Run Team Ritten Sport",
+    "province": "BZ",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010019",
+    "name": "Uisp Comitato Terr.le Genova",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010108",
+    "name": "Csi Ansaldo",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010310",
+    "name": "Cus Genova Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010340",
+    "name": "Asd Ariosto",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010396",
+    "name": "Pol Insieme Per Sport Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010448",
+    "name": "Asd Gymnotecnica",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010466",
+    "name": "Gau Sport Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010493",
+    "name": "Gs Anffas Liguria Onlus Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010535",
+    "name": "Atletica Cffsd Cogoleto",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010594",
+    "name": "Associazione Anziani Oggi Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010615",
+    "name": "Asd Nuotatori Rivarolesi",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010745",
+    "name": "Nordic Walking Croce Di Vie Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010796",
+    "name": "Dlf Di Genova",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010915",
+    "name": "Cug Circolo Universitario Genovese",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010916",
+    "name": "Maratoneti Genovesi Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C010974",
+    "name": "Asd Coordinamento Vivi.s.e.m.m.",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011179",
+    "name": "Asd Cambiaso Risso Running Team Ge",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011181",
+    "name": "Pro Sesto Genova",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011190",
+    "name": "Pol. Arenzano Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011193",
+    "name": "Asd Podistica Valpolcevera",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011298",
+    "name": "Atletica Don Bosco Universale Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011337",
+    "name": "Asd Atletica Rapallo Golfo Paradiso Recco",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011432",
+    "name": "Podistica Peralto Genova Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011447",
+    "name": "Circolo San Francesco Asd Cult Ricr",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011465",
+    "name": "Circ. Dipendenti Banca Carige",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011469",
+    "name": "Quadrifoglio Ssd A R.l.",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011475",
+    "name": "Sisport Ssd A R.l.",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011484",
+    "name": "Athle Team Genova Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011530",
+    "name": "Sporteventi Ssd A Rl",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011555",
+    "name": "Unopuntotre Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011586",
+    "name": "Asd Us San Marziano",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011602",
+    "name": "Maratoneti Del Tigullio",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011610",
+    "name": "Cffs Cogoleto Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011617",
+    "name": "Acquasanta Asd Cult",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011658",
+    "name": "Chiavari Tigullio Outdoor Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011674",
+    "name": "Marina Sporting Club Lavagna Asd Pol.",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011691",
+    "name": "Atletica Entella Running Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011756",
+    "name": "Gs Gaiazza Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011764",
+    "name": "Resto Del Mondo Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011774",
+    "name": "Free Sport Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011789",
+    "name": "Zena Runners Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011813",
+    "name": "Boot Camp G Asd ",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011829",
+    "name": "Team Xix",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011840",
+    "name": "4jumps Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011872",
+    "name": "Team Liguria Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011875",
+    "name": "Activemotion Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011880",
+    "name": "Crocera Stadium Ssd A Rl ",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011881",
+    "name": "Rensen Sport Team Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011883",
+    "name": "42 195 Running Team Genova Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011885",
+    "name": "Comitato Manifestazioni Arenzano",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011887",
+    "name": "Spazio Benessere Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C011888",
+    "name": "Tripinyourshoes Asd",
+    "province": "GE",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C020019",
+    "name": "Uisp Comitato Terr.le Imperia",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021021",
+    "name": "A.s.d. My",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021024",
+    "name": "A.s.d. Alta Valle Argentina",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021056",
+    "name": "A.s.d. Riviera Dei Fiori Outdoor",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021060",
+    "name": "A.s.d. S.b.s.",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021079",
+    "name": "West Canyon A.s.d.",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C021087",
+    "name": "Mondo Vertigine A.s.d.",
+    "province": "IM",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030019",
+    "name": "Uisp Com.to Terr. La Spezia E Val Di Magra",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030277",
+    "name": "A.s.d. Ziona 2001",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030348",
+    "name": "A.s.d. Polisportiva 5 Terre",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030407",
+    "name": "Asd Pol. Dil. Amatori Sarzana 2008",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030441",
+    "name": "A.s.d. Mcr Due Ruote",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030517",
+    "name": "Pol. Dil. Arci Favaro",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030553",
+    "name": "A.s.d. Golfo Dei Poeti",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030599",
+    "name": "A.s.d. Cambertano",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030660",
+    "name": "Associazione Di Volontariato An.g.s.a. La Spezia",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030676",
+    "name": "A.s.d. Team Planet Bike",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030701",
+    "name": "A.s.d. Spezia Marathon Dlf",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030702",
+    "name": "Attiva Sportutility S.s.d. S.r.l.",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030703",
+    "name": "A.s.d. Vertical Bike",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C030795",
+    "name": "A.s.d. Corrilunigiana",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035125",
+    "name": "Polisp.dilettantistica Levante Sarzana",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035154",
+    "name": "Associazione Sportiva Dilettantistica Caprione Outdoor",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035208",
+    "name": "Srl Soc.sport.dil. Le Physique-du-role",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035287",
+    "name": "In The Box",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035295",
+    "name": "Asd Polisportiva Madonnetta",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035300",
+    "name": "A.s.d. Funzional-mente",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035314",
+    "name": "Asd Pro Avis Castelnuovo Magra",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C035324",
+    "name": "X-traxx Outdoor Adventure Team A.s.d.",
+    "province": "SP",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040019",
+    "name": "Uisp Comitato Terr.le Savona",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040148",
+    "name": "Finale Ligure Freeride Asd",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040165",
+    "name": "Polisp.del Finale A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040229",
+    "name": "A.s.d. Climbers Toirano",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040241",
+    "name": "Atletica Varazze A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040269",
+    "name": "Attiva Corpo & Mente A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040334",
+    "name": "Maremontana A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040335",
+    "name": "Trail Runners Finale L. Asd",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040338",
+    "name": "Bergteam A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040340",
+    "name": "A.s.d. Urbe",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040341",
+    "name": "Vaze Free Time",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040345",
+    "name": "Centro Atletica Celle L. Asd",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040349",
+    "name": "Cisano2.0  A.s.d..",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040360",
+    "name": "Cadifugo Ass. Culturale A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040371",
+    "name": "Valmaremola  A.s.d.",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "C040385",
+    "name": "Atletica Ceriale S.giorgio Asd",
+    "province": "SV",
+    "organization": "Uisp",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA001",
+    "name": "C.u.s. Cagliari",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA002",
+    "name": "S G Amsicora",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA003",
+    "name": "Ss Esperia",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA004",
+    "name": "Atl Orroli Mariano Leoni",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA010",
+    "name": "Pol Atl Serramanna",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA012",
+    "name": "Atletica Selargius",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA017",
+    "name": "Us Atl Guspini",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA025",
+    "name": "G.s. Atletica Dolianova",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA032",
+    "name": "As Tespiense Quartu",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA033",
+    "name": "Atl Cortoghiana",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA035",
+    "name": "Us Acli Mariano Scano",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  },
+  {
+    "society_code": "CA036",
+    "name": "Pol Libertas Campidano",
+    "province": "CA",
+    "organization": "Fidal",
+    "is_managed": false
+  }
+]

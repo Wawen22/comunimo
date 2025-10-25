@@ -113,6 +113,8 @@ export interface Member {
   medical_certificate_date: string | null;        // Data certificato medico
   medical_certificate_expiry: string | null;      // Data scadenza certificato medico
   photo_url: string | null;                       // URL foto atleta
+  fidal_card_date: string | null;                 // Data movimento/tessera FIDAL (DAT_MOV)
+  fidal_system_date: string | null;               // Data inserimento sistema FIDAL (DAT_SYS)
   
   // Additional Info
   notes: string | null;

@@ -9,18 +9,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/lib/hooks/useUser';
-import { Plus, Search, Download, Filter, Upload } from 'lucide-react';
+import { Plus, Search, Download, Filter, Upload, FileSpreadsheet, ChevronDown } from 'lucide-react';
 import { MemberStatusBadge } from './MemberStatusBadge';
 import { MemberFilters } from './MemberFilters';
 import { ExpiryAlert } from './ExpiryAlert';
 import { exportMembersToCSV } from '@/lib/utils/csvExport';
 import { BulkImportDialog } from './BulkImportDialog';
+import { BulkImportExcelDialog } from './BulkImportExcelDialog';
 import { SocietyMultiSelect } from './SocietyMultiSelect';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface MemberWithSociety extends Member {
   society?: {
     id: string;
     name: string;
+    society_code: string | null;
   } | null;
 }
 
@@ -42,6 +50,7 @@ export function MembersList() {
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showImportExcelDialog, setShowImportExcelDialog] = useState(false);
   const [filters, setFilters] = useState<MemberFiltersState>({
     search: '',
     societyIds: [],
@@ -88,7 +97,7 @@ export function MembersList() {
         .from('members')
         .select(`
           *,
-          society:societies(id, name)
+          society:societies(id, name, society_code)
         `, { count: 'exact' })
         .eq('is_active', true)
         .order('last_name', { ascending: true })
@@ -214,13 +223,25 @@ export function MembersList() {
           </Button>
           {isAdmin && (
             <>
-              <Button
-                variant="outline"
-                onClick={() => setShowImportDialog(true)}
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Importa
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Importa
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setShowImportDialog(true)}>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Importa CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowImportExcelDialog(true)}>
+                    <FileSpreadsheet className="mr-2 h-4 w-4" />
+                    Importa Excel (FIDAL/UISP)
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Link href="/dashboard/members/new">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -358,13 +379,21 @@ export function MembersList() {
                                 {member.first_name} {member.last_name}
                               </div>
                               <div className="text-sm text-gray-500">
-                                {member.fiscal_code || '-'}
+                                {member.birth_date
+                                  ? new Date(member.birth_date).toLocaleDateString('it-IT', {
+                                      day: '2-digit',
+                                      month: '2-digit',
+                                      year: 'numeric'
+                                    })
+                                  : '-'}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                          {member.society?.name || '-'}
+                          {member.society?.name
+                            ? `${member.society.name}${member.society.society_code ? ` (${member.society.society_code})` : ''}`
+                            : '-'}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                           {member.organization || '-'}
@@ -460,12 +489,22 @@ export function MembersList() {
         )}
       </div>
 
-      {/* Bulk Import Dialog */}
+      {/* Bulk Import Dialog (CSV) */}
       <BulkImportDialog
         isOpen={showImportDialog}
         onClose={() => setShowImportDialog(false)}
         onSuccess={() => {
           setShowImportDialog(false);
+          fetchMembers();
+        }}
+      />
+
+      {/* Bulk Import Excel Dialog (FIDAL/UISP) */}
+      <BulkImportExcelDialog
+        isOpen={showImportExcelDialog}
+        onClose={() => setShowImportExcelDialog(false)}
+        onSuccess={() => {
+          setShowImportExcelDialog(false);
           fetchMembers();
         }}
       />
