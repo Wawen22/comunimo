@@ -122,8 +122,8 @@ const memberFromFIDALSchema = z.object({
   society_code: z.string().min(1),
   regional_code: z.string().nullable(),
   category: z.string().nullable(),
-  fidal_card_date: z.string().nullable(),
-  fidal_system_date: z.string().nullable(),
+  card_date: z.string().nullable(),
+  system_date: z.string().nullable(),
   organization: z.literal('FIDAL'),
   fiscal_code: z.string().nullable(),
   phone: z.string().nullable(),
@@ -132,6 +132,101 @@ const memberFromFIDALSchema = z.object({
   city: z.string().nullable(),
   province: z.string().nullable(),
   is_foreign: z.boolean(),
+});
+
+// ============================================================================
+// UISP TYPES AND SCHEMAS
+// ============================================================================
+
+/**
+ * UISP Excel Row
+ * Columns: Id persona, Codice fiscale aff., Codice fiscale, Cognome, Nome,
+ * Indirizzo, N° civ., Cap, Comune, Localita, Data nascita, Comune nascita,
+ * Sesso, Telefono, Email, Cellulare, AbsContaRiga, N° tess., Id tesseramento,
+ * Cod. tess., Prodotto, Prodotto integ., Prod. int. codice, Categoria,
+ * Data tessera, Tipo tess. integrazioni, Abbinata, Data abbinata, Squadra,
+ * Disciplina, Cod. disciplina, SdA, Cod. affiliata, Ragione sociale,
+ * Id affiliata, Regionale, Provinciale, Delegazione, Scad. certificato,
+ * Tipo certificato
+ */
+export interface UISPRow {
+  'Cognome': string;
+  'Nome': string;
+  'Data nascita': string | number | Date;
+  'Sesso': string;                          // M or F
+  'N° tess.': string | number;
+  'Data tessera': string | number | Date;
+  'Cod. affiliata': string | number;
+  'Ragione sociale': string;
+  'Scad. certificato'?: string | number | Date;
+  // Optional fields
+  'Codice fiscale'?: string;
+  'Telefono'?: string | number;
+  'Cellulare'?: string | number;
+  'Email'?: string;
+  'Indirizzo'?: string;
+  'N° civ.'?: string | number;
+  'Cap'?: string | number;
+  'Comune'?: string;
+  'Categoria'?: string;
+  [key: string]: any;  // Allow other fields
+}
+
+/**
+ * Parsed data with validation result for UISP
+ */
+export interface ParsedUISPData {
+  rowNumber: number;
+  data: Partial<Member>;
+  isValid: boolean;
+  errors: string[];
+}
+
+/**
+ * Zod schema for UISP Excel row
+ */
+const uispRowSchema = z.object({
+  'Cognome': z.string().min(1, 'Cognome obbligatorio'),
+  'Nome': z.string().min(1, 'Nome obbligatorio'),
+  'Data nascita': z.union([z.string(), z.number(), z.date()]).optional(),
+  'Sesso': z.string().min(1, 'Sesso obbligatorio'),
+  'N° tess.': z.union([z.string(), z.number()]).transform(val => String(val)).pipe(z.string().min(1, 'Numero tessera obbligatorio')),
+  'Data tessera': z.union([z.string(), z.number(), z.date()]).optional(),
+  'Cod. affiliata': z.union([z.string(), z.number()]).transform(val => String(val)).pipe(z.string().min(1, 'Codice affiliata obbligatorio')),
+  'Ragione sociale': z.string().min(1, 'Ragione sociale obbligatoria'),
+  'Scad. certificato': z.union([z.string(), z.number(), z.date(), z.undefined()]).optional(),
+  'Codice fiscale': z.union([z.string(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Telefono': z.union([z.string(), z.number(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Cellulare': z.union([z.string(), z.number(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Email': z.union([z.string(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Indirizzo': z.union([z.string(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'N° civ.': z.union([z.string(), z.number(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Cap': z.union([z.string(), z.number(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Comune': z.union([z.string(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+  'Categoria': z.union([z.string(), z.undefined()]).transform(val => val ? String(val) : '').optional(),
+}).passthrough(); // Allow extra fields
+
+/**
+ * Zod schema for Member data from UISP
+ */
+const memberFromUISPSchema = z.object({
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
+  birth_date: z.string(),
+  gender: z.enum(['M', 'F']),
+  membership_number: z.string().min(1),
+  society_code: z.string().min(1),
+  card_date: z.string().nullable(),
+  medical_certificate_expiry: z.string().nullable(),
+  organization: z.literal('UISP'),
+  fiscal_code: z.string().nullable(),
+  phone: z.string().nullable(),
+  mobile: z.string().nullable(),
+  email: z.string().nullable(),
+  address: z.string().nullable(),
+  postal_code: z.string().nullable(),
+  city: z.string().nullable(),
+  category: z.string().nullable(),
 });
 
 // ============================================================================
@@ -247,8 +342,8 @@ export function transformFIDALToMember(row: FIDALRow): Partial<Member> {
     society_code: String(row.COD_SOC),
     regional_code: row.COD_REG ? String(row.COD_REG) : null,
     category: row.CATEG || null,
-    fidal_card_date: parseDate(row.DAT_MOV),
-    fidal_system_date: parseDate(row.DAT_SYS),
+    card_date: parseDate(row.DAT_MOV),
+    system_date: parseDate(row.DAT_SYS),
     organization: 'FIDAL',
     fiscal_code: row.COD_FISC ? String(row.COD_FISC) : null,
     phone: row.TEL_ATL ? String(row.TEL_ATL) : null,
@@ -257,6 +352,46 @@ export function transformFIDALToMember(row: FIDALRow): Partial<Member> {
     city: row.LOCA || null,
     province: row.PROV || null,
     is_foreign: row.STRAN ? String(row.STRAN).toUpperCase() === 'S' : false,
+  };
+}
+
+/**
+ * Transform UISP row to Member data
+ */
+export function transformUISPToMember(row: UISPRow): Partial<Member> {
+  // Normalize gender (M or F)
+  const gender = row['Sesso']?.toString().toUpperCase().trim();
+  const normalizedGender: 'M' | 'F' = gender === 'F' ? 'F' : 'M';
+
+  // Combine address fields
+  let fullAddress = row['Indirizzo'] || '';
+  if (row['N° civ.']) {
+    fullAddress += fullAddress ? `, ${row['N° civ.']}` : String(row['N° civ.']);
+  }
+
+  // Use mobile if available, otherwise phone
+  const phone = row['Cellulare'] ? String(row['Cellulare']) : (row['Telefono'] ? String(row['Telefono']) : null);
+  const mobile = row['Cellulare'] ? String(row['Cellulare']) : null;
+
+  return {
+    first_name: row['Nome'],
+    last_name: row['Cognome'],
+    birth_date: parseDate(row['Data nascita']),
+    gender: normalizedGender,
+    membership_number: String(row['N° tess.']),
+    society_code: String(row['Cod. affiliata']),
+    card_date: parseDate(row['Data tessera']),
+    medical_certificate_expiry: parseDate(row['Scad. certificato']),
+    organization: 'UISP',
+    fiscal_code: row['Codice fiscale'] ? String(row['Codice fiscale']) : null,
+    phone: phone,
+    mobile: mobile,
+    email: row['Email'] ? String(row['Email']) : null,
+    address: fullAddress || null,
+    postal_code: row['Cap'] ? String(row['Cap']) : null,
+    city: row['Comune'] ? String(row['Comune']) : null,
+    category: row['Categoria'] ? String(row['Categoria']) : null,
+    is_foreign: false, // UISP doesn't have this field
   };
 }
 
@@ -321,6 +456,96 @@ export async function parseFIDALExcel(file: File): Promise<ParsedFIDALData[]> {
 
       // Validate member data
       memberFromFIDALSchema.parse(memberData);
+
+      parsedData.push({
+        rowNumber,
+        data: memberData,
+        isValid: true,
+        errors: [],
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.warn(`❌ Row ${rowNumber} validation error:`, error.errors);
+        parsedData.push({
+          rowNumber,
+          data: {},
+          isValid: false,
+          errors: error.errors.map(e => `${e.path.join('.')}: ${e.message}`),
+        });
+      } else {
+        console.error(`❌ Row ${rowNumber} unknown error:`, error);
+        parsedData.push({
+          rowNumber,
+          data: {},
+          isValid: false,
+          errors: ['Errore sconosciuto durante il parsing'],
+        });
+      }
+    }
+  });
+
+  console.log('✅ Parsing complete. Valid:', parsedData.filter(d => d.isValid).length, 'Errors:', parsedData.filter(d => !d.isValid).length);
+
+  return parsedData;
+}
+
+/**
+ * Parse UISP Excel file
+ */
+export async function parseUISPExcel(file: File): Promise<ParsedUISPData[]> {
+  console.log('🔍 Starting UISP Excel parsing...');
+  console.log('📄 File:', file.name, 'Size:', file.size);
+
+  const buffer = await file.arrayBuffer();
+
+  // Read workbook with options for Excel files
+  const workbook = XLSX.read(buffer, {
+    type: 'array',
+    cellDates: true,      // Parse dates as Date objects
+    cellNF: false,        // Don't parse number formats
+    cellText: false,      // Don't parse as text
+    dense: false,         // Use normal structure
+    WTF: false,           // Don't throw on unexpected features
+  });
+
+  console.log('📊 Workbook sheets:', workbook.SheetNames);
+
+  if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+    console.error('❌ No sheets found in workbook!');
+    throw new Error('Il file Excel non contiene fogli. Verifica che sia un file Excel valido.');
+  }
+
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+  if (!worksheet) {
+    console.error('❌ Worksheet is empty!');
+    throw new Error('Il foglio Excel è vuoto.');
+  }
+
+  // Parse with header row - keep raw values to preserve dates
+  const rows: UISPRow[] = XLSX.utils.sheet_to_json(worksheet, {
+    raw: true,            // Keep raw values (dates as Date objects, numbers as numbers)
+    defval: '',           // Default value for empty cells
+    blankrows: false,     // Skip blank rows
+  });
+
+  console.log('📋 Total rows parsed:', rows.length);
+  console.log('🔍 First row sample:', rows[0]);
+
+  const parsedData: ParsedUISPData[] = [];
+
+  rows.forEach((row, index) => {
+    const rowNumber = index + 2; // +2 for header + 1-based
+
+    try {
+      // Validate row
+      uispRowSchema.parse(row);
+
+      // Transform to Member data
+      const memberData = transformUISPToMember(row);
+
+      // Validate member data
+      memberFromUISPSchema.parse(memberData);
 
       parsedData.push({
         rowNumber,
@@ -552,6 +777,70 @@ export async function upsertMemberFromFIDAL(
     }
   } catch (error: any) {
     console.error('Error upserting member:', error);
+    return { success: false, action: 'inserted', error: error.message };
+  }
+}
+
+/**
+ * Upsert member from UISP data
+ */
+export async function upsertMemberFromUISP(
+  memberData: Partial<Member>
+): Promise<{ success: boolean; action: 'inserted' | 'updated'; error?: string }> {
+
+  try {
+    // 1. Lookup society in all_societies
+    let allSociety = await lookupSociety(memberData.society_code!);
+
+    // 2. Create society in all_societies if not exists
+    if (!allSociety) {
+      allSociety = await createSociety(
+        memberData.society_code!,
+        `Società ${memberData.society_code}`,
+        'UISP'
+      );
+    }
+
+    // 3. Get or create managed society (in societies table)
+    let societyId: string | null = null;
+    if (allSociety) {
+      societyId = await getOrCreateManagedSociety(allSociety);
+    }
+
+    // 4. Check if member exists (by membership_number)
+    const { data: existing } = await supabase
+      .from('members')
+      .select('id')
+      .eq('membership_number', memberData.membership_number!)
+      .maybeSingle();
+
+    // 5. Prepare member data
+    const finalData = {
+      ...memberData,
+      society_id: societyId,
+      membership_status: 'active' as const,
+      is_active: true,
+    };
+
+    // 6. Upsert
+    if (existing) {
+      const { error } = await supabase
+        .from('members')
+        .update(finalData)
+        .eq('id', existing.id);
+
+      if (error) throw error;
+      return { success: true, action: 'updated' };
+    } else {
+      const { error } = await supabase
+        .from('members')
+        .insert(finalData);
+
+      if (error) throw error;
+      return { success: true, action: 'inserted' };
+    }
+  } catch (error: any) {
+    console.error('Error upserting UISP member:', error);
     return { success: false, action: 'inserted', error: error.message };
   }
 }

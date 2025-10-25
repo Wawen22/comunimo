@@ -24,8 +24,11 @@ import {
 } from 'lucide-react';
 import {
   parseFIDALExcel,
+  parseUISPExcel,
   upsertMemberFromFIDAL,
+  upsertMemberFromUISP,
   type ParsedFIDALData,
+  type ParsedUISPData,
   type ImportResult,
 } from '@/lib/utils/excelImport';
 
@@ -46,7 +49,7 @@ export function BulkImportExcelDialog({
   const [step, setStep] = useState<Step>(1);
   const [importType, setImportType] = useState<ImportType>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [parsedData, setParsedData] = useState<ParsedFIDALData[]>([]);
+  const [parsedData, setParsedData] = useState<ParsedFIDALData[] | ParsedUISPData[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ImportResult | null>(null);
@@ -90,6 +93,12 @@ export function BulkImportExcelDialog({
         console.log('✅ Parsing complete, data:', parsed);
         setParsedData(parsed);
         setStep(3);
+      } else if (importType === 'UISP') {
+        console.log('🚀 Starting UISP parsing...');
+        const parsed = await parseUISPExcel(selectedFile);
+        console.log('✅ Parsing complete, data:', parsed);
+        setParsedData(parsed);
+        setStep(3);
       }
     } catch (error) {
       console.error('❌ Error parsing file:', error);
@@ -113,10 +122,13 @@ export function BulkImportExcelDialog({
 
     for (let i = 0; i < validData.length; i++) {
       const item = validData[i];
-      
+
       try {
-        const result = await upsertMemberFromFIDAL(item.data);
-        
+        // Use appropriate upsert function based on import type
+        const result = importType === 'FIDAL'
+          ? await upsertMemberFromFIDAL(item.data)
+          : await upsertMemberFromUISP(item.data);
+
         if (result.success) {
           if (result.action === 'inserted') {
             importResult.inserted++;
@@ -187,13 +199,13 @@ export function BulkImportExcelDialog({
 
               <Button
                 variant="outline"
-                className="h-32 flex flex-col gap-3 opacity-50 cursor-not-allowed"
-                disabled
+                className="h-32 flex flex-col gap-3 hover:border-primary hover:bg-primary/5"
+                onClick={() => handleSelectType('UISP')}
               >
-                <FileSpreadsheet className="h-12 w-12 text-muted-foreground" />
+                <FileSpreadsheet className="h-12 w-12 text-primary" />
                 <div>
                   <div className="font-semibold">Import UISP</div>
-                  <div className="text-xs text-muted-foreground">Coming Soon</div>
+                  <div className="text-xs text-muted-foreground">40 colonne</div>
                 </div>
               </Button>
             </div>

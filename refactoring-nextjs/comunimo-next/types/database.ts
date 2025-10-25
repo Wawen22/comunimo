@@ -95,6 +95,8 @@ export interface Member {
   medical_certificate_expiry: string | null;
   is_foreign_athlete: boolean;
   photo_url: string | null;
+  card_date: string | null;                       // Data movimento/tessera (DAT_MOV per FIDAL, Data tessera per UISP)
+  system_date: string | null;                     // Data inserimento sistema (DAT_SYS per FIDAL)
 
   // Additional Info
   notes: string | null;

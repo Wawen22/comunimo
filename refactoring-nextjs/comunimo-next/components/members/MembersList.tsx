@@ -9,20 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/lib/hooks/useUser';
-import { Plus, Search, Download, Filter, Upload, FileSpreadsheet, ChevronDown } from 'lucide-react';
+import { Plus, Search, Download, Filter, FileSpreadsheet } from 'lucide-react';
 import { MemberStatusBadge } from './MemberStatusBadge';
 import { MemberFilters } from './MemberFilters';
 import { ExpiryAlert } from './ExpiryAlert';
 import { exportMembersToCSV } from '@/lib/utils/csvExport';
-import { BulkImportDialog } from './BulkImportDialog';
 import { BulkImportExcelDialog } from './BulkImportExcelDialog';
 import { SocietyMultiSelect } from './SocietyMultiSelect';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 interface MemberWithSociety extends Member {
   society?: {
@@ -49,7 +42,6 @@ export function MembersList() {
   const [societies, setSocieties] = useState<{ id: string; name: string; society_code: string | null }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
-  const [showImportDialog, setShowImportDialog] = useState(false);
   const [showImportExcelDialog, setShowImportExcelDialog] = useState(false);
   const [filters, setFilters] = useState<MemberFiltersState>({
     search: '',
@@ -223,25 +215,13 @@ export function MembersList() {
           </Button>
           {isAdmin && (
             <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Importa
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setShowImportDialog(true)}>
-                    <Upload className="mr-2 h-4 w-4" />
-                    Importa CSV
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setShowImportExcelDialog(true)}>
-                    <FileSpreadsheet className="mr-2 h-4 w-4" />
-                    Importa Excel (FIDAL/UISP)
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button
+                variant="outline"
+                onClick={() => setShowImportExcelDialog(true)}
+              >
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Importa Excel
+              </Button>
               <Link href="/dashboard/members/new">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -348,19 +328,13 @@ export function MembersList() {
                       Ente
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Categoria
+                      Sesso
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Tessera
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Scadenze
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Stato
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Azioni
                     </th>
                   </tr>
                 </thead>
@@ -391,15 +365,20 @@ export function MembersList() {
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                          {member.society?.name
-                            ? `${member.society.name}${member.society.society_code ? ` (${member.society.society_code})` : ''}`
-                            : '-'}
+                          {member.society?.name ? (
+                            <>
+                              {member.society.name}
+                              {member.society.society_code && (
+                                <span className="font-bold"> ({member.society.society_code})</span>
+                              )}
+                            </>
+                          ) : '-'}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                           {member.organization || '-'}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                          {member.category || '-'}
+                          {member.gender || '-'}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                           {member.membership_number || '-'}
@@ -412,18 +391,6 @@ export function MembersList() {
                               compact
                             />
                           </div>
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          <MemberStatusBadge status={member.membership_status} />
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm">
-                          <Link
-                            href={`/dashboard/members/${member.id}`}
-                            className="text-blue-600 hover:text-blue-900"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Dettagli
-                          </Link>
                         </td>
                       </tr>
                     );
@@ -488,16 +455,6 @@ export function MembersList() {
           </>
         )}
       </div>
-
-      {/* Bulk Import Dialog (CSV) */}
-      <BulkImportDialog
-        isOpen={showImportDialog}
-        onClose={() => setShowImportDialog(false)}
-        onSuccess={() => {
-          setShowImportDialog(false);
-          fetchMembers();
-        }}
-      />
 
       {/* Bulk Import Excel Dialog (FIDAL/UISP) */}
       <BulkImportExcelDialog
