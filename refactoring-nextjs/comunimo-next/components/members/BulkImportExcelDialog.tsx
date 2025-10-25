@@ -116,6 +116,7 @@ export function BulkImportExcelDialog({
     const importResult: ImportResult = {
       inserted: 0,
       updated: 0,
+      skipped: 0,
       errors: 0,
       errorDetails: [],
     };
@@ -132,8 +133,10 @@ export function BulkImportExcelDialog({
         if (result.success) {
           if (result.action === 'inserted') {
             importResult.inserted++;
-          } else {
+          } else if (result.action === 'updated') {
             importResult.updated++;
+          } else if (result.action === 'skipped') {
+            importResult.skipped++;
           }
         } else {
           importResult.errors++;
@@ -391,7 +394,7 @@ export function BulkImportExcelDialog({
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">{result.inserted}</div>
                 <div className="text-sm text-green-600">Inseriti</div>
@@ -399,6 +402,10 @@ export function BulkImportExcelDialog({
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{result.updated}</div>
                 <div className="text-sm text-blue-600">Aggiornati</div>
+              </div>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-yellow-600">{result.skipped}</div>
+                <div className="text-sm text-yellow-600">Saltati</div>
               </div>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-red-600">{result.errors}</div>

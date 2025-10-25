@@ -69,6 +69,7 @@ export interface ParsedFIDALData {
 export interface ImportResult {
   inserted: number;
   updated: number;
+  skipped: number;
   errors: number;
   errorDetails: Array<{ row: number; message: string }>;
 }
@@ -719,10 +720,12 @@ async function getOrCreateManagedSociety(
 
 /**
  * Upsert member from FIDAL data
+ * Smart logic: identifies athlete by first_name + last_name + birth_date
+ * Updates only if card_date is more recent (overwrites all data)
  */
 export async function upsertMemberFromFIDAL(
   memberData: Partial<Member>
-): Promise<{ success: boolean; action: 'inserted' | 'updated'; error?: string }> {
+): Promise<{ success: boolean; action: 'inserted' | 'updated' | 'skipped'; error?: string }> {
 
   try {
     // 1. Lookup society in all_societies
@@ -743,12 +746,19 @@ export async function upsertMemberFromFIDAL(
       societyId = await getOrCreateManagedSociety(allSociety);
     }
 
-    // 4. Check if member exists (by membership_number)
-    const { data: existing } = await supabase
-      .from('members')
-      .select('id')
-      .eq('membership_number', memberData.membership_number!)
-      .maybeSingle();
+    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
+    let existing = null;
+
+    if (memberData.first_name && memberData.last_name && memberData.birth_date) {
+      const { data } = await supabase
+        .from('members')
+        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date')
+        .eq('first_name', memberData.first_name)
+        .eq('last_name', memberData.last_name)
+        .eq('birth_date', memberData.birth_date)
+        .maybeSingle();
+      existing = data;
+    }
 
     // 5. Prepare member data
     const finalData = {
@@ -758,16 +768,27 @@ export async function upsertMemberFromFIDAL(
       is_active: true,
     };
 
-    // 6. Upsert
+    // 6. Upsert with smart date comparison
     if (existing) {
-      const { error } = await supabase
-        .from('members')
-        .update(finalData)
-        .eq('id', existing.id);
+      // Compare card_date: only update if new date is more recent
+      const existingDate = existing.card_date ? new Date(existing.card_date) : null;
+      const newDate = memberData.card_date ? new Date(memberData.card_date) : null;
 
-      if (error) throw error;
-      return { success: true, action: 'updated' };
+      // If new date is more recent (or existing has no date), OVERWRITE ALL DATA
+      if (!existingDate || (newDate && newDate > existingDate)) {
+        const { error } = await supabase
+          .from('members')
+          .update(finalData)
+          .eq('id', existing.id);
+
+        if (error) throw error;
+        return { success: true, action: 'updated' };
+      } else {
+        // Skip update: existing data is more recent
+        return { success: true, action: 'skipped' };
+      }
     } else {
+      // Insert new member
       const { error } = await supabase
         .from('members')
         .insert(finalData);
@@ -783,10 +804,12 @@ export async function upsertMemberFromFIDAL(
 
 /**
  * Upsert member from UISP data
+ * Smart logic: identifies athlete by first_name + last_name + birth_date
+ * Updates only if card_date is more recent (overwrites all data)
  */
 export async function upsertMemberFromUISP(
   memberData: Partial<Member>
-): Promise<{ success: boolean; action: 'inserted' | 'updated'; error?: string }> {
+): Promise<{ success: boolean; action: 'inserted' | 'updated' | 'skipped'; error?: string }> {
 
   try {
     // 1. Lookup society in all_societies
@@ -807,12 +830,19 @@ export async function upsertMemberFromUISP(
       societyId = await getOrCreateManagedSociety(allSociety);
     }
 
-    // 4. Check if member exists (by membership_number)
-    const { data: existing } = await supabase
-      .from('members')
-      .select('id')
-      .eq('membership_number', memberData.membership_number!)
-      .maybeSingle();
+    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
+    let existing = null;
+
+    if (memberData.first_name && memberData.last_name && memberData.birth_date) {
+      const { data } = await supabase
+        .from('members')
+        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date')
+        .eq('first_name', memberData.first_name)
+        .eq('last_name', memberData.last_name)
+        .eq('birth_date', memberData.birth_date)
+        .maybeSingle();
+      existing = data;
+    }
 
     // 5. Prepare member data
     const finalData = {
@@ -822,16 +852,27 @@ export async function upsertMemberFromUISP(
       is_active: true,
     };
 
-    // 6. Upsert
+    // 6. Upsert with smart date comparison
     if (existing) {
-      const { error } = await supabase
-        .from('members')
-        .update(finalData)
-        .eq('id', existing.id);
+      // Compare card_date: only update if new date is more recent
+      const existingDate = existing.card_date ? new Date(existing.card_date) : null;
+      const newDate = memberData.card_date ? new Date(memberData.card_date) : null;
 
-      if (error) throw error;
-      return { success: true, action: 'updated' };
+      // If new date is more recent (or existing has no date), OVERWRITE ALL DATA
+      if (!existingDate || (newDate && newDate > existingDate)) {
+        const { error } = await supabase
+          .from('members')
+          .update(finalData)
+          .eq('id', existing.id);
+
+        if (error) throw error;
+        return { success: true, action: 'updated' };
+      } else {
+        // Skip update: existing data is more recent
+        return { success: true, action: 'skipped' };
+      }
     } else {
+      // Insert new member
       const { error } = await supabase
         .from('members')
         .insert(finalData);

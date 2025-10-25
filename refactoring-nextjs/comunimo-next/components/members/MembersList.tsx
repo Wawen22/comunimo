@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/lib/hooks/useUser';
-import { Plus, Search, Download, Filter, FileSpreadsheet } from 'lucide-react';
+import { Plus, Search, Download, Filter, FileSpreadsheet, ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MemberStatusBadge } from './MemberStatusBadge';
 import { MemberFilters } from './MemberFilters';
 import { ExpiryAlert } from './ExpiryAlert';
@@ -80,6 +80,39 @@ export function MembersList() {
     }
   };
 
+  const buildSearchFilter = (searchTerm: string) => {
+    if (!searchTerm.trim()) return null;
+
+    const trimmedSearch = searchTerm.trim();
+
+    // Split search term into words (for multi-word searches like "Mario Rossi" or "Rossi Mario")
+    const words = trimmedSearch.split(/\s+/).filter(w => w.length > 0);
+
+    if (words.length === 0) return null;
+
+    if (words.length === 1) {
+      // Single word: search in first_name, last_name, fiscal_code, membership_number
+      const word = words[0];
+      return `first_name.ilike.%${word}%,last_name.ilike.%${word}%,fiscal_code.ilike.%${word}%,membership_number.ilike.%${word}%`;
+    } else {
+      // Multiple words: search for each word in both first_name AND last_name
+      // This allows "Mario Rossi" to match both "Mario Rossi" and "Rossi Mario"
+      const conditions: string[] = [];
+
+      // For each word, it should match either first_name OR last_name
+      words.forEach(word => {
+        conditions.push(`first_name.ilike.%${word}%`);
+        conditions.push(`last_name.ilike.%${word}%`);
+      });
+
+      // Also search the full term in fiscal_code and membership_number
+      conditions.push(`fiscal_code.ilike.%${trimmedSearch}%`);
+      conditions.push(`membership_number.ilike.%${trimmedSearch}%`);
+
+      return conditions.join(',');
+    }
+  };
+
   const fetchMembers = async () => {
     try {
       setIsLoading(true);
@@ -97,7 +130,10 @@ export function MembersList() {
 
       // Apply filters
       if (filters.search) {
-        query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,fiscal_code.ilike.%${filters.search}%,membership_number.ilike.%${filters.search}%`);
+        const searchFilter = buildSearchFilter(filters.search);
+        if (searchFilter) {
+          query = query.or(searchFilter);
+        }
       }
 
       if (filters.societyIds.length > 0) {
@@ -150,7 +186,10 @@ export function MembersList() {
 
       // Apply same filters as the list
       if (filters.search) {
-        query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,fiscal_code.ilike.%${filters.search}%,membership_number.ilike.%${filters.search}%`);
+        const searchFilter = buildSearchFilter(filters.search);
+        if (searchFilter) {
+          query = query.or(searchFilter);
+        }
       }
 
       if (filters.societyIds.length > 0) {
@@ -408,14 +447,29 @@ export function MembersList() {
                   <span className="font-medium">{totalCount}</span> risultati
                 </div>
                 <div className="flex gap-2">
+                  {/* Prima pagina */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(1)}
+                    disabled={page === 1}
+                    title="Prima pagina"
+                  >
+                    <ChevronsLeft className="h-4 w-4" />
+                  </Button>
+
+                  {/* Precedente */}
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
+                    title="Pagina precedente"
                   >
-                    Precedente
+                    <ChevronLeft className="h-4 w-4" />
                   </Button>
+
+                  {/* Numeri pagina */}
                   <div className="flex items-center gap-1">
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                       let pageNum;
@@ -428,7 +482,7 @@ export function MembersList() {
                       } else {
                         pageNum = page - 2 + i;
                       }
-                      
+
                       return (
                         <Button
                           key={pageNum}
@@ -441,13 +495,27 @@ export function MembersList() {
                       );
                     })}
                   </div>
+
+                  {/* Successivo */}
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setPage(page + 1)}
                     disabled={page === totalPages}
+                    title="Pagina successiva"
                   >
-                    Successivo
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+
+                  {/* Ultima pagina */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(totalPages)}
+                    disabled={page === totalPages}
+                    title="Ultima pagina"
+                  >
+                    <ChevronsRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
