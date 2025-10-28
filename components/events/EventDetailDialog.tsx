@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/api/supabase';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useUser } from '@/lib/hooks/useUser';
 import { Event, Championship } from '@/types/database';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ interface EventDetailDialogProps {
 }
 
 export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: EventDetailDialogProps) {
-  const { profile } = useAuth();
+  const { profile } = useUser();
   const { toast } = useToast();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -58,8 +58,8 @@ export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: Event
     try {
       setDeleting(true);
 
-      const { error } = await supabase
-        .from('events')
+      const { error } = await (supabase
+        .from('events') as any)
         .update({ is_active: false })
         .eq('id', event.id);
 

@@ -39,7 +39,7 @@ export function ScrollReveal({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry && entry.isIntersecting) {
           setIsVisible(true);
         }
       },

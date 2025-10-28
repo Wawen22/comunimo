@@ -2,6 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    // Ignora errori ESLint durante la build di produzione
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    // Ignora errori TypeScript durante la build di produzione
+    ignoreBuildErrors: false,
+  },
   images: {
     domains: [],
     formats: ['image/avif', 'image/webp'],

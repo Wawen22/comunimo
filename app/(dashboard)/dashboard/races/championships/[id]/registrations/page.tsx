@@ -111,7 +111,7 @@ export default function ChampionshipRegistrationsPage() {
 
       // Fetch registration counts for each race
       if (racesData && racesData.length > 0) {
-        const raceIds = racesData.map(race => race.id);
+        const raceIds = (racesData as Race[]).map(race => race.id);
         const { data: eventRegistrations } = await supabase
           .from('event_registrations')
           .select('event_id')
@@ -120,14 +120,14 @@ export default function ChampionshipRegistrationsPage() {
 
         // Count registrations per race
         const counts: Record<string, number> = {};
-        eventRegistrations?.forEach(reg => {
+        (eventRegistrations as { event_id: string }[] | null)?.forEach(reg => {
           counts[reg.event_id] = (counts[reg.event_id] || 0) + 1;
         });
         setRaceRegistrationCounts(counts);
       }
 
       setChampionship({
-        ...championshipData,
+        ...(championshipData as Championship),
         race_count: racesData?.length || 0,
       });
 

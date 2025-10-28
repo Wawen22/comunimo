@@ -74,13 +74,13 @@ export function InsightsSection({ championship, events }: InsightsSectionProps) 
 
         // Count unique societies
         const uniqueSocietyIds = new Set(
-          registrations?.map(r => r.society_id).filter(Boolean)
+          (registrations as { society_id: string | null; category: string | null }[] | null)?.map(r => r.society_id).filter(Boolean)
         );
         const totalSocieties = uniqueSocietyIds.size;
 
         // Count unique categories
         const uniqueCategorySet = new Set(
-          registrations?.map(r => r.category?.trim()).filter(Boolean)
+          (registrations as { society_id: string | null; category: string | null }[] | null)?.map(r => r.category?.trim()).filter(Boolean)
         );
         const uniqueCategories = uniqueCategorySet.size;
 

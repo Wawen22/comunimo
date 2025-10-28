@@ -446,6 +446,7 @@ export function CalendarSection({ stages, loading }: CalendarSectionProps) {
           pdfUrl={selectedPoster}
           isOpen={!!selectedPoster}
           onClose={() => setSelectedPoster(null)}
+          title="Locandina evento"
         />
       )}
     </section>
