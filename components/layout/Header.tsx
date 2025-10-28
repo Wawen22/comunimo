@@ -28,7 +28,7 @@ function getPageTitle(pathname: string): string {
     'profile': 'Profilo',
   };
 
-  return titles[lastSegment] || 'Dashboard';
+  return (lastSegment && titles[lastSegment]) || 'Dashboard';
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
