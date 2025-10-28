@@ -65,7 +65,7 @@ export function NotificationBell() {
             size="icon"
             className="relative hover:bg-white/60 hover:scale-105 transition-all duration-200 rounded-xl group"
           >
-            <Bell className={`h-5 w-5 text-slate-600 transition-all duration-200 ${unreadCount > 0 ? 'animate-pulse' : 'group-hover:rotate-12'}`} />
+            <Bell className={`h-5 w-5 text-slate-600 transition-all duration-200 ${unreadCount > 0 ? 'text-blue-600' : 'group-hover:rotate-12'}`} />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-pink-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 animate-bounce">
                 {unreadCount > 99 ? '99+' : unreadCount}
