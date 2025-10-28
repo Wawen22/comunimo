@@ -55,6 +55,10 @@ export default function ChampionshipRegistrationsPage() {
     }
   }, [championshipId]);
 
+  const hasSpecificSocietySelected = !!societyId && societyId !== 'all';
+  const isAllSocietiesSelected = societyId === 'all';
+  const hasAnySocietySelection = !!societyId;
+
   const fetchTotalRegistrations = async () => {
     try {
       const { count, error } = await supabase
@@ -412,36 +416,52 @@ export default function ChampionshipRegistrationsPage() {
 
             <div className={cn(
               "bg-white rounded-xl border-2 shadow-lg p-6 transition-all duration-300",
-              !societyId
+              !hasAnySocietySelection
                 ? "border-yellow-400 shadow-yellow-200 animate-pulse-slow ring-4 ring-yellow-100"
-                : "border-green-400 shadow-green-200"
+                : hasSpecificSocietySelected
+                  ? "border-green-400 shadow-green-200"
+                  : "border-blue-400 shadow-blue-200 ring-4 ring-blue-100/70"
             )}>
               <div className="flex items-center gap-3 mb-4">
                 {/* Step Badge */}
                 <div className={cn(
                   "w-10 h-10 rounded-lg flex items-center justify-center shadow-md font-bold text-white text-lg",
-                  !societyId
+                  !hasAnySocietySelection
                     ? "bg-gradient-to-br from-yellow-500 to-orange-600"
-                    : "bg-gradient-to-br from-green-500 to-emerald-600"
+                    : hasSpecificSocietySelected
+                      ? "bg-gradient-to-br from-green-500 to-emerald-600"
+                      : "bg-gradient-to-br from-blue-500 to-indigo-600"
                 )}>
-                  {!societyId ? "1" : "✓"}
+                  {!hasAnySocietySelection ? "1" : hasSpecificSocietySelected ? "✓" : "!"}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <label className="block text-lg font-bold text-gray-900">
-                      {!societyId ? "STEP 1: Seleziona Società" : "Società Selezionata"}
+                      {!hasAnySocietySelection
+                        ? "STEP 1: Seleziona Società"
+                        : hasSpecificSocietySelected
+                          ? "Società Selezionata"
+                          : "Vista: Tutte le Società"}
                     </label>
-                    {societyId && societyId !== 'all' && (
+                    {hasSpecificSocietySelected && (
                       <div className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-bold">
                         COMPLETATO
                       </div>
                     )}
                   </div>
                   <p className="text-sm text-gray-500">
-                    {!societyId
+                    {!hasAnySocietySelection
                       ? "Prima scegli la società per cui gestire le iscrizioni"
-                      : "Ora puoi aggiungere nuovi iscritti"}
+                      : hasSpecificSocietySelected
+                        ? "Ora puoi aggiungere nuovi iscritti"
+                        : "Seleziona una società specifica per aggiungere nuovi iscritti"}
                   </p>
+                  {isAllSocietiesSelected && (
+                    <div className="mt-4 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700">
+                      <Info className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                      <span>Per registrare nuovi atleti, scegli una società specifica dal menu.</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -451,15 +471,17 @@ export default function ChampionshipRegistrationsPage() {
             onClick={() => setIsDropdownOpen(true)}
             className={cn(
               "flex h-14 w-full items-center justify-between rounded-xl border-2 px-5 py-3 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2",
-              !societyId
+              !hasAnySocietySelection
                 ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 hover:border-yellow-500 hover:shadow-lg focus:ring-yellow-500 shadow-md"
-                : "border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 hover:border-green-500 hover:shadow-md focus:ring-green-500"
+                : hasSpecificSocietySelected
+                  ? "border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 hover:border-green-500 hover:shadow-md focus:ring-green-500"
+                  : "border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 hover:border-blue-500 hover:shadow-md focus:ring-blue-500"
             )}
           >
             <span className={cn(
               "font-bold",
-              !societyId && "text-gray-600",
-              societyId && "text-gray-900"
+              !hasAnySocietySelection && "text-gray-600",
+              hasAnySocietySelection && "text-gray-900"
             )}>
               {societyId === 'all'
                 ? '🏢 Tutte le Società'
@@ -473,7 +495,11 @@ export default function ChampionshipRegistrationsPage() {
             </span>
             <ChevronsUpDown className={cn(
               "h-5 w-5",
-              !societyId ? "text-yellow-600" : "text-green-600"
+              !hasAnySocietySelection
+                ? "text-yellow-600"
+                : hasSpecificSocietySelected
+                  ? "text-green-600"
+                  : "text-blue-600"
             )} />
           </button>
 
@@ -702,4 +728,3 @@ export default function ChampionshipRegistrationsPage() {
     </div>
   );
 }
-
