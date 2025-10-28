@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './button';
@@ -73,21 +74,27 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
 
 export function DialogContent({ children, className }: DialogContentProps) {
   const { onOpenChange } = React.useContext(DialogContext);
+  const [mounted, setMounted] = React.useState(false);
 
-  return (
+  React.useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
-        className="fixed z-[100] bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm"
         onClick={() => onOpenChange(false)}
-        style={{ top: 0, left: 0, right: 0, bottom: 0, margin: 0, padding: 0 }}
       />
 
       {/* Dialog */}
-      <div
-        className="fixed z-[101] flex items-center justify-center p-4 overflow-y-auto"
-        style={{ top: 0, left: 0, right: 0, bottom: 0, margin: 0, padding: '1rem' }}
-      >
+      <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto p-4">
         <div
           className={cn(
             'relative w-full max-w-lg rounded-lg border border-gray-200 bg-white p-6 shadow-lg',
@@ -107,7 +114,8 @@ export function DialogContent({ children, className }: DialogContentProps) {
           {children}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 
@@ -157,4 +165,3 @@ export function DialogTrigger({ children, ...props }: React.ButtonHTMLAttributes
     </Button>
   );
 }
-
