@@ -123,6 +123,8 @@ export function BulkImportExcelDialog({
 
     for (let i = 0; i < validData.length; i++) {
       const item = validData[i];
+      
+      if (!item) continue;
 
       try {
         // Use appropriate upsert function based on import type
