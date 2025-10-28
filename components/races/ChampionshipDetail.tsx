@@ -63,6 +63,8 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
 
       if (racesError) throw racesError;
 
+      const typedRacesData = (racesData ?? []) as Event[];
+
       // Fetch registrations count for this championship
       const { count: regCount } = await supabase
         .from('championship_registrations')
@@ -73,8 +75,8 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
       setRegistrationsCount(regCount || 0);
 
       // Fetch registration counts for each race
-      if (racesData && racesData.length > 0) {
-        const raceIds = racesData.map(race => race.id);
+      if (typedRacesData.length > 0) {
+        const raceIds = typedRacesData.map(race => race.id);
         const { data: eventRegistrations } = await supabase
           .from('event_registrations')
           .select('event_id')
@@ -83,7 +85,8 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
 
         // Count registrations per race
         const counts: Record<string, number> = {};
-        eventRegistrations?.forEach(reg => {
+        const typedEventRegistrations = (eventRegistrations ?? []) as Array<{ event_id: string }>;
+        typedEventRegistrations.forEach(reg => {
           counts[reg.event_id] = (counts[reg.event_id] || 0) + 1;
         });
         setRaceRegistrationCounts(counts);
@@ -92,8 +95,8 @@ export function ChampionshipDetail({ championshipId }: ChampionshipDetailProps) 
       if (championshipData) {
         setChampionship({
           ...(championshipData as Championship),
-          races: racesData || [],
-          race_count: racesData?.length || 0,
+          races: typedRacesData,
+          race_count: typedRacesData.length,
         } as ChampionshipWithRaces);
       }
     } catch (error: any) {

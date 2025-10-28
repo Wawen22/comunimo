@@ -224,6 +224,18 @@ export interface EventRegistration {
   updated_at: string;
 }
 
+export interface AllSociety {
+  id: string;
+  society_code: string;
+  name: string;
+  province: string | null;
+  organization: string | null;
+  is_managed: boolean;
+  managed_society_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // ============================================================================
 // NOTIFICATIONS
 // ============================================================================
@@ -320,6 +332,9 @@ export type CreateUserSocietyInput = Omit<UserSociety, 'id' | 'created_at' | 'up
 export type CreateSocietyInput = Omit<Society, 'id' | 'created_at' | 'updated_at' | 'created_by'>;
 export type UpdateSocietyInput = Partial<CreateSocietyInput>;
 
+export type CreateAllSocietyInput = Omit<AllSociety, 'id' | 'created_at' | 'updated_at'>;
+export type UpdateAllSocietyInput = Partial<CreateAllSocietyInput>;
+
 export type CreateMemberInput = Omit<Member, 'id' | 'created_at' | 'updated_at' | 'created_by'>;
 export type UpdateMemberInput = Partial<CreateMemberInput>;
 
@@ -401,6 +416,11 @@ export interface Database {
         Row: Society;
         Insert: CreateSocietyInput;
         Update: UpdateSocietyInput;
+      };
+      all_societies: {
+        Row: AllSociety;
+        Insert: CreateAllSocietyInput;
+        Update: UpdateAllSocietyInput;
       };
       members: {
         Row: Member;

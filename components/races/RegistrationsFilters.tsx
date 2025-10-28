@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,8 +46,6 @@ export function RegistrationsFilters({
   totalCount,
   filteredCount,
 }: RegistrationsFiltersProps) {
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
-
   const organizations = [
     { value: 'FIDAL', label: 'FIDAL', icon: Trophy, color: 'from-green-500 to-green-600' },
     { value: 'UISP', label: 'UISP', icon: Flag, color: 'from-purple-500 to-purple-600' },
@@ -106,7 +102,7 @@ export function RegistrationsFilters({
         </div>
 
         {/* Advanced Filters Button - Compact on Mobile */}
-        <DropdownMenu open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
@@ -243,4 +239,3 @@ export function RegistrationsFilters({
     </div>
   );
 }
-

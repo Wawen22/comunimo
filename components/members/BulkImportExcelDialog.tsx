@@ -121,11 +121,7 @@ export function BulkImportExcelDialog({
       errorDetails: [],
     };
 
-    for (let i = 0; i < validData.length; i++) {
-      const item = validData[i];
-      
-      if (!item) continue;
-
+    for (const [index, item] of validData.entries()) {
       try {
         // Use appropriate upsert function based on import type
         const result = importType === 'FIDAL'
@@ -156,7 +152,7 @@ export function BulkImportExcelDialog({
       }
 
       // Update progress
-      setProgress(Math.round(((i + 1) / validData.length) * 100));
+      setProgress(Math.round(((index + 1) / validData.length) * 100));
     }
 
     setResult(importResult);
@@ -441,4 +437,3 @@ export function BulkImportExcelDialog({
     </Dialog>
   );
 }
-

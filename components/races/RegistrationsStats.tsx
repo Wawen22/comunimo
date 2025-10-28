@@ -26,9 +26,11 @@ function StatCard({ title, value, icon, color, subtitle, trend, delay = 0 }: Sta
 
   useEffect(() => {
     // Trigger animation after delay
+    let counter: ReturnType<typeof setInterval> | null = null;
+
     const timer = setTimeout(() => {
       setIsVisible(true);
-      
+
       // Animate counter if value is a number
       if (typeof value === 'number') {
         const duration = 1000;
@@ -36,21 +38,27 @@ function StatCard({ title, value, icon, color, subtitle, trend, delay = 0 }: Sta
         const increment = value / steps;
         let current = 0;
 
-        const counter = setInterval(() => {
+        counter = setInterval(() => {
           current += increment;
           if (current >= value) {
             setDisplayValue(value);
-            clearInterval(counter);
+            if (counter) {
+              clearInterval(counter);
+              counter = null;
+            }
           } else {
             setDisplayValue(Math.floor(current));
           }
         }, duration / steps);
-
-        return () => clearInterval(counter);
       }
     }, delay);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (counter) {
+        clearInterval(counter);
+      }
+    };
   }, [value, delay]);
 
   return (
@@ -270,4 +278,3 @@ export function RegistrationsStats({ registrations, loading = false }: Registrat
     </div>
   );
 }
-

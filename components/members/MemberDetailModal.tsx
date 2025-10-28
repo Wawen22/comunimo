@@ -291,7 +291,11 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
                     </h3>
                     <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                       <InfoField icon={Flag} label="Ente" value={member.organization} />
-                      <InfoField icon={Calendar} label="Anno" value={member.year} />
+                      <InfoField
+                        icon={Calendar}
+                        label="Anno"
+                        value={member.year !== null && member.year !== undefined ? String(member.year) : null}
+                      />
                       <InfoField icon={CreditCard} label="Codice Regionale" value={member.regional_code} />
                       <InfoField icon={Trophy} label="Categoria" value={member.category} />
                       <InfoField icon={Building2} label="Codice Società" value={member.society_code} />
@@ -395,4 +399,3 @@ function InfoField({ icon: Icon, label, value }: { icon: any; label: string; val
     </div>
   );
 }
-

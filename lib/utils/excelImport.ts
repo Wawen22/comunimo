@@ -271,12 +271,13 @@ export function parseDate(dateStr: string | number | Date | undefined): string |
     if (dateString.includes('/')) {
       const parts = dateString.split('/');
       if (parts.length === 3) {
-        const [day, month, year] = parts;
+        const [day, month, yearPart] = parts;
+        if (!day || !month || !yearPart) return null;
         // Handle 2-digit years (e.g., 97 -> 1997, 24 -> 2024)
-        let fullYear = year;
-        if (year.length === 2) {
-          const yearNum = parseInt(year, 10);
-          fullYear = yearNum > 50 ? `19${year}` : `20${year}`;
+        let fullYear = yearPart;
+        if (yearPart.length === 2) {
+          const yearNum = parseInt(yearPart, 10);
+          fullYear = yearNum > 50 ? `19${yearPart}` : `20${yearPart}`;
         }
         return `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       }
@@ -286,12 +287,13 @@ export function parseDate(dateStr: string | number | Date | undefined): string |
     if (dateString.includes('-') && dateString.match(/^\d{1,2}-\d{1,2}-\d{2,4}$/)) {
       const parts = dateString.split('-');
       if (parts.length === 3) {
-        const [day, month, year] = parts;
+        const [day, month, yearPart] = parts;
+        if (!day || !month || !yearPart) return null;
         // Handle 2-digit years
-        let fullYear = year;
-        if (year.length === 2) {
-          const yearNum = parseInt(year, 10);
-          fullYear = yearNum > 50 ? `19${year}` : `20${year}`;
+        let fullYear = yearPart;
+        if (yearPart.length === 2) {
+          const yearNum = parseInt(yearPart, 10);
+          fullYear = yearNum > 50 ? `19${yearPart}` : `20${yearPart}`;
         }
         return `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       }
@@ -325,7 +327,7 @@ export function parseDate(dateStr: string | number | Date | undefined): string |
  */
 export function extractGender(categ: string): 'M' | 'F' {
   if (categ.length < 2) return 'M'; // Default
-  const secondLetter = categ[1].toUpperCase();
+  const secondLetter = categ.charAt(1).toUpperCase();
   return secondLetter === 'F' ? 'F' : 'M';
 }
 
@@ -426,7 +428,13 @@ export async function parseFIDALExcel(file: File): Promise<ParsedFIDALData[]> {
     throw new Error('Il file Excel non contiene fogli. Verifica che sia un file Excel valido.');
   }
 
-  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const [firstSheetName] = workbook.SheetNames;
+  if (!firstSheetName) {
+    console.error('❌ No sheets found in workbook');
+    return [];
+  }
+
+  const worksheet = workbook.Sheets[firstSheetName];
 
   if (!worksheet) {
     console.error('❌ Worksheet is empty!');
@@ -516,7 +524,13 @@ export async function parseUISPExcel(file: File): Promise<ParsedUISPData[]> {
     throw new Error('Il file Excel non contiene fogli. Verifica che sia un file Excel valido.');
   }
 
-  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const [firstSheetName] = workbook.SheetNames;
+  if (!firstSheetName) {
+    console.error('❌ No sheets found in workbook');
+    return [];
+  }
+
+  const worksheet = workbook.Sheets[firstSheetName];
 
   if (!worksheet) {
     console.error('❌ Worksheet is empty!');
@@ -629,14 +643,18 @@ export async function createSociety(
   name: string,
   organization: string
 ): Promise<AllSociety | null> {
+  const payload = {
+    society_code: code,
+    name,
+    organization: normalizeOrganization(organization),
+    is_managed: false,
+    province: null,
+    managed_society_id: null,
+  };
+
   const { data, error } = await supabase
     .from('all_societies')
-    .insert({
-      society_code: code,
-      name: name,
-      organization: normalizeOrganization(organization),
-      is_managed: false,
-    })
+    .insert(payload as any)
     .select()
     .single();
 
@@ -668,23 +686,25 @@ async function getOrCreateManagedSociety(
       .eq('society_code', allSociety.society_code)
       .maybeSingle();
 
-    if (existingSociety) {
+    const existingSocietyId = (existingSociety as { id: string } | null)?.id;
+
+    if (existingSocietyId) {
       // Update all_societies to link to existing society
-      await supabase
-        .from('all_societies')
+      await (supabase
+        .from('all_societies') as any)
         .update({
-          managed_society_id: existingSociety.id,
+          managed_society_id: existingSocietyId,
           is_managed: true,
         })
         .eq('id', allSociety.id);
 
-      console.log('✅ Linked to existing society:', allSociety.society_code, '→', existingSociety.id);
-      return existingSociety.id;
+      console.log('✅ Linked to existing society:', allSociety.society_code, '→', existingSocietyId);
+      return existingSocietyId;
     }
 
     // Create new society in societies table
-    const { data: newSociety, error: createError } = await supabase
-      .from('societies')
+    const { data: newSociety, error: createError } = await (supabase
+      .from('societies') as any)
       .insert({
         name: allSociety.name,
         society_code: allSociety.society_code,
@@ -700,18 +720,24 @@ async function getOrCreateManagedSociety(
       return null;
     }
 
+    const newSocietyId = (newSociety as { id: string } | null)?.id;
+    if (!newSocietyId) {
+      console.error('❌ Missing new society id after creation');
+      return null;
+    }
+
     // Update all_societies to link to the new society
-    await supabase
-      .from('all_societies')
+    await (supabase
+      .from('all_societies') as any)
       .update({
-        managed_society_id: newSociety.id,
+        managed_society_id: newSocietyId,
         is_managed: true,
       })
       .eq('id', allSociety.id);
 
-    console.log('✅ Created managed society:', allSociety.society_code, '→', newSociety.id);
+    console.log('✅ Created managed society:', allSociety.society_code, '→', newSocietyId);
 
-    return newSociety.id;
+    return newSocietyId;
   } catch (error) {
     console.error('❌ Error in getOrCreateManagedSociety:', error);
     return null;
@@ -747,7 +773,7 @@ export async function upsertMemberFromFIDAL(
     }
 
     // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
-    let existing = null;
+    let existing: Member | null = null;
 
     if (memberData.first_name && memberData.last_name && memberData.birth_date) {
       const { data } = await supabase
@@ -757,7 +783,7 @@ export async function upsertMemberFromFIDAL(
         .eq('last_name', memberData.last_name)
         .eq('birth_date', memberData.birth_date)
         .maybeSingle();
-      existing = data;
+      existing = (data as Member | null);
     }
 
     // 5. Prepare member data
@@ -770,16 +796,17 @@ export async function upsertMemberFromFIDAL(
 
     // 6. Upsert with smart date comparison
     if (existing) {
+      const existingMember = existing as Member;
       // Compare card_date: only update if new date is more recent
-      const existingDate = existing.card_date ? new Date(existing.card_date) : null;
+      const existingDate = existingMember.card_date ? new Date(existingMember.card_date) : null;
       const newDate = memberData.card_date ? new Date(memberData.card_date) : null;
 
       // If new date is more recent (or existing has no date), OVERWRITE ALL DATA
       if (!existingDate || (newDate && newDate > existingDate)) {
-        const { error } = await supabase
-          .from('members')
-          .update(finalData)
-          .eq('id', existing.id);
+        const { error } = await (supabase
+          .from('members') as any)
+          .update(finalData as any)
+          .eq('id', existingMember.id);
 
         if (error) throw error;
         return { success: true, action: 'updated' };
@@ -789,9 +816,9 @@ export async function upsertMemberFromFIDAL(
       }
     } else {
       // Insert new member
-      const { error } = await supabase
-        .from('members')
-        .insert(finalData);
+      const { error } = await (supabase
+        .from('members') as any)
+        .insert(finalData as any);
 
       if (error) throw error;
       return { success: true, action: 'inserted' };
@@ -831,7 +858,7 @@ export async function upsertMemberFromUISP(
     }
 
     // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
-    let existing = null;
+    let existing: Member | null = null;
 
     if (memberData.first_name && memberData.last_name && memberData.birth_date) {
       const { data } = await supabase
@@ -841,7 +868,7 @@ export async function upsertMemberFromUISP(
         .eq('last_name', memberData.last_name)
         .eq('birth_date', memberData.birth_date)
         .maybeSingle();
-      existing = data;
+      existing = (data as Member | null);
     }
 
     // 5. Prepare member data
@@ -854,16 +881,17 @@ export async function upsertMemberFromUISP(
 
     // 6. Upsert with smart date comparison
     if (existing) {
+      const existingMember = existing as Member;
       // Compare card_date: only update if new date is more recent
-      const existingDate = existing.card_date ? new Date(existing.card_date) : null;
+      const existingDate = existingMember.card_date ? new Date(existingMember.card_date) : null;
       const newDate = memberData.card_date ? new Date(memberData.card_date) : null;
 
       // If new date is more recent (or existing has no date), OVERWRITE ALL DATA
       if (!existingDate || (newDate && newDate > existingDate)) {
-        const { error } = await supabase
-          .from('members')
-          .update(finalData)
-          .eq('id', existing.id);
+        const { error } = await (supabase
+          .from('members') as any)
+          .update(finalData as any)
+          .eq('id', existingMember.id);
 
         if (error) throw error;
         return { success: true, action: 'updated' };
@@ -873,9 +901,9 @@ export async function upsertMemberFromUISP(
       }
     } else {
       // Insert new member
-      const { error } = await supabase
-        .from('members')
-        .insert(finalData);
+      const { error } = await (supabase
+        .from('members') as any)
+        .insert(finalData as any);
 
       if (error) throw error;
       return { success: true, action: 'inserted' };
@@ -885,4 +913,3 @@ export async function upsertMemberFromUISP(
     return { success: false, action: 'inserted', error: error.message };
   }
 }
-

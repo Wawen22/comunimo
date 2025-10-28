@@ -14,8 +14,10 @@ import { getRaceStatus, getStatusLabel, getDaysUntilRace } from '@/lib/utils/rac
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 
+type ExtendedRace = Race & { subtitle?: string | null };
+
 interface ChampionshipStagesModalProps {
-  races: Race[];
+  races: ExtendedRace[];
   championshipId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -202,4 +204,3 @@ export function ChampionshipStagesModal({
     </Dialog>
   );
 }
-
