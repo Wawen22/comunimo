@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, Loader2, ChevronRight, MousePointerClick } from 'lucide-react';
+import { Bell, Loader2, ChevronRight, MousePointerClick, X, RefreshCcw } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuClose,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -74,18 +75,30 @@ export function NotificationBell() {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-80 max-w-sm border-blue-100/50 shadow-xl shadow-blue-500/10">
+        <DropdownMenuContent
+          align="end"
+          className="w-[calc(100vw-2rem)] max-w-sm sm:w-80 border-blue-100/50 shadow-xl shadow-blue-500/10"
+        >
           <DropdownMenuLabel className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50/30 rounded-t-lg">
             <span className="font-semibold bg-gradient-to-r from-blue-700 to-purple-600 bg-clip-text text-transparent">
               Notifiche
             </span>
-            <button
-              type="button"
-              onClick={refresh}
-              className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-md hover:bg-white/60"
-            >
-              Aggiorna
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={refresh}
+                className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:scale-[1.03] transition-all duration-200 px-2 py-1 rounded-md hover:bg-white/60"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+                Aggiorna
+              </button>
+              <DropdownMenuClose
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-blue-500 hover:bg-white/60 hover:text-blue-700 transition-colors"
+                aria-label="Chiudi notifiche"
+              >
+                <X className="h-5 w-5" />
+              </DropdownMenuClose>
+            </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-blue-200/30 to-transparent" />
 

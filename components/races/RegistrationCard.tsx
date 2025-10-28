@@ -236,44 +236,44 @@ export function RegistrationCard({
           {/* Header: Name + Bib Badge */}
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-gray-900 text-base mb-1.5 truncate">
+              <h4 className="font-bold text-gray-900 text-base mb-1.5 leading-snug">
                 {member?.first_name} {member?.last_name}
               </h4>
-              {registration.organization && (
-                <Badge className={cn('text-xs font-semibold', getOrganizationColor(registration.organization))}>
-                  {getOrganizationIcon(registration.organization)}
-                  <span className="ml-1">{registration.organization}</span>
-                </Badge>
-              )}
-            </div>
-
-            {/* Bib Number Badge - Top Right */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-br from-brand-blue to-brand-blue-dark text-white shadow-md">
-                <Hash className="h-3.5 w-3.5" />
-                <span className="text-base font-bold font-mono">{registration.bib_number}</span>
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                {registration.bib_number && (
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-br from-brand-blue to-brand-blue-dark px-2.5 py-1 text-xs font-semibold text-white shadow-md">
+                    <Hash className="h-3 w-3 text-white/80" />
+                    <span className="font-mono text-sm leading-none">{registration.bib_number}</span>
+                  </span>
+                )}
+                {registration.organization && (
+                  <Badge className={cn('text-xs font-semibold', getOrganizationColor(registration.organization))}>
+                    {getOrganizationIcon(registration.organization)}
+                    <span className="ml-1">{registration.organization}</span>
+                  </Badge>
+                )}
               </div>
-
-              {/* Actions Menu */}
-              {showActions && onCancel && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={() => onCancel(registration.id)}
-                      className="text-red-600 focus:text-red-600 focus:bg-red-50"
-                    >
-                      <UserX className="mr-2 h-4 w-4" />
-                      Annulla Iscrizione
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
             </div>
+
+            {/* Actions Menu */}
+            {showActions && onCancel && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => onCancel(registration.id)}
+                    className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                  >
+                    <UserX className="mr-2 h-4 w-4" />
+                    Annulla Iscrizione
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           {/* Info Grid - 2 Columns */}
@@ -487,4 +487,3 @@ export function RegistrationCard({
     </div>
   );
 }
-

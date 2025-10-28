@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 
 interface DropdownMenuProps {
@@ -90,9 +91,31 @@ export function DropdownMenuContent({
 }: DropdownMenuContentProps) {
   const { open, setOpen } = React.useContext(DropdownMenuContext);
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(max-width: 640px)');
+    const handleChange = (event: MediaQueryListEvent) => setIsMobile(event.matches);
+
+    setIsMobile(mediaQuery.matches);
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
 
   // Close on click outside
   React.useEffect(() => {
+    if (!open || isMobile) return;
+
     const handleClickOutside = (e: MouseEvent) => {
       if (
         contentRef.current &&
@@ -102,14 +125,36 @@ export function DropdownMenuContent({
       }
     };
 
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return undefined;
-  }, [open, setOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open, setOpen, isMobile]);
 
   if (!open) return null;
+  if (!mounted) return null;
+
+  if (isMobile) {
+    return createPortal(
+      <div className="fixed inset-0 z-50">
+        <div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        />
+        <div className="relative z-10 mt-24 flex justify-center px-4">
+          <div
+            ref={contentRef}
+            className={cn(
+              'w-full max-w-md overflow-hidden rounded-2xl border border-white/30 bg-white/95 shadow-2xl backdrop-blur-lg max-h-[70vh] overflow-y-auto',
+              className
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {children}
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  }
 
   const alignmentClasses = {
     start: 'left-0',
@@ -167,6 +212,33 @@ export function DropdownMenuLabel({ children, className }: DropdownMenuLabelProp
     <div className={cn('px-2 py-1.5 text-sm font-semibold text-gray-900', className)}>
       {children}
     </div>
+  );
+}
+
+interface DropdownMenuCloseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function DropdownMenuClose({
+  children,
+  className,
+  ...props
+}: DropdownMenuCloseProps) {
+  const { setOpen } = React.useContext(DropdownMenuContext);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(false)}
+      className={cn(
+        'inline-flex items-center justify-center rounded-md px-2 py-1 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
   );
 }
 

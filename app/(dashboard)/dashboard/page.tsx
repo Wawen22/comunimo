@@ -6,7 +6,7 @@ import { useUser } from '@/lib/hooks/useUser';
 import { useNotifications, type NotificationFeedItem } from '@/lib/hooks/useNotifications';
 import { supabase } from '@/lib/api/supabase';
 import { markNotificationAsRead } from '@/actions/notifications';
-import { Building2, Users, Calendar, Bell, TrendingUp, ArrowRight, Clock, ChevronRight, MousePointerClick } from 'lucide-react';
+import { Building2, Users, Calendar, Bell, TrendingUp, ArrowRight, Clock, ChevronRight, MousePointerClick, RefreshCcw } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -237,10 +237,12 @@ export default function DashboardPage() {
                 </div>
                 {notifications.length > 0 && (
                   <button
+                    type="button"
                     onClick={refreshNotifications}
-                    className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                    className="flex h-9 w-9 items-center justify-center rounded-md text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                    aria-label="Aggiorna notifiche"
                   >
-                    Aggiorna
+                    <RefreshCcw className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -266,58 +268,58 @@ export default function DashboardPage() {
                   <div
                     key={notification.recipientId}
                     onClick={() => handleOpenNotification(notification.recipientId)}
-                    className={`group px-6 py-4 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50/30 cursor-pointer border-l-4 ${
+                    className={`group px-4 py-3 sm:px-6 sm:py-4 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50/30 cursor-pointer border-l-4 ${
                       !notification.readAt
                         ? 'bg-blue-50/50 border-blue-500 hover:border-blue-600'
                         : 'border-transparent hover:border-blue-300'
                     }`}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`mt-1 rounded-full p-2 transition-all duration-200 ${
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className={`mt-1 rounded-full p-1.5 sm:p-2 transition-all duration-200 ${
                         !notification.readAt ? 'bg-blue-100 group-hover:bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100'
                       }`}>
-                        <Bell className={`h-4 w-4 transition-all duration-200 ${
+                        <Bell className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-all duration-200 ${
                           !notification.readAt ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-500'
                         }`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-2 flex-1">
-                            <h3 className={`font-semibold ${
+                          <div className="flex items-center gap-1.5 sm:gap-2 flex-1">
+                            <h3 className={`font-semibold text-sm sm:text-base ${
                               !notification.readAt ? 'text-gray-900' : 'text-gray-700'
                             }`}>
                               {notification.title}
                             </h3>
-                            <MousePointerClick className="h-4 w-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" />
+                            <MousePointerClick className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" />
                           </div>
                           {!notification.readAt && (
                             <span className="inline-flex h-2 w-2 rounded-full bg-blue-600 flex-shrink-0 mt-2 animate-pulse" />
                           )}
                         </div>
-                        <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+                        <p className="mt-1 text-xs sm:text-sm text-gray-600 line-clamp-2">
                           {notification.bodyText || 'Nessun contenuto'}
                         </p>
-                        <div className="mt-2 flex items-center justify-between gap-4">
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <div className="mt-2 flex items-center justify-between gap-3 sm:gap-4">
+                          <div className="flex items-center gap-1 text-[11px] sm:text-xs text-gray-500">
                             <Clock className="h-3 w-3" />
                             {formatDistanceToNow(new Date(notification.publishedAt), {
                               addSuffix: true,
                               locale: it,
                             })}
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 sm:gap-2">
                             {!notification.readAt && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleMarkAsRead(notification.recipientId);
                                 }}
-                                className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                                className="text-[11px] sm:text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
                               >
                                 Segna come letta
                               </button>
                             )}
-                            <span className="text-xs text-blue-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1">
+                            <span className="text-[11px] sm:text-xs text-blue-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1">
                               Clicca per leggere
                               <ChevronRight className="h-3 w-3" />
                             </span>
@@ -427,4 +429,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
