@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import { Member } from '@/lib/types/database';
 import { Button } from '@/components/ui/button';
@@ -388,14 +389,20 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
 }
 
 // Helper component for info fields
-function InfoField({ icon: Icon, label, value }: { icon: any; label: string; value: string | null | undefined }) {
+function InfoField({ icon: Icon, label, value }: { icon: any; label: string; value?: ReactNode }) {
+  const hasValue =
+    value !== null &&
+    value !== undefined &&
+    (!(typeof value === 'string') || value.trim() !== '');
+  const displayValue = hasValue ? value : '-';
+
   return (
     <div className="group bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200/60 hover:border-blue-300/60 hover:shadow-md transition-all duration-200">
       <p className="text-xs sm:text-sm font-semibold text-gray-500 mb-2 flex items-center gap-2 group-hover:text-blue-600 transition-colors">
         <Icon className="h-4 w-4 flex-shrink-0" />
         <span>{label}</span>
       </p>
-      <p className="text-sm sm:text-base text-gray-900 font-medium break-words">{value || '-'}</p>
+      <p className="text-sm sm:text-base text-gray-900 font-medium break-words">{displayValue}</p>
     </div>
   );
 }
