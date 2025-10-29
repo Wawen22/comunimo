@@ -340,7 +340,9 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
     });
   };
 
-  const categoriesForGender = watchedGender ? getCategoriesByGender(watchedGender as Gender) : [];
+  const categoriesForGender = watchedGender && (watchedGender === 'M' || watchedGender === 'F') 
+    ? getCategoriesByGender(watchedGender) 
+    : [];
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)} className="flex min-h-full flex-col">
