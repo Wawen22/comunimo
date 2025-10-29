@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import type { Event } from '@/types/database';
 
@@ -10,9 +10,15 @@ export interface EventsFilters {
   sortBy: 'date-asc' | 'date-desc' | 'title';
 }
 
+interface UseEventsDataOptions {
+  scope?: 'public' | 'dashboard';
+}
+
 export interface UseEventsDataReturn {
   events: Event[];
   filteredEvents: Event[];
+  upcomingEvents: Event[];
+  nextEvent: Event | null;
   loading: boolean;
   error: string | null;
   filters: EventsFilters;
@@ -23,13 +29,15 @@ export interface UseEventsDataReturn {
     past: number;
     thisMonth: number;
   };
+  refresh: () => Promise<void>;
 }
 
 /**
- * Hook to fetch and manage public events data
+ * Hook to fetch and manage events data
  * Provides filtering, sorting, and statistics
  */
-export function useEventsData(): UseEventsDataReturn {
+export function useEventsData(options: UseEventsDataOptions = {}): UseEventsDataReturn {
+  const scope = options.scope ?? 'public';
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,22 +47,22 @@ export function useEventsData(): UseEventsDataReturn {
     sortBy: 'date-asc',
   });
 
-  // Fetch events
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase
+      let query = supabase
         .from('events')
         .select('*')
-        .eq('is_public', true)
         .eq('is_active', true)
         .order('event_date', { ascending: true });
+
+      if (scope === 'public') {
+        query = query.eq('is_public', true);
+      }
+
+      const { data, error: fetchError } = await query;
 
       if (fetchError) {
         throw fetchError;
@@ -67,9 +75,17 @@ export function useEventsData(): UseEventsDataReturn {
     } finally {
       setLoading(false);
     }
-  };
+  }, [scope]);
+
+  // Fetch events
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
 
   // Filter and sort events
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
   const filteredEvents = events
     .filter((event) => {
       // Search filter
@@ -84,8 +100,6 @@ export function useEventsData(): UseEventsDataReturn {
 
       // Date filter
       const eventDate = new Date(event.event_date);
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
 
       if (filters.dateFilter === 'upcoming') {
         return eventDate >= now;
@@ -111,10 +125,13 @@ export function useEventsData(): UseEventsDataReturn {
       }
     });
 
+  const upcomingEvents = events
+    .filter((event) => new Date(event.event_date) >= now)
+    .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+
+  const nextEvent = upcomingEvents[0] ?? null;
+
   // Calculate statistics
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  
   const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const thisMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
@@ -131,11 +148,13 @@ export function useEventsData(): UseEventsDataReturn {
   return {
     events,
     filteredEvents,
+    upcomingEvents,
+    nextEvent,
     loading,
     error,
     filters,
     setFilters,
     stats,
+    refresh: fetchEvents,
   };
 }
-

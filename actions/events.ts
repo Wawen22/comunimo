@@ -27,6 +27,21 @@ interface CreateCustomEventResult {
   emailsFailed?: number;
 }
 
+interface UpdateCustomEventInput {
+  id: string;
+  title: string;
+  description?: string;
+  event_date: string;
+  event_time?: string;
+  location?: string;
+  max_participants?: number;
+}
+
+interface UpdateCustomEventResult {
+  success: boolean;
+  error?: string;
+}
+
 // Sanitize configuration (same as notifications)
 const sanitizeConfig = {
   allowedTags: [
@@ -314,3 +329,96 @@ export async function createCustomEvent(
   }
 }
 
+export async function updateCustomEvent(
+  input: UpdateCustomEventInput
+): Promise<UpdateCustomEventResult> {
+  const supabase = await createServerClient();
+
+  const { data: authData } = await supabase.auth.getUser();
+  const currentUser = authData?.user;
+
+  if (!currentUser) {
+    return { success: false, error: 'Utente non autenticato' };
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('id, role')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (profileError || !profile) {
+    console.error('[events] Unable to load profile for update', profileError);
+    return { success: false, error: 'Impossibile caricare il profilo' };
+  }
+
+  const userRole = (profile as any).role as string | null;
+  if (!userRole || !['admin', 'super_admin'].includes(userRole)) {
+    return { success: false, error: 'Permessi insufficienti' };
+  }
+
+  const eventId = input.id;
+  const title = input.title?.trim();
+  const event_date = input.event_date?.trim();
+
+  if (!eventId) {
+    return { success: false, error: 'Evento non valido' };
+  }
+
+  if (!title) {
+    return { success: false, error: 'Titolo obbligatorio' };
+  }
+
+  if (!event_date) {
+    return { success: false, error: 'Data evento obbligatoria' };
+  }
+
+  const { data: existingEvent, error: existingEventError } = await (supabase
+    .from('events') as any)
+    .select('id, championship_id')
+    .eq('id', eventId)
+    .single();
+
+  if (existingEventError || !existingEvent) {
+    console.error('[events] Event not found for update', existingEventError);
+    return { success: false, error: 'Evento non trovato' };
+  }
+
+  if ((existingEvent as any).championship_id) {
+    return { success: false, error: 'Puoi modificare solo eventi personalizzati' };
+  }
+
+  const sanitizedDescription = input.description
+    ? sanitizeHtml(input.description, sanitizeConfig)
+    : null;
+
+  try {
+    const { error: updateError } = await (supabase
+      .from('events') as any)
+      .update({
+        title,
+        description: sanitizedDescription,
+        event_date,
+        event_time: input.event_time?.trim() || null,
+        location: input.location?.trim() || null,
+        max_participants: input.max_participants || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', eventId);
+
+    if (updateError) {
+      console.error('[events] Failed to update event', updateError);
+      return { success: false, error: 'Errore durante l\'aggiornamento dell\'evento' };
+    }
+
+    revalidatePath('/dashboard/events');
+
+    return { success: true };
+  } catch (error) {
+    console.error('[events] Unexpected error updating event', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Errore imprevisto',
+    };
+  }
+}

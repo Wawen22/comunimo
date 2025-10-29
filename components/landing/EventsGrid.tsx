@@ -30,6 +30,7 @@ interface EventsGridProps {
   filters: EventsFilters;
   onFiltersChange: (filters: EventsFilters) => void;
   loading: boolean;
+  onEventClick?: (event: Event) => void;
 }
 
 /**
@@ -42,7 +43,13 @@ interface EventsGridProps {
  * - Empty states
  * - Filter badges
  */
-export function EventsGrid({ events, filters, onFiltersChange, loading }: EventsGridProps) {
+export function EventsGrid({
+  events,
+  filters,
+  onFiltersChange,
+  loading,
+  onEventClick,
+}: EventsGridProps) {
   const [showFilters, setShowFilters] = useState(false);
 
   const handleSearchChange = (value: string) => {
@@ -93,7 +100,7 @@ export function EventsGrid({ events, filters, onFiltersChange, loading }: Events
   }
 
   return (
-    <section className="bg-slate-50 py-16">
+    <section id="events-grid" className="bg-slate-50 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Filters Section */}
         <div className="mb-8 space-y-4">
@@ -251,7 +258,11 @@ export function EventsGrid({ events, filters, onFiltersChange, loading }: Events
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard
+                key={event.id}
+                event={event}
+                onSelect={onEventClick ? () => onEventClick(event) : undefined}
+              />
             ))}
           </div>
         )}
@@ -259,4 +270,3 @@ export function EventsGrid({ events, filters, onFiltersChange, loading }: Events
     </section>
   );
 }
-

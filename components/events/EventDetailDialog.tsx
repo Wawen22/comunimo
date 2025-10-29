@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast';
-import { Calendar, MapPin, Clock, Users, Trophy, Edit, Trash2, ExternalLink, Loader2, FileText } from 'lucide-react';
+import { Calendar, MapPin, Clock, Users, Trophy, Edit, Trash2, ExternalLink, Loader2, FileText, X } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -32,9 +32,10 @@ interface EventDetailDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdate: () => void;
+  onEdit?: (event: EventWithChampionship) => void;
 }
 
-export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: EventDetailDialogProps) {
+export function EventDetailDialog({ event, open, onOpenChange, onUpdate, onEdit }: EventDetailDialogProps) {
   const { profile } = useUser();
   const { toast } = useToast();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -85,10 +86,12 @@ export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: Event
     }
   };
 
+  const handleClose = () => onOpenChange(false);
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" hideClose>
           <DialogHeader>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
@@ -122,25 +125,39 @@ export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: Event
                 </DialogTitle>
               </div>
 
-              {canEdit && isCustomEvent && (
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 border-2"
-                  >
-                    <Edit className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setShowDeleteDialog(true)}
-                    className="h-10 w-10 border-2 text-red-600 hover:bg-red-50 hover:border-red-300"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </Button>
-                </div>
-              )}
+              <div className="flex gap-2">
+                {canEdit && isCustomEvent && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 border-2"
+                      onClick={() => {
+                        handleClose();
+                        onEdit?.(event);
+                      }}
+                    >
+                      <Edit className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setShowDeleteDialog(true)}
+                      className="h-10 w-10 border-2 text-red-600 hover:bg-red-50 hover:border-red-300"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </Button>
+                  </>
+                )}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleClose}
+                  className="h-10 w-10 border-2"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
           </DialogHeader>
 
@@ -299,4 +316,3 @@ export function EventDetailDialog({ event, open, onOpenChange, onUpdate }: Event
     </>
   );
 }
-

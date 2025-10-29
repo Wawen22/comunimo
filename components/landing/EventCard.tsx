@@ -1,6 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import {
+  useState,
+  MouseEvent as ReactMouseEvent,
+  KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
 import { format, isPast, isFuture, differenceInDays } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Calendar, MapPin, Clock, Users, FileText, ExternalLink, CheckCircle2, XCircle } from 'lucide-react';
@@ -11,6 +15,7 @@ import { PDFViewerModal } from './PDFViewerModal';
 
 interface EventCardProps {
   event: Event;
+  onSelect?: (event: Event) => void;
 }
 
 /**
@@ -23,7 +28,7 @@ interface EventCardProps {
  * - Poster preview
  * - Smooth animations
  */
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, onSelect }: EventCardProps) {
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -64,12 +69,43 @@ export function EventCard({ event }: EventCardProps) {
     ? 'border-orange-200 hover:border-orange-400'
     : 'border-purple-200 hover:border-purple-400';
 
+  const interactivityClasses = onSelect
+    ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2'
+    : '';
+
+  const handleSelect = () => {
+    if (onSelect) {
+      onSelect(event);
+    }
+  };
+
+  const handlePosterClick = (e: ReactMouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setPdfModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setPdfModalOpen(false);
+  };
+
+  const handleKeyDown = (keyboardEvent: ReactKeyboardEvent<HTMLElement>) => {
+    if (!onSelect) return;
+    if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+      keyboardEvent.preventDefault();
+      onSelect(event);
+    }
+  };
+
   return (
     <>
       <article
-        className={`group relative overflow-hidden rounded-[24px] border-2 ${borderClass} bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl`}
+        className={`group relative overflow-hidden rounded-[24px] border-2 ${borderClass} bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${interactivityClasses}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={handleSelect}
+        role={onSelect ? 'button' : undefined}
+        tabIndex={onSelect ? 0 : undefined}
+        onKeyDown={handleKeyDown}
       >
         {/* Gradient Overlay */}
         <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
@@ -182,7 +218,7 @@ export function EventCard({ event }: EventCardProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPdfModalOpen(true)}
+                onClick={handlePosterClick}
                 className="flex-1 border-2 border-purple-200 text-purple-700 hover:border-purple-400 hover:bg-purple-50"
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -198,7 +234,12 @@ export function EventCard({ event }: EventCardProps) {
                 asChild
                 className="flex-1 border-2 border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
               >
-                <a href={event.results_url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={event.results_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Classifiche
                 </a>
@@ -224,7 +265,7 @@ export function EventCard({ event }: EventCardProps) {
       {event.poster_url && (
         <PDFViewerModal
           isOpen={pdfModalOpen}
-          onClose={() => setPdfModalOpen(false)}
+          onClose={handleModalClose}
           pdfUrl={event.poster_url}
           title={`Locandina - ${event.title}`}
         />
@@ -232,4 +273,3 @@ export function EventCard({ event }: EventCardProps) {
     </>
   );
 }
-
