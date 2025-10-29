@@ -88,7 +88,7 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black bg-opacity-50 px-4 !mt-0">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -118,26 +118,29 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
           {/* Add Society Section */}
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-gray-900">Aggiungi Società</h3>
-            <div className="flex gap-2">
-              <select
-                value={selectedSocietyId}
-                onChange={(e) => setSelectedSocietyId(e.target.value)}
-                disabled={loading || saving || availableSocieties.length === 0}
-                className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">
-                  {loading ? 'Caricamento...' : availableSocieties.length === 0 ? 'Tutte le società già assegnate' : 'Seleziona una società'}
-                </option>
-                {availableSocieties.map((society) => (
-                  <option key={society.id} value={society.id}>
-                    {society.society_code} - {society.name}
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <div className="sm:flex-1 sm:min-w-0">
+                <select
+                  value={selectedSocietyId}
+                  onChange={(e) => setSelectedSocietyId(e.target.value)}
+                  disabled={loading || saving || availableSocieties.length === 0}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">
+                    {loading ? 'Caricamento...' : availableSocieties.length === 0 ? 'Tutte le società già assegnate' : 'Seleziona una società'}
                   </option>
-                ))}
-              </select>
+                  {availableSocieties.map((society) => (
+                    <option key={society.id} value={society.id}>
+                      {society.society_code} - {society.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <Button
                 onClick={handleAssignSociety}
                 disabled={!selectedSocietyId || saving}
                 size="sm"
+                className="w-full sm:w-auto"
               >
                 <Plus className="h-4 w-4 mr-1" />
                 Aggiungi
@@ -226,4 +229,3 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
     </div>
   );
 }
-
