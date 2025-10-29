@@ -1,16 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Edit, Trophy, CheckCircle2, AlertTriangle, Flag } from 'lucide-react';
 import { supabase } from '@/lib/api/supabase';
 import { Member } from '@/lib/types/database';
 import { useToast } from '@/components/ui/toast';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle 
-} from '@/components/ui/dialog';
-import { Edit, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { MemberFormInModal } from './MemberFormInModal';
 
 interface MemberEditModalProps {
@@ -33,7 +31,7 @@ export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: Mem
 
   const fetchMember = async () => {
     if (!memberId) return;
-    
+
     try {
       setIsLoading(true);
 
@@ -51,7 +49,7 @@ export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: Mem
       console.error('Error fetching member:', error);
       toast({
         title: 'Errore',
-        description: 'Impossibile caricare i dati dell\'atleta',
+        description: "Impossibile caricare i dati dell'atleta",
         variant: 'destructive',
       });
     } finally {
@@ -66,15 +64,37 @@ export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: Mem
     }
   };
 
+  const membershipStatusStyles: Record<
+    NonNullable<Member['membership_status']>,
+    { label: string; className: string }
+  > = {
+    active: {
+      label: 'Tesseramento attivo',
+      className: 'bg-emerald-100 text-emerald-700 ring-emerald-200',
+    },
+    suspended: {
+      label: 'Tesseramento sospeso',
+      className: 'bg-amber-100 text-amber-700 ring-amber-200',
+    },
+    expired: {
+      label: 'Tesseramento scaduto',
+      className: 'bg-rose-100 text-rose-700 ring-rose-200',
+    },
+    cancelled: {
+      label: 'Tesseramento annullato',
+      className: 'bg-slate-200 text-slate-700 ring-slate-300',
+    },
+  };
+
   if (!open) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-0 gap-0 bg-gradient-to-br from-slate-50 via-green-50/30 to-emerald-50/40">
+      <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-0 bg-slate-50">
         {isLoading ? (
           <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
             <div className="text-center">
-              <div className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-green-500 border-t-transparent mx-auto"></div>
+              <div className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto"></div>
               <p className="text-sm font-medium text-gray-600">Caricamento...</p>
             </div>
           </div>
@@ -86,42 +106,62 @@ export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: Mem
           </div>
         ) : (
           <>
-            {/* Header with soft gradient */}
-            <div className="relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 px-6 sm:px-8 py-5 sm:py-6">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5" />
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
-
-              <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 shadow-lg">
-                    <Edit className="h-6 w-6 sm:h-7 sm:w-7 text-white drop-shadow-sm" />
+            <div className="border-b border-slate-200 bg-white px-6 sm:px-8 py-6">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600 shadow-sm">
+                    <Edit className="h-6 w-6" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <DialogTitle className="text-lg sm:text-xl font-bold text-white drop-shadow-sm">
-                      Modifica Atleta
+                  <div className="min-w-0 flex-1 md:pr-4">
+                    <DialogTitle className="text-xl font-bold text-slate-900">
+                      Modifica atleta
                     </DialogTitle>
-                    <p className="text-xs sm:text-sm text-white/90 mt-0.5 font-medium truncate">
+                    <p className="mt-1 text-sm text-slate-500">
                       {member.first_name} {member.last_name}
                     </p>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      {member.category && (
+                        <Badge className="flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                          <Trophy className="h-3.5 w-3.5" />
+                          {member.category}
+                        </Badge>
+                      )}
+
+                      {member.membership_status && (
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide',
+                            membershipStatusStyles[member.membership_status]?.className,
+                          )}
+                        >
+                          {member.membership_status === 'active' ? (
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          ) : (
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                          )}
+                          {membershipStatusStyles[member.membership_status]?.label}
+                        </Badge>
+                      )}
+
+                      {member.organization && (
+                        <Badge className="flex items-center gap-1.5 rounded-full bg-sky-100 text-sky-700 ring-1 ring-sky-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                          <Flag className="h-3.5 w-3.5" />
+                          {member.organization}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Close button */}
-                <button
-                  onClick={() => onOpenChange(false)}
-                  className="rounded-full p-2 bg-white/15 backdrop-blur-md border border-white/40 text-white hover:bg-white/25 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-                  aria-label="Chiudi"
-                >
-                  <X className="h-4 w-4" />
-                </button>
               </div>
             </div>
 
-            {/* Form Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto bg-white/50">
-              <MemberFormInModal 
-                member={member} 
-                mode="edit" 
+            <div className="flex-1 overflow-y-auto bg-slate-50">
+              <MemberFormInModal
+                member={member}
+                mode="edit"
                 onSuccess={handleSuccess}
                 onCancel={() => onOpenChange(false)}
               />
@@ -132,4 +172,3 @@ export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: Mem
     </Dialog>
   );
 }
-

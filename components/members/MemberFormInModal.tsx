@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import type { ReactNode } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/lib/api/supabase';
@@ -9,25 +10,32 @@ import { Member, Society } from '@/lib/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { ChevronLeft, ChevronRight, Save, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { assignCategory, getCategoriesByGender, type Gender } from '@/lib/utils/categoryAssignment';
+import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 
 // Validation schema
 const memberSchema = z.object({
-  // Step 1: Personal Info
   first_name: z.string().min(1, 'Nome obbligatorio'),
   last_name: z.string().min(1, 'Cognome obbligatorio'),
-  fiscal_code: z.string()
+  fiscal_code: z
+    .string()
     .regex(/^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/, 'Codice fiscale non valido (16 caratteri)')
     .optional()
     .or(z.literal('')),
   birth_date: z.string().min(1, 'Data di nascita obbligatoria'),
   birth_place: z.string().optional(),
   gender: z.enum(['M', 'F', 'other'], { required_error: 'Genere obbligatorio' }),
-
-  // Step 2: Contact & Address
   email: z.string().email('Email non valida').optional().or(z.literal('')),
   phone: z.string().optional(),
   mobile: z.string().optional(),
@@ -35,22 +43,16 @@ const memberSchema = z.object({
   city: z.string().optional(),
   province: z.string().max(2, 'Provincia deve essere di 2 caratteri').optional(),
   postal_code: z.string().max(5, 'CAP deve essere di 5 cifre').optional(),
-
-  // Step 3: Membership
   society_id: z.string().min(1, 'Società obbligatoria'),
   society_code: z.string().min(1, 'Codice società obbligatorio'),
   membership_number: z.string().optional(),
   membership_date: z.string().optional(),
   membership_type: z.string().optional(),
   membership_status: z.enum(['active', 'suspended', 'expired', 'cancelled']).default('active'),
-
-  // Step 4: Athletic Info
   year: z.number().optional().or(z.string().optional()),
   regional_code: z.string().optional(),
   category: z.string().optional(),
   is_foreign: z.boolean().default(false),
-
-  // Step 5: Documents
   medical_certificate_date: z.string().optional(),
   medical_certificate_expiry: z.string().optional(),
   photo_url: z.string().url('URL non valido').optional().or(z.literal('')),
@@ -66,6 +68,29 @@ interface MemberFormInModalProps {
   onCancel?: () => void;
 }
 
+const steps = [
+  {
+    id: 1,
+    title: 'Dati personali',
+    description: 'Anagrafica di base dell’atleta',
+  },
+  {
+    id: 2,
+    title: 'Contatti e indirizzo',
+    description: 'Dove e come contattare l’atleta',
+  },
+  {
+    id: 3,
+    title: 'Tesseramento',
+    description: 'Stato di iscrizione e società di riferimento',
+  },
+  {
+    id: 4,
+    title: 'Dati atletici e documenti',
+    description: 'Categoria, certificato medico e note interne',
+  },
+] as const;
+
 export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel }: MemberFormInModalProps) {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -73,11 +98,12 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
   const [currentStep, setCurrentStep] = useState(1);
   const [societies, setSocieties] = useState<Society[]>([]);
   const [justChangedStep, setJustChangedStep] = useState(false);
-  const totalSteps = 4;
+  const totalSteps = steps.length;
 
   const {
     register,
     handleSubmit,
+    control,
     watch,
     setValue,
     formState: { errors },
@@ -90,7 +116,7 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
           fiscal_code: member.fiscal_code || '',
           birth_date: member.birth_date || '',
           birth_place: member.birth_place || '',
-          gender: member.gender || 'M',
+          gender: (member.gender as MemberFormData['gender']) || 'M',
           email: member.email || '',
           phone: member.phone || '',
           mobile: member.mobile || '',
@@ -196,7 +222,6 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
   const nextStep = (e?: React.MouseEvent<HTMLButtonElement>) => {
     if (e) {
       e.preventDefault();
-      e.stopPropagation();
     }
     setJustChangedStep(true);
     setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
@@ -205,7 +230,6 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
   const prevStep = (e?: React.MouseEvent<HTMLButtonElement>) => {
     if (e) {
       e.preventDefault();
-      e.stopPropagation();
     }
     setJustChangedStep(true);
     setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -220,7 +244,12 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
     try {
       setIsLoading(true);
 
-      const yearValue = data.year ? (typeof data.year === 'string' ? parseInt(data.year, 10) : data.year) : null;
+      const yearValue =
+        data.year != null && data.year !== ''
+          ? typeof data.year === 'string'
+            ? parseInt(data.year, 10)
+            : data.year
+          : null;
 
       const memberData = {
         first_name: data.first_name,
@@ -255,11 +284,11 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
       };
 
       if (mode === 'create') {
-        const { data: newMember, error } = await supabase
+        const { error } = await supabase
           .from('members')
           .insert([memberData] as any)
           .select()
-          .single() as { data: any; error: any };
+          .single();
 
         if (error) throw error;
 
@@ -270,7 +299,7 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
         });
 
         if (onSuccess) onSuccess();
-      } else {
+      } else if (member) {
         const { error } = await supabase
           .from('members')
           // @ts-expect-error - Supabase type inference issue
@@ -278,7 +307,7 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
             ...memberData,
             updated_at: new Date().toISOString(),
           })
-          .eq('id', member!.id);
+          .eq('id', member.id);
 
         if (error) throw error;
 
@@ -295,7 +324,7 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
 
       toast({
         title: 'Errore',
-        description: 'Impossibile salvare l\'atleta',
+        description: "Impossibile salvare l'atleta",
         variant: 'destructive',
       });
     } finally {
@@ -303,386 +332,392 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
     }
   };
 
-  const onError = (errors: any) => {
-    console.log('Form validation failed:', errors);
+  const onError = () => {
     toast({
-      title: 'Errore di Validazione',
+      title: 'Errore di validazione',
       description: 'Controlla i campi obbligatori e riprova',
       variant: 'destructive',
     });
   };
 
+  const categoriesForGender = watchedGender ? getCategoriesByGender(watchedGender as Gender) : [];
+
   return (
-    <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6 p-6">
-      {/* Progress Indicator */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          {[1, 2, 3, 4].map((step) => (
-            <div key={step} className="flex items-center flex-1">
-              <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
-                  step <= currentStep
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-600'
-                }`}
-              >
-                {step}
-              </div>
-              {step < 4 && (
-                <div
-                  className={`h-1 flex-1 mx-2 ${
-                    step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="flex min-h-full flex-col">
+      <StepIndicator currentStep={currentStep} />
+
+      <div className="flex-1 space-y-6 p-6">
+        {currentStep === 1 && (
+          <FormSection title="Anagrafica atleta" description="Inserisci i dati identificativi principali.">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field id="first_name" label="Nome" required error={errors.first_name?.message}>
+                <Input id="first_name" {...register('first_name')} placeholder="Mario" />
+              </Field>
+
+              <Field id="last_name" label="Cognome" required error={errors.last_name?.message}>
+                <Input id="last_name" {...register('last_name')} placeholder="Rossi" />
+              </Field>
+
+              <Field id="fiscal_code" label="Codice Fiscale" error={errors.fiscal_code?.message}>
+                <Input
+                  id="fiscal_code"
+                  {...register('fiscal_code')}
+                  placeholder="RSSMRA80A01H501Z"
+                  maxLength={16}
                 />
-              )}
+              </Field>
+
+              <Field id="birth_date" label="Data di nascita" required error={errors.birth_date?.message}>
+                <Input id="birth_date" type="date" {...register('birth_date')} />
+              </Field>
+
+              <Field id="birth_place" label="Luogo di nascita" error={errors.birth_place?.message}>
+                <Input id="birth_place" {...register('birth_place')} placeholder="Modena" />
+              </Field>
+
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <Field id="gender" label="Genere" required error={errors.gender?.message}>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger id="gender">
+                        <SelectValue placeholder="Seleziona genere" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="M">Maschio</SelectItem>
+                        <SelectItem value="F">Femmina</SelectItem>
+                        <SelectItem value="other">Altro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                )}
+              />
             </div>
-          ))}
-        </div>
-        <div className="text-center text-sm text-gray-600">
-          Step {currentStep} di {totalSteps}
-        </div>
+          </FormSection>
+        )}
+
+        {currentStep === 2 && (
+          <FormSection
+            title="Contatti e indirizzo"
+            description="Mantieni aggiornati i riferimenti per comunicare con l’atleta."
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field id="email" label="Email" error={errors.email?.message}>
+                <Input id="email" {...register('email')} type="email" placeholder="mario.rossi@email.it" />
+              </Field>
+
+              <Field id="phone" label="Telefono" error={errors.phone?.message}>
+                <Input id="phone" {...register('phone')} placeholder="059 123456" />
+              </Field>
+
+              <Field id="mobile" label="Cellulare" error={errors.mobile?.message}>
+                <Input id="mobile" {...register('mobile')} placeholder="+39 333 1234567" />
+              </Field>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field id="address" label="Indirizzo" error={errors.address?.message}>
+                <Input id="address" {...register('address')} placeholder="Via Roma, 123" />
+              </Field>
+
+              <Field id="city" label="Città" error={errors.city?.message}>
+                <Input id="city" {...register('city')} placeholder="Modena" />
+              </Field>
+
+              <Field id="province" label="Provincia" error={errors.province?.message}>
+                <Input id="province" {...register('province')} maxLength={2} placeholder="MO" />
+              </Field>
+
+              <Field id="postal_code" label="CAP" error={errors.postal_code?.message}>
+                <Input id="postal_code" {...register('postal_code')} maxLength={5} placeholder="41121" />
+              </Field>
+            </div>
+          </FormSection>
+        )}
+
+        {currentStep === 3 && (
+          <FormSection title="Tesseramento" description="Associa l’atleta alla società e aggiorna il suo stato.">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field id="society_id" label="Società" required error={errors.society_id?.message}>
+                <select
+                  id="society_id"
+                  {...register('society_id')}
+                  className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                >
+                  <option value="">Seleziona società</option>
+                  {societies.map((society) => (
+                    <option key={society.id} value={society.id}>
+                      {society.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              <Field id="society_code" label="Codice società" required error={errors.society_code?.message}>
+                <Input id="society_code" {...register('society_code')} placeholder="MO001F" />
+              </Field>
+
+              <Field id="membership_number" label="Numero tessera" error={errors.membership_number?.message}>
+                <Input id="membership_number" {...register('membership_number')} placeholder="12345" />
+              </Field>
+
+              <Field id="membership_date" label="Data tesseramento" error={errors.membership_date?.message}>
+                <Input id="membership_date" type="date" {...register('membership_date')} />
+              </Field>
+
+              <Field id="membership_type" label="Tipo tesseramento" error={errors.membership_type?.message}>
+                <Input id="membership_type" {...register('membership_type')} placeholder="Agonistico" />
+              </Field>
+
+              <Controller
+                control={control}
+                name="membership_status"
+                render={({ field }) => (
+                  <Field id="membership_status" label="Stato tesseramento" error={errors.membership_status?.message}>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger id="membership_status">
+                        <SelectValue placeholder="Seleziona stato" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">Attivo</SelectItem>
+                        <SelectItem value="suspended">Sospeso</SelectItem>
+                        <SelectItem value="expired">Scaduto</SelectItem>
+                        <SelectItem value="cancelled">Annullato</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                )}
+              />
+            </div>
+          </FormSection>
+        )}
+
+        {currentStep === 4 && (
+          <div className="space-y-6">
+            <FormSection
+              title="Dati atletici"
+              description="Calcola automaticamente la categoria e definisci le informazioni sportive."
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field id="category" label="Categoria" error={errors.category?.message}>
+                  <select
+                    id="category"
+                    {...register('category')}
+                    className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                  >
+                    <option value="">Seleziona categoria</option>
+                    {categoriesForGender.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <Field id="year" label="Anno" error={errors.year?.toString()}>
+                  <Input id="year" {...register('year')} type="number" placeholder="2024" />
+                </Field>
+
+                <Field id="regional_code" label="Codice regionale" error={errors.regional_code?.message}>
+                  <Input id="regional_code" {...register('regional_code')} placeholder="REG123" />
+                </Field>
+
+                <Controller
+                  control={control}
+                  name="is_foreign"
+                  render={({ field }) => (
+                    <Field id="is_foreign" label="Atleta straniero">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => field.onChange(!field.value)}
+                          className={cn(
+                            'rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2',
+                            field.value
+                              ? 'border-emerald-200 bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-200'
+                              : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100 focus:ring-slate-200',
+                          )}
+                        >
+                          {field.value ? 'Sì' : 'No'}
+                        </button>
+                        <span className="text-xs text-slate-500">
+                          {field.value
+                            ? 'L’atleta è registrato come straniero.'
+                            : 'L’atleta è registrato come italiano.'}
+                        </span>
+                      </div>
+                    </Field>
+                  )}
+                />
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Certificato medico & note"
+              description="Tieni traccia della validità del certificato medico e annota informazioni utili."
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  id="medical_certificate_date"
+                  label="Data certificato"
+                  error={errors.medical_certificate_date?.message}
+                >
+                  <Input id="medical_certificate_date" type="date" {...register('medical_certificate_date')} />
+                </Field>
+
+                <Field
+                  id="medical_certificate_expiry"
+                  label="Scadenza certificato"
+                  error={errors.medical_certificate_expiry?.message}
+                >
+                  <Input id="medical_certificate_expiry" type="date" {...register('medical_certificate_expiry')} />
+                </Field>
+              </div>
+
+              <Field id="photo_url" label="URL foto" error={errors.photo_url?.message}>
+                <Input id="photo_url" {...register('photo_url')} placeholder="https://esempio.it/foto.jpg" />
+              </Field>
+
+              <Field id="notes" label="Note interne" error={errors.notes?.message}>
+                <Textarea
+                  id="notes"
+                  {...register('notes')}
+                  rows={4}
+                  placeholder="Annotazioni utili per lo staff..."
+                />
+              </Field>
+            </FormSection>
+          </div>
+        )}
       </div>
 
-      {/* Step 1: Personal Information */}
-      {currentStep === 1 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Dati Personali</h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="first_name">
-                Nome <span className="text-red-500">*</span>
-              </Label>
-              <Input id="first_name" {...register('first_name')} placeholder="Mario" />
-              {errors.first_name && (
-                <p className="mt-1 text-sm text-red-600">{errors.first_name.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="last_name">
-                Cognome <span className="text-red-500">*</span>
-              </Label>
-              <Input id="last_name" {...register('last_name')} placeholder="Rossi" />
-              {errors.last_name && (
-                <p className="mt-1 text-sm text-red-600">{errors.last_name.message}</p>
-              )}
-            </div>
+      <div className="sticky bottom-0 border-t border-slate-200 bg-white/95 px-6 py-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-xs text-slate-500">
+            Step {currentStep} di {totalSteps}
           </div>
 
-          <div>
-            <Label htmlFor="fiscal_code">Codice Fiscale</Label>
-            <Input
-              id="fiscal_code"
-              {...register('fiscal_code')}
-              placeholder="RSSMRA80A01H501Z"
-              maxLength={16}
-            />
-            {errors.fiscal_code && (
-              <p className="mt-1 text-sm text-red-600">{errors.fiscal_code.message}</p>
+          <div className="flex items-center justify-end gap-3">
+            {onCancel && (
+              <Button variant="ghost" type="button" onClick={onCancel} disabled={isLoading}>
+                Annulla
+              </Button>
             )}
-          </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="birth_date">
-                Data di Nascita <span className="text-red-500">*</span>
-              </Label>
-              <Input id="birth_date" type="date" {...register('birth_date')} />
-              {errors.birth_date && (
-                <p className="mt-1 text-sm text-red-600">{errors.birth_date.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="birth_place">Luogo di Nascita</Label>
-              <Input id="birth_place" {...register('birth_place')} placeholder="Modena" />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="gender">
-              Genere <span className="text-red-500">*</span>
-            </Label>
-            <select
-              id="gender"
-              {...register('gender')}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            <Button
+              type="button"
+              variant="outline"
+              onClick={prevStep}
+              disabled={currentStep === 1 || isLoading}
+              className="hidden sm:inline-flex items-center gap-2"
             >
-              <option value="M">Maschio</option>
-              <option value="F">Femmina</option>
-              <option value="other">Altro</option>
-            </select>
-            {errors.gender && (
-              <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Contact & Address */}
-      {currentStep === 2 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Contatti e Indirizzo</h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" {...register('email')} placeholder="mario.rossi@email.it" />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="phone">Telefono</Label>
-              <Input id="phone" type="tel" {...register('phone')} placeholder="059 123456" />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="mobile">Cellulare</Label>
-            <Input id="mobile" type="tel" {...register('mobile')} placeholder="333 1234567" />
-          </div>
-
-          <div>
-            <Label htmlFor="address">Indirizzo</Label>
-            <Input id="address" {...register('address')} placeholder="Via Roma, 123" />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <Label htmlFor="city">Città</Label>
-              <Input id="city" {...register('city')} placeholder="Modena" />
-            </div>
-
-            <div>
-              <Label htmlFor="province">Provincia</Label>
-              <Input id="province" {...register('province')} placeholder="MO" maxLength={2} />
-              {errors.province && (
-                <p className="mt-1 text-sm text-red-600">{errors.province.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="postal_code">CAP</Label>
-              <Input id="postal_code" {...register('postal_code')} placeholder="41121" maxLength={5} />
-              {errors.postal_code && (
-                <p className="mt-1 text-sm text-red-600">{errors.postal_code.message}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 3: Membership & Athletic Info */}
-      {currentStep === 3 && (
-        <div className="space-y-6">
-          <h3 className="text-lg font-semibold">Tesseramento e Dati Atletici</h3>
-
-          {/* Membership Section */}
-          <div className="space-y-4 border-b pb-4">
-            <h4 className="text-md font-medium text-gray-700">Dati Tesseramento</h4>
-
-            <div>
-              <Label htmlFor="society_id">
-                Società <span className="text-red-500">*</span>
-              </Label>
-              <select
-                id="society_id"
-                {...register('society_id')}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-              >
-                <option value="">Seleziona una società</option>
-                {societies.map((society) => (
-                  <option key={society.id} value={society.id}>
-                    {society.name} {society.society_code ? `(${society.society_code})` : ''}
-                  </option>
-                ))}
-              </select>
-              {errors.society_id && (
-                <p className="mt-1 text-sm text-red-600">{errors.society_id.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="society_code">
-                Codice Società <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="society_code"
-                {...register('society_code')}
-                placeholder="Auto-popolato dalla società"
-                readOnly
-                className="bg-gray-50"
-              />
-              {errors.society_code && (
-                <p className="mt-1 text-sm text-red-600">{errors.society_code.message}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="membership_number">Numero Tessera</Label>
-                <Input id="membership_number" {...register('membership_number')} placeholder="12345" />
-              </div>
-
-              <div>
-                <Label htmlFor="membership_date">Data Tesseramento</Label>
-                <Input id="membership_date" type="date" {...register('membership_date')} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="membership_type">Tipo Tesseramento</Label>
-                <Input id="membership_type" {...register('membership_type')} placeholder="Annuale" />
-              </div>
-
-              <div>
-                <Label htmlFor="membership_status">Stato Tesseramento</Label>
-                <select
-                  id="membership_status"
-                  {...register('membership_status')}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                >
-                  <option value="active">Attivo</option>
-                  <option value="suspended">Sospeso</option>
-                  <option value="expired">Scaduto</option>
-                  <option value="cancelled">Annullato</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Athletic Info Section */}
-          <div className="space-y-4">
-            <h4 className="text-md font-medium text-gray-700">Dati Atletici</h4>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="year">Anno Gestione</Label>
-                <Input id="year" type="number" {...register('year')} placeholder="2024" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="regional_code">Codice Regionale</Label>
-                <Input id="regional_code" {...register('regional_code')} placeholder="ER123" />
-              </div>
-
-              <div>
-                <Label htmlFor="category">Categoria</Label>
-                <select
-                  id="category"
-                  {...register('category')}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 bg-gray-50"
-                >
-                  <option value="">Auto-assegnata da età e genere</option>
-                  {watchedGender && (watchedGender === 'M' || watchedGender === 'F') &&
-                    getCategoriesByGender(watchedGender).map((cat) => (
-                      <option key={cat.code} value={cat.code} title={cat.description}>
-                        {cat.name} ({cat.ageMin}-{cat.ageMax || '∞'} anni)
-                      </option>
-                    ))
-                  }
-                </select>
-                <p className="mt-1 text-xs text-gray-500">
-                  Categoria calcolata automaticamente (modificabile)
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                id="is_foreign"
-                type="checkbox"
-                {...register('is_foreign')}
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
-              />
-              <Label htmlFor="is_foreign" className="cursor-pointer">
-                Atleta Straniero
-              </Label>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 4: Documents */}
-      {currentStep === 4 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Documenti</h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="medical_certificate_date">Data Certificato Medico</Label>
-              <Input id="medical_certificate_date" type="date" {...register('medical_certificate_date')} />
-            </div>
-
-            <div>
-              <Label htmlFor="medical_certificate_expiry">Data Scadenza Certificato</Label>
-              <Input id="medical_certificate_expiry" type="date" {...register('medical_certificate_expiry')} />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="photo_url">URL Foto</Label>
-            <Input id="photo_url" type="url" {...register('photo_url')} placeholder="https://esempio.it/foto.jpg" />
-            {errors.photo_url && (
-              <p className="mt-1 text-sm text-red-600">{errors.photo_url.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="notes">Note</Label>
-            <textarea
-              id="notes"
-              {...register('notes')}
-              rows={4}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-              placeholder="Note aggiuntive sull'atleta..."
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Form Actions */}
-      <div className="flex items-center justify-between border-t pt-6">
-        <div>
-          {currentStep > 1 && (
-            <Button type="button" variant="outline" onClick={(e) => prevStep(e)} disabled={isLoading}>
-              <ChevronLeft className="mr-2 h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
               Indietro
             </Button>
-          )}
-        </div>
 
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
-            <X className="mr-2 h-4 w-4" />
-            Annulla
-          </Button>
-
-          {currentStep < totalSteps ? (
-            <Button type="button" onClick={(e) => nextStep(e)} disabled={isLoading}>
-              Avanti
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          ) : (
-            <Button type="submit" disabled={isLoading}>
-              <Save className="mr-2 h-4 w-4" />
-              {isLoading ? 'Salvataggio...' : mode === 'create' ? 'Crea Atleta' : 'Salva Modifiche'}
-            </Button>
-          )}
+            {currentStep < totalSteps ? (
+              <Button
+                type="button"
+                onClick={nextStep}
+                disabled={isLoading}
+                className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Avanti
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="inline-flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+              >
+                <Save className="h-4 w-4" />
+                {isLoading ? 'Salvataggio...' : 'Salva atleta'}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </form>
   );
 }
 
+function StepIndicator({ currentStep }: { currentStep: number }) {
+  return (
+    <div className="border-b border-slate-200 bg-white px-6 py-4">
+      <div className="flex items-start gap-4 overflow-x-auto">
+        {steps.map((step) => (
+          <div key={step.id} className="flex min-w-[180px] flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  'flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition',
+                  step.id <= currentStep
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-200 text-slate-600',
+                )}
+              >
+                {step.id}
+              </span>
+              <span
+                className={cn(
+                  'text-sm font-semibold',
+                  step.id <= currentStep ? 'text-slate-900' : 'text-slate-500',
+                )}
+              >
+                {step.title}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500">{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FormSection({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur">
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+        {description && <p className="text-xs text-slate-500">{description}</p>}
+      </div>
+      <div className="space-y-4">{children}</div>
+    </section>
+  );
+}
+
+function Field({
+  id,
+  label,
+  children,
+  error,
+  required,
+}: {
+  id: string;
+  label: string;
+  children: ReactNode;
+  error?: string;
+  required?: boolean;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id} className="text-sm font-semibold text-slate-700">
+        {label}
+        {required && <span className="ml-1 text-red-500">*</span>}
+      </Label>
+      {children}
+      {error && <p className="text-xs text-rose-600">{error}</p>}
+    </div>
+  );
+}

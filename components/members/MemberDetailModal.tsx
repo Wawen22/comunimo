@@ -2,38 +2,37 @@
 
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { supabase } from '@/lib/api/supabase';
-import { Member } from '@/lib/types/database';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/toast';
-import { useIsAdmin } from '@/lib/hooks/useUser';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle 
-} from '@/components/ui/dialog';
-import { 
-  User, 
-  Calendar, 
-  Building2, 
-  CreditCard, 
+import type { LucideIcon } from 'lucide-react';
+import {
+  User,
+  Calendar,
+  Building2,
+  CreditCard,
   Trophy,
   FileText,
   Mail,
   Phone,
   MapPin,
   Edit,
-  X,
   Cake,
   Flag,
   Users,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Copy,
+  ExternalLink,
+  ClipboardList,
+  Activity,
+  Globe,
 } from 'lucide-react';
+import { supabase } from '@/lib/api/supabase';
+import { Member } from '@/lib/types/database';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/toast';
+import { useIsAdmin } from '@/lib/hooks/useUser';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
 import { MemberEditModal } from './MemberEditModal';
 
 interface MemberWithRelations extends Member {
@@ -50,16 +49,12 @@ interface MemberDetailModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type TabType = 'personal' | 'athletic' | 'documents';
-
 export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetailModalProps) {
-  const router = useRouter();
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
   const [member, setMember] = useState<MemberWithRelations | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabType>('personal');
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
@@ -70,16 +65,18 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
 
   const fetchMember = async () => {
     if (!memberId) return;
-    
+
     try {
       setIsLoading(true);
 
       const { data, error } = await supabase
         .from('members')
-        .select(`
+        .select(
+          `
           *,
           society:societies(id, name, society_code)
-        `)
+        `,
+        )
         .eq('id', memberId)
         .eq('is_active', true)
         .single();
@@ -91,7 +88,7 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
       console.error('Error fetching member:', error);
       toast({
         title: 'Errore',
-        description: 'Impossibile caricare i dati dell\'atleta',
+        description: "Impossibile caricare i dati dell'atleta",
         variant: 'destructive',
       });
     } finally {
@@ -107,20 +104,38 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
   const formatGender = (gender: string | null) => {
     if (!gender) return '-';
     switch (gender) {
-      case 'M': return 'Maschio';
-      case 'F': return 'Femmina';
-      default: return gender;
+      case 'M':
+        return 'Maschio';
+      case 'F':
+        return 'Femmina';
+      default:
+        return gender;
     }
   };
 
   const getOrganizationColor = (org: string) => {
     switch (org) {
-      case 'FIDAL': return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'UISP': return 'bg-green-100 text-green-700 border-green-200';
-      case 'CSI': return 'bg-purple-100 text-purple-700 border-purple-200';
-      case 'LIBERTAS': return 'bg-orange-100 text-orange-700 border-orange-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'FIDAL':
+        return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'UISP':
+        return 'bg-green-100 text-green-700 border-green-200';
+      case 'CSI':
+        return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'LIBERTAS':
+        return 'bg-orange-100 text-orange-700 border-orange-200';
+      default:
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     }
+  };
+
+  const membershipStatusStyles: Record<
+    NonNullable<Member['membership_status']>,
+    { label: string; className: string }
+  > = {
+    active: { label: 'Attivo', className: 'bg-emerald-100 text-emerald-700 ring-emerald-200' },
+    suspended: { label: 'Sospeso', className: 'bg-amber-100 text-amber-700 ring-amber-200' },
+    expired: { label: 'Scaduto', className: 'bg-rose-100 text-rose-700 ring-rose-200' },
+    cancelled: { label: 'Annullato', className: 'bg-slate-200 text-slate-700 ring-slate-300' },
   };
 
   const handleEdit = () => {
@@ -128,254 +143,280 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
   };
 
   const handleEditSuccess = () => {
-    // Refresh member data after successful edit
     fetchMember();
   };
 
-  const tabs: { id: TabType; label: string; icon: any }[] = [
-    { id: 'personal', label: 'Dati Personali', icon: User },
-    { id: 'athletic', label: 'Dati Atletici & Tesseramento', icon: Trophy },
-    { id: 'documents', label: 'Documenti', icon: FileText },
-  ];
+  const handleCopy = async (label: string, value?: string | null) => {
+    if (!value || !value.trim()) return;
 
-  if (!open) return null;
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({
+        title: 'Copiato',
+        description: `${label} copiato negli appunti`,
+        variant: 'success',
+      });
+    } catch (error) {
+      console.error('Clipboard error:', error);
+      toast({
+        title: 'Errore',
+        description: 'Impossibile copiare il valore',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const formatAddress = (value: MemberWithRelations | null) => {
+    if (!value) return null;
+
+    const parts = [
+      value.address?.trim() || '',
+      value.city?.trim() ? `${value.postal_code || ''} ${value.city}`.trim() : '',
+      value.province?.trim() ? `(${value.province})` : '',
+    ].filter(Boolean);
+
+    return parts.length ? parts.join(' ') : null;
+  };
+
+  const shouldShowDetail = open && !showEditModal;
+
+  if (!open && !showEditModal) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-0 gap-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
-        {isLoading ? (
-          <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
-            <div className="text-center">
-              <div className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
-              <p className="text-sm font-medium text-gray-600">Caricamento...</p>
-            </div>
-          </div>
-        ) : !member ? (
-          <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
-            <div className="text-center">
-              <p className="text-lg font-semibold text-gray-900">Atleta non trovato</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Header with soft gradient */}
-            <div className="relative bg-gradient-to-br from-blue-500/90 via-indigo-500/90 to-purple-500/90 px-6 sm:px-8 py-6 sm:py-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5" />
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
+    <>
+      {shouldShowDetail && (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-0 bg-slate-50">
+            {isLoading ? (
+              <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
+                <div className="text-center">
+                  <div className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+                  <p className="text-sm font-medium text-gray-600">Caricamento...</p>
+                </div>
+              </div>
+            ) : !member ? (
+              <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
+                <div className="text-center">
+                  <p className="text-lg font-semibold text-gray-900">Atleta non trovato</p>
+                </div>
+              </div>
+            ) : (
+              <>
+            <div className="relative border-b border-slate-200 bg-gradient-to-r from-sky-100 via-indigo-50 to-transparent px-6 sm:px-8 py-6 sm:py-7">
+              <div className="relative flex flex-col gap-5 md:flex-row md:items-start md:justify-between md:pr-16">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border border-white/60 bg-white/90 text-slate-600 shadow-sm">
+                    <User className="h-8 w-8" />
+                  </div>
+                  <div className="min-w-0 flex-1 md:pr-4">
+                    <DialogTitle className="text-xl sm:text-2xl font-bold text-slate-900">
+                      {member.first_name} {member.last_name}
+                    </DialogTitle>
 
-              <div className="relative flex flex-col sm:flex-row items-start sm:items-start justify-between gap-4">
-                <div className="flex-1 w-full sm:w-auto">
-                  <div className="flex items-center gap-3 sm:gap-4 mb-3">
-                    <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 shadow-lg">
-                      <User className="h-7 w-7 sm:h-8 sm:w-8 text-white drop-shadow-sm" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <DialogTitle className="text-xl sm:text-2xl font-bold text-white mb-1.5 drop-shadow-sm truncate">
-                        {member.first_name} {member.last_name}
-                      </DialogTitle>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
                       {member.organization && (
-                        <Badge className={cn('text-xs font-semibold border shadow-sm', getOrganizationColor(member.organization))}>
-                          <Flag className="h-3 w-3 mr-1" />
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide shadow-sm',
+                            getOrganizationColor(member.organization),
+                          )}
+                        >
+                          <Flag className="h-3.5 w-3.5" />
                           {member.organization}
                         </Badge>
                       )}
+
+                      {member.category && (
+                        <Badge className="flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                          <Trophy className="h-3.5 w-3.5" />
+                          {member.category}
+                        </Badge>
+                      )}
+
+                      {member.birth_date && (
+                        <Badge className="flex items-center gap-1.5 rounded-full bg-slate-100 text-slate-700 ring-1 ring-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                          <Cake className="h-3.5 w-3.5" />
+                          {formatDate(member.birth_date)}
+                        </Badge>
+                      )}
+
+                      {member.society && (
+                        <Badge className="flex items-center gap-1.5 rounded-full bg-indigo-100 text-indigo-700 ring-1 ring-indigo-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                          <Building2 className="h-3.5 w-3.5" />
+                          {member.society.name}
+                        </Badge>
+                      )}
                     </div>
                   </div>
-
-                  {/* Quick Info */}
-                  <div className="mt-4 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm">
-                    {member.category && (
-                      <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                        <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className="font-medium">{member.category}</span>
-                      </div>
-                    )}
-                    {member.birth_date && (
-                      <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                        <Cake className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className="font-medium">{formatDate(member.birth_date)}</span>
-                      </div>
-                    )}
-                    {member.society && (
-                      <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                        <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className="font-medium truncate max-w-[150px]">{member.society.name}</span>
-                      </div>
-                    )}
-                  </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  {isAdmin && (
+                {isAdmin && (
+                  <div className="flex items-center justify-end md:self-start md:ml-auto md:mr-12">
                     <Button
                       onClick={handleEdit}
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
-                      className="bg-white/15 backdrop-blur-md border-white/40 text-white hover:bg-white/25 shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
+                      className="border border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50"
                     >
-                      <Edit className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">Modifica</span>
-                      <span className="sm:hidden">Modifica</span>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Modifica
                     </Button>
-                  )}
-
-                  <button
-                    onClick={() => onOpenChange(false)}
-                    className="rounded-full p-2 bg-white/15 backdrop-blur-md border border-white/40 text-white hover:bg-white/25 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-                    aria-label="Chiudi"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b border-gray-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white px-4 sm:px-6">
-              <nav className="flex -mb-px gap-3 sm:gap-6 overflow-x-auto scrollbar-hide">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={cn(
-                        'flex items-center gap-2 px-2 sm:px-3 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold border-b-2 transition-all duration-200 whitespace-nowrap',
-                        activeTab === tab.id
-                          ? 'border-blue-500 text-blue-600 bg-blue-50/50'
-                          : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300 hover:bg-gray-50/50'
-                      )}
+            <div className="flex-1 overflow-y-auto">
+              <div className="space-y-6 p-6">
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                  <div className="space-y-6">
+                    <SectionCard
+                      icon={User}
+                      title="Dati personali"
+                      description="Informazioni anagrafiche e contatti dell’atleta"
                     >
-                      <Icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="hidden sm:inline">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-
-            {/* Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 bg-white/50">
-              {/* Personal Info Tab */}
-              {activeTab === 'personal' && (
-                <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 animate-in fade-in duration-300">
-                  <InfoField icon={User} label="Nome" value={member.first_name} />
-                  <InfoField icon={User} label="Cognome" value={member.last_name} />
-                  <InfoField icon={CreditCard} label="Codice Fiscale" value={member.fiscal_code} />
-                  <InfoField icon={Cake} label="Data di Nascita" value={formatDate(member.birth_date)} />
-                  <InfoField icon={MapPin} label="Luogo di Nascita" value={member.birth_place} />
-                  <InfoField icon={Users} label="Sesso" value={formatGender(member.gender)} />
-                  <InfoField icon={Mail} label="Email" value={member.email} />
-                  <InfoField icon={Phone} label="Telefono" value={member.phone} />
-                  <InfoField icon={Phone} label="Cellulare" value={member.mobile} />
-                  <div className="md:col-span-2">
-                    <InfoField
-                      icon={MapPin}
-                      label="Indirizzo"
-                      value={`${member.address || '-'}${member.city ? `, ${member.city}` : ''}${member.province ? ` (${member.province})` : ''}${member.postal_code ? ` - ${member.postal_code}` : ''}`}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Athletic & Membership Tab (UNIFIED) */}
-              {activeTab === 'athletic' && (
-                <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-                  {/* Dati Atletici Section */}
-                  <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/30 rounded-2xl p-4 sm:p-6 border border-blue-100/60">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <div className="p-2 bg-blue-500/10 rounded-lg">
-                        <Trophy className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <span>Dati Atletici</span>
-                    </h3>
-                    <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-                      <InfoField icon={Flag} label="Ente" value={member.organization} />
-                      <InfoField
-                        icon={Calendar}
-                        label="Anno"
-                        value={member.year !== null && member.year !== undefined ? String(member.year) : null}
-                      />
-                      <InfoField icon={CreditCard} label="Codice Regionale" value={member.regional_code} />
-                      <InfoField icon={Trophy} label="Categoria" value={member.category} />
-                      <InfoField icon={Building2} label="Codice Società" value={member.society_code} />
-                      <InfoField
-                        icon={Flag}
-                        label="Atleta Straniero"
-                        value={member.is_foreign ? 'Sì' : 'No'}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Tesseramento Section */}
-                  <div className="bg-gradient-to-br from-green-50/50 to-emerald-50/30 rounded-2xl p-4 sm:p-6 border border-green-100/60">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <div className="p-2 bg-green-500/10 rounded-lg">
-                        <CreditCard className="h-5 w-5 text-green-600" />
-                      </div>
-                      <span>Tesseramento</span>
-                    </h3>
-                    <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-                      <InfoField icon={CreditCard} label="Numero Tessera" value={member.membership_number} />
-                      <InfoField icon={Calendar} label="Data Tesseramento" value={formatDate(member.membership_date)} />
-                      <InfoField icon={FileText} label="Tipo Tesseramento" value={member.membership_type} />
-                      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200/60">
-                        <p className="text-xs sm:text-sm font-semibold text-gray-500 mb-2 flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
-                          <span>Stato</span>
-                        </p>
-                        <Badge className={cn(
-                          'text-sm font-semibold px-3 py-1',
-                          member.membership_status === 'active'
-                            ? 'bg-green-100 text-green-700 border-green-200'
-                            : 'bg-gray-100 text-gray-700 border-gray-200'
-                        )}>
-                          {member.membership_status === 'active' ? 'Attivo' : member.membership_status}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Documents Tab */}
-              {activeTab === 'documents' && (
-                <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-300">
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-                    <InfoField
-                      icon={Calendar}
-                      label="Data Certificato Medico"
-                      value={formatDate(member.medical_certificate_date)}
-                    />
-                    <InfoField
-                      icon={AlertCircle}
-                      label="Data Scadenza Certificato"
-                      value={formatDate(member.medical_certificate_expiry)}
-                    />
-                  </div>
-
-                  {member.notes && (
-                    <div className="bg-gradient-to-br from-amber-50/50 to-orange-50/30 rounded-2xl p-4 sm:p-6 border border-amber-100/60">
-                      <p className="text-sm sm:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                        <div className="p-2 bg-amber-500/10 rounded-lg">
-                          <FileText className="h-5 w-5 text-amber-600" />
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <InfoRow icon={User} label="Nome" value={member.first_name} />
+                        <InfoRow icon={User} label="Cognome" value={member.last_name} />
+                        <InfoRow icon={CreditCard} label="Codice fiscale" value={member.fiscal_code} />
+                        <InfoRow icon={Cake} label="Data di nascita" value={formatDate(member.birth_date)} />
+                        <InfoRow icon={MapPin} label="Luogo di nascita" value={member.birth_place} />
+                        <InfoRow icon={Users} label="Sesso" value={formatGender(member.gender)} />
+                        <InfoRow icon={Mail} label="Email" value={member.email} />
+                        <InfoRow icon={Phone} label="Telefono" value={member.phone} />
+                        <InfoRow icon={Phone} label="Cellulare" value={member.mobile} />
+                        <div className="md:col-span-2">
+                          <InfoRow icon={MapPin} label="Indirizzo" value={formatAddress(member)} />
                         </div>
-                        <span>Note</span>
-                      </p>
-                      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200/60">
-                        <p className="text-sm text-gray-900 whitespace-pre-wrap leading-relaxed">{member.notes}</p>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </DialogContent>
+                    </SectionCard>
 
-      {/* Edit Modal */}
+                    <SectionCard
+                      icon={ClipboardList}
+                      title="Tesseramento"
+                      description="Stato e dettagli del tesseramento"
+                    >
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <InfoRow
+                          icon={CheckCircle2}
+                          label="Stato tesseramento"
+                          value={membershipStatusStyles[member.membership_status || 'active']?.label ?? 'N/D'}
+                          highlightClass={
+                            membershipStatusStyles[member.membership_status || 'active']?.className
+                          }
+                        />
+                        <InfoRow icon={CreditCard} label="Numero tessera" value={member.membership_number} />
+                        <InfoRow icon={Calendar} label="Data tesseramento" value={formatDate(member.membership_date)} />
+                        <InfoRow icon={ClipboardList} label="Tipo tesseramento" value={member.membership_type} />
+                        <InfoRow
+                          icon={Building2}
+                          label="Società"
+                          value={
+                            member.society
+                              ? `${member.society.name}${member.society.society_code ? ` (${member.society.society_code})` : ''}`
+                              : null
+                          }
+                        />
+                      </div>
+                    </SectionCard>
+
+                    <SectionCard
+                      icon={Activity}
+                      title="Dati atletici"
+                      description="Categoria di appartenenza e informazioni sportive"
+                    >
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <InfoRow icon={Trophy} label="Categoria" value={member.category} />
+                        <InfoRow icon={Calendar} label="Anno" value={member.year ? String(member.year) : null} />
+                        <InfoRow icon={Flag} label="Codice regionale" value={member.regional_code} />
+                        <InfoRow icon={Globe} label="Atleta straniero" value={member.is_foreign ? 'Sì' : 'No'} />
+                      </div>
+                    </SectionCard>
+
+                    <SectionCard
+                      icon={FileText}
+                      title="Documenti"
+                      description="Certificato medico e note aggiuntive"
+                    >
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <InfoRow
+                          icon={Calendar}
+                          label="Data certificato"
+                          value={formatDate(member.medical_certificate_date)}
+                        />
+                        <InfoRow
+                          icon={AlertCircle}
+                          label="Scadenza certificato"
+                          value={formatDate(member.medical_certificate_expiry)}
+                        />
+                      </div>
+
+                      {member.notes && (
+                        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/60 p-4">
+                          <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-amber-700">
+                            <FileText className="h-4 w-4" />
+                            Note
+                          </p>
+                          <p className="text-sm text-slate-900 whitespace-pre-wrap leading-relaxed">
+                            {member.notes}
+                          </p>
+                        </div>
+                      )}
+                    </SectionCard>
+                  </div>
+
+                  <aside className="space-y-6">
+                    <SectionCard
+                      icon={Phone}
+                      title="Contatti rapidi"
+                      description="Collegamenti immediati per comunicare con l’atleta"
+                    >
+                      <div className="space-y-3">
+                        <ContactRow
+                          icon={Phone}
+                          label="Telefono"
+                          value={member.phone}
+                          href={member.phone ? `tel:${member.phone}` : undefined}
+                          onCopy={handleCopy}
+                        />
+                        <ContactRow
+                          icon={Phone}
+                          label="Cellulare"
+                          value={member.mobile}
+                          href={member.mobile ? `tel:${member.mobile}` : undefined}
+                          onCopy={handleCopy}
+                        />
+                        <ContactRow
+                          icon={Mail}
+                          label="Email"
+                          value={member.email}
+                          href={member.email ? `mailto:${member.email}` : undefined}
+                          onCopy={handleCopy}
+                        />
+                      </div>
+                    </SectionCard>
+
+                    <SectionCard
+                      icon={Calendar}
+                      title="Cronologia"
+                      description="Date di creazione e ultimo aggiornamento"
+                    >
+                      <div className="space-y-3 text-sm text-slate-600">
+                        <MetaRow icon={Calendar} label="Creato il" value={formatDate(member.created_at)} />
+                        <MetaRow icon={Calendar} label="Ultima modifica" value={formatDate(member.updated_at)} />
+                      </div>
+                    </SectionCard>
+                  </aside>
+                </div>
+              </div>
+            </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
+
       {memberId && (
         <MemberEditModal
           memberId={memberId}
@@ -384,25 +425,154 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
           onSuccess={handleEditSuccess}
         />
       )}
-    </Dialog>
+    </>
   );
 }
 
-// Helper component for info fields
-function InfoField({ icon: Icon, label, value }: { icon: any; label: string; value?: ReactNode }) {
+type IconType = LucideIcon;
+
+function SectionCard({
+  icon: Icon,
+  title,
+  description,
+  children,
+}: {
+  icon: IconType;
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur">
+      <div className="mb-4 flex items-start gap-3">
+        <div className="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+          {description && <p className="text-xs text-slate-500">{description}</p>}
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function InfoRow({
+  icon: Icon,
+  label,
+  value,
+  highlightClass,
+}: {
+  icon: IconType;
+  label: string;
+  value?: ReactNode | null;
+  highlightClass?: string;
+}) {
   const hasValue =
     value !== null &&
     value !== undefined &&
     (!(typeof value === 'string') || value.trim() !== '');
-  const displayValue = hasValue ? value : '-';
 
   return (
-    <div className="group bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200/60 hover:border-blue-300/60 hover:shadow-md transition-all duration-200">
-      <p className="text-xs sm:text-sm font-semibold text-gray-500 mb-2 flex items-center gap-2 group-hover:text-blue-600 transition-colors">
-        <Icon className="h-4 w-4 flex-shrink-0" />
-        <span>{label}</span>
-      </p>
-      <p className="text-sm sm:text-base text-gray-900 font-medium break-words">{displayValue}</p>
+    <div
+      className={cn(
+        'flex items-start gap-3 rounded-xl border border-slate-200/70 bg-white px-4 py-3 shadow-sm',
+        highlightClass ? `ring-1 ${highlightClass}` : '',
+      )}
+    >
+      <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+        {hasValue ? (
+          <p className="mt-1 text-sm font-medium text-slate-900 break-words">{value}</p>
+        ) : (
+          <p className="mt-1 text-sm italic text-slate-400">Non disponibile</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ContactRow({
+  icon: Icon,
+  label,
+  value,
+  href,
+  openInNewTab,
+  onCopy,
+}: {
+  icon: IconType;
+  label: string;
+  value?: string | null;
+  href?: string;
+  openInNewTab?: boolean;
+  onCopy?: (label: string, value?: string | null) => void;
+}) {
+  const hasValue = value && value.trim().length > 0;
+
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/70 bg-white px-4 py-3 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <Icon className="h-4 w-4" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+          {hasValue ? (
+            href ? (
+              <a
+                href={href}
+                target={openInNewTab ? '_blank' : undefined}
+                rel={openInNewTab ? 'noreferrer' : undefined}
+                className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-blue-700 hover:text-blue-800 hover:underline"
+              >
+                {value}
+                {openInNewTab && <ExternalLink className="h-3.5 w-3.5" />}
+              </a>
+            ) : (
+              <p className="mt-1 text-sm font-medium text-slate-900 break-words">{value}</p>
+            )
+          ) : (
+            <p className="mt-1 text-sm italic text-slate-400">Non disponibile</p>
+          )}
+        </div>
+      </div>
+
+      {hasValue && onCopy && (
+        <button
+          type="button"
+          onClick={() => onCopy(label, value)}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+          aria-label={`Copia ${label.toLowerCase()}`}
+        >
+          <Copy className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MetaRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: IconType;
+  label: string;
+  value: string | null;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-lg border border-slate-200/70 bg-white px-4 py-3 shadow-sm">
+      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+        <p className="text-sm font-medium text-slate-900">{value || '-'}</p>
+      </div>
     </div>
   );
 }
