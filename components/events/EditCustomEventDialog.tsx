@@ -30,7 +30,7 @@ function formatDateForInput(date: string | null): string {
 function formatTimeForInput(time: string | null): string {
   if (!time) return '';
   const segments = time.split(':');
-  if (segments.length >= 2) {
+  if (segments.length >= 2 && segments[0] && segments[1]) {
     return `${segments[0].padStart(2, '0')}:${segments[1].padStart(2, '0')}`;
   }
   return time;
