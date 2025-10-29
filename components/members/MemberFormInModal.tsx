@@ -510,8 +510,8 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
                   >
                     <option value="">Seleziona categoria</option>
                     {categoriesForGender.map((category) => (
-                      <option key={category.value} value={category.value}>
-                        {category.label}
+                      <option key={category.code} value={category.code}>
+                        {category.name}
                       </option>
                     ))}
                   </select>
