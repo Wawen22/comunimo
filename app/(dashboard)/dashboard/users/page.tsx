@@ -89,18 +89,18 @@ export default function UsersManagementPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 col-span-2 sm:col-span-1">
             <div className="text-sm font-medium text-gray-500">Totale Utenti</div>
             <div className="mt-2 text-3xl font-bold text-gray-900">{users.length}</div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 col-span-1">
             <div className="text-sm font-medium text-gray-500">Amministratori Società</div>
             <div className="mt-2 text-3xl font-bold text-gray-900">
               {users.filter(u => u.role === 'society_admin').length}
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 col-span-1">
             <div className="text-sm font-medium text-gray-500">Amministratori</div>
             <div className="mt-2 text-3xl font-bold text-gray-900">
               {users.filter(u => u.role === 'admin' || u.role === 'super_admin').length}
@@ -124,4 +124,3 @@ export default function UsersManagementPage() {
     </RequireRole>
   );
 }
-
