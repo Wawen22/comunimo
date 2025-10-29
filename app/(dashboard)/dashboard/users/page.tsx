@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import { RequireRole } from '@/components/auth/RequireRole';
 import { UserManagementList } from '@/components/users/UserManagementList';
 import { Button } from '@/components/ui/button';
 import { Plus, Users } from 'lucide-react';
 import type { Profile, Society } from '@/types/database';
+import { useToast } from '@/components/ui/toast';
+import { triggerPasswordReset } from '@/actions/users';
+import { UserFormDialog } from '@/components/users/UserFormDialog';
 
 export interface UserWithSocieties extends Profile {
   societies: Society[];
@@ -16,6 +19,11 @@ export default function UsersManagementPage() {
   const [users, setUsers] = useState<UserWithSocieties[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingUser, setEditingUser] = useState<UserWithSocieties | null>(null);
+  const [resettingUserId, setResettingUserId] = useState<string | null>(null);
+  const [isResetPending, startResetTransition] = useTransition();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchUsers();
@@ -72,8 +80,32 @@ export default function UsersManagementPage() {
     }
   };
 
+  const handleResetPassword = (user: UserWithSocieties) => {
+    setResettingUserId(user.id);
+    startResetTransition(async () => {
+      try {
+        const result = await triggerPasswordReset({ userId: user.id });
+        if (!result.success) {
+          toast({
+            title: 'Errore',
+            description: result.error ?? 'Impossibile inviare il reset password',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Email inviata',
+            description: result.message ?? 'Email di reset password inviata correttamente',
+            variant: 'success',
+          });
+        }
+      } finally {
+        setResettingUserId(null);
+      }
+    });
+  };
+
   return (
-    <RequireRole role="admin">
+    <RequireRole role="super_admin">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -85,6 +117,12 @@ export default function UsersManagementPage() {
             <p className="mt-2 text-sm text-gray-600">
               Gestisci gli utenti e le loro assegnazioni alle società
             </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => setShowCreateDialog(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nuovo utente
+            </Button>
           </div>
         </div>
 
@@ -118,10 +156,37 @@ export default function UsersManagementPage() {
             <p className="text-sm text-red-800">{error}</p>
           </div>
         ) : (
-          <UserManagementList users={users} onUpdate={fetchUsers} />
+          <UserManagementList
+            users={users}
+            onUpdate={fetchUsers}
+            onEditUser={setEditingUser}
+            onResetPassword={handleResetPassword}
+            resettingUserId={isResetPending ? resettingUserId : null}
+          />
+        )}
+
+        <UserFormDialog
+          mode="create"
+          open={showCreateDialog}
+          onOpenChange={setShowCreateDialog}
+          onSuccess={fetchUsers}
+        />
+
+        {editingUser && (
+          <UserFormDialog
+            mode="edit"
+            user={editingUser}
+            open={Boolean(editingUser)}
+            onOpenChange={(open) => {
+              if (!open) setEditingUser(null);
+            }}
+            onSuccess={() => {
+              setEditingUser(null);
+              fetchUsers();
+            }}
+          />
         )}
       </div>
     </RequireRole>
   );
 }
-

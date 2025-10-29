@@ -141,12 +141,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <div className="h-px flex-1 bg-gradient-to-r from-blue-300/50 to-transparent" />
                 </div>
 
-                <NavItem
-                  href="/dashboard/users"
-                  icon={UserCog}
-                  label="Gestione Utenti"
-                  onClick={onClose}
-                />
+                <RequireRole role="super_admin">
+                  <NavItem
+                    href="/dashboard/users"
+                    icon={UserCog}
+                    label="Gestione Utenti"
+                    onClick={onClose}
+                  />
+                </RequireRole>
 
                 <NavItem
                   href="/dashboard/communications"
