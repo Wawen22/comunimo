@@ -3,17 +3,42 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { UserSocietyAssignment } from './UserSocietyAssignment';
 import { getRoleDisplayName } from '@/lib/utils/permissions';
-import { Shield, ShieldCheck, ShieldAlert, Building2, Mail } from 'lucide-react';
+import {
+  Shield,
+  ShieldCheck,
+  ShieldAlert,
+  Building2,
+  Mail,
+  Calendar,
+  MoreVertical,
+  RefreshCcw,
+  Pencil,
+} from 'lucide-react';
 import type { UserWithSocieties } from '@/app/(dashboard)/dashboard/users/page';
 
 interface UserManagementListProps {
   users: UserWithSocieties[];
   onUpdate: () => void;
+  onEditUser: (user: UserWithSocieties) => void;
+  onResetPassword: (user: UserWithSocieties) => void;
+  resettingUserId: string | null;
 }
 
-export function UserManagementList({ users, onUpdate }: UserManagementListProps) {
+export function UserManagementList({
+  users,
+  onUpdate,
+  onEditUser,
+  onResetPassword,
+  resettingUserId,
+}: UserManagementListProps) {
   const [selectedUser, setSelectedUser] = useState<UserWithSocieties | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
@@ -127,8 +152,10 @@ export function UserManagementList({ users, onUpdate }: UserManagementListProps)
                     </td>
                   </tr>
                 ) : (
-                  filteredUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                  filteredUsers.map((user) => {
+                    const isResetting = resettingUserId === user.id;
+                    return (
+                      <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
@@ -181,19 +208,48 @@ export function UserManagementList({ users, onUpdate }: UserManagementListProps)
                         </Badge>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {user.role === 'society_admin' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedUser(user)}
-                          >
-                            <Building2 className="h-4 w-4 mr-1" />
-                            Gestisci Società
-                          </Button>
-                        )}
+                        <div className="flex items-center justify-end gap-2">
+                          {user.role === 'society_admin' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedUser(user)}
+                            >
+                              <Building2 className="h-4 w-4 mr-1" />
+                              Gestisci Società
+                            </Button>
+                          )}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-9 w-9">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                              <DropdownMenuItem
+                                onClick={() => onEditUser(user)}
+                                className="flex items-center gap-2"
+                              >
+                                <Pencil className="h-4 w-4" />
+                                Modifica profilo
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className={`flex items-center gap-2 ${isResetting ? 'cursor-not-allowed text-gray-400 hover:bg-transparent' : ''}`}
+                                onClick={() => {
+                                  if (isResetting) return;
+                                  onResetPassword(user);
+                                }}
+                              >
+                                <RefreshCcw className="h-4 w-4" />
+                                Invia reset password
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </td>
                     </tr>
-                  ))
+                    );
+                  })
                 )}
               </tbody>
             </table>

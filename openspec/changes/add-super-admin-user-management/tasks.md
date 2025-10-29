@@ -1,0 +1,6 @@
+- [x] Verify current Supabase auth policies support super-admin-only user mutations and document any gaps. (Server actions now guard with `ensureSuperAdmin` and rely on `supabaseAdmin`; operations bypass RLS only after role validation.)
+- [x] Build dashboard route/component gated to `super_admin` that lists all users with search and basic details.
+- [x] Implement server actions for creating users, updating roles/society assignments, and triggering password reset emails.
+- [x] Wire front-end forms/actions to server handlers with optimistic/error states and loading indicators.
+- [x] Add integration/unit coverage for permission checks and the new server actions.
+- [ ] Manually test as super admin to confirm listing, creation, role update, and password reset flows. (Pending verification in a live environment.)
