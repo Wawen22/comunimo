@@ -60,9 +60,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
       {/* Right side actions */}
       <div className="flex items-center gap-3">
-        <div className="hidden md:block">
-          <GuidedRegistrationLauncher orientation="horizontal" />
-        </div>
+        <GuidedRegistrationLauncher orientation="horizontal" className="hidden md:flex" />
         {/* Search button - Optional for future */}
         <Button
           variant="ghost"
