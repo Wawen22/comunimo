@@ -51,4 +51,5 @@ node_modules/.cache
 
 # OpenCode configuration with secrets
 opencode.json
+opencode.jsonc
 
