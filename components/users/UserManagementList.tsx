@@ -17,10 +17,10 @@ import {
   ShieldAlert,
   Building2,
   Mail,
-  Calendar,
   MoreVertical,
   RefreshCcw,
   Pencil,
+  Sparkles,
 } from 'lucide-react';
 import type { UserWithSocieties } from '@/app/(dashboard)/dashboard/users/page';
 
@@ -134,7 +134,7 @@ export function UserManagementList({
                     Ruolo
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Società Assegnate
+                    Società
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Stato
@@ -154,6 +154,7 @@ export function UserManagementList({
                 ) : (
                   filteredUsers.map((user) => {
                     const isResetting = resettingUserId === user.id;
+                    const requestedSocieties = user.requested_societies ?? [];
                     return (
                       <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -181,6 +182,21 @@ export function UserManagementList({
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
+                        {requestedSocieties.length > 0 && (
+                          <div className="mb-2">
+                            <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              <Sparkles className="h-3 w-3" />
+                              Richieste
+                            </div>
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {requestedSocieties.map((society) => (
+                                <Badge key={society.id} variant="secondary" className="text-xs">
+                                  {society.society_code ? `${society.society_code} — ${society.name}` : society.name}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         {user.role === 'society_admin' ? (
                           user.societies.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
@@ -263,8 +279,10 @@ export function UserManagementList({
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {filteredUsers.map((user) => (
-                <div key={user.id} className="px-4 py-5 space-y-4">
+                {filteredUsers.map((user) => {
+                  const requestedSocieties = user.requested_societies ?? [];
+                  return (
+                    <div key={user.id} className="px-4 py-5 space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
                       <span className="text-blue-600 font-semibold">
@@ -298,6 +316,21 @@ export function UserManagementList({
                       Società
                     </div>
                     <div className="mt-2">
+                      {requestedSocieties.length > 0 && (
+                        <div className="mb-2">
+                          <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            <Sparkles className="h-3 w-3" />
+                            Richieste
+                          </div>
+                          <div className="mt-1 flex flex-wrap gap-1.5">
+                            {requestedSocieties.map((society) => (
+                              <Badge key={society.id} variant="secondary" className="text-xs">
+                                {society.society_code ? `${society.society_code} — ${society.name}` : society.name}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       {user.role === 'society_admin' ? (
                         user.societies.length > 0 ? (
                           <div className="flex flex-wrap gap-1.5">
@@ -332,7 +365,8 @@ export function UserManagementList({
                     </Button>
                   )}
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>

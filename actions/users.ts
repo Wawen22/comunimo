@@ -107,6 +107,25 @@ async function setUserSocieties(userId: string, societyIds: string[]) {
     console.error('[users actions] Errore assegnando società', insertError);
     throw new Error('Impossibile assegnare le società selezionate');
   }
+
+  const { error: clearRequestedError } = await adminClient
+    .from('profiles')
+    .update({ requested_society_ids: [] } as Partial<Profile>)
+    .eq('id', userId);
+
+  if (clearRequestedError) {
+    console.error('[users actions] Errore azzerando richieste società', clearRequestedError);
+  }
+
+  const { error: clearMetadataError } = await adminClient.auth.admin.updateUserById(userId, {
+    user_metadata: {
+      requested_society_ids: [],
+    },
+  });
+
+  if (clearMetadataError) {
+    console.error('[users actions] Errore azzerando richieste società (metadata)', clearMetadataError);
+  }
 }
 
 function getResetRedirect() {

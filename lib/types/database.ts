@@ -34,6 +34,7 @@ export interface Profile {
   fiscal_code: string | null;
   role: UserRole;
   society_id: string | null;
+  requested_society_ids: string[] | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;

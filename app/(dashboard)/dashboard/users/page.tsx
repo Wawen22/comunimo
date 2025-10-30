@@ -6,13 +6,16 @@ import { RequireRole } from '@/components/auth/RequireRole';
 import { UserManagementList } from '@/components/users/UserManagementList';
 import { Button } from '@/components/ui/button';
 import { Plus, Users } from 'lucide-react';
-import type { Profile, Society } from '@/types/database';
+import type { AllSociety, Profile, Society } from '@/types/database';
 import { useToast } from '@/components/ui/toast';
 import { triggerPasswordReset } from '@/actions/users';
 import { UserFormDialog } from '@/components/users/UserFormDialog';
 
+type RequestedSociety = Pick<AllSociety, 'id' | 'name' | 'society_code'>;
+
 export interface UserWithSocieties extends Profile {
   societies: Society[];
+  requested_societies: RequestedSociety[];
 }
 
 export default function UsersManagementPage() {
@@ -42,6 +45,35 @@ export default function UsersManagementPage() {
 
       if (profilesError) throw profilesError;
 
+      const requestedIds = Array.from(
+        new Set(
+          (profiles ?? [])
+            .flatMap((profile: Profile) => profile.requested_society_ids ?? [])
+            .filter((id): id is string => Boolean(id))
+        )
+      );
+
+      let requestedSocietyMap: Record<string, RequestedSociety> = {};
+
+      if (requestedIds.length > 0) {
+        const { data: requestedSocieties, error: requestedSocietiesError } = await supabase
+          .from('all_societies')
+          .select('id, name, society_code')
+          .in('id', requestedIds);
+
+        if (requestedSocietiesError) throw requestedSocietiesError;
+
+        const requestedSocietyList = (requestedSocieties ?? []) as RequestedSociety[];
+
+        requestedSocietyMap = requestedSocietyList.reduce<Record<string, RequestedSociety>>(
+          (acc, society) => {
+            acc[society.id] = society;
+            return acc;
+          },
+          {}
+        );
+      }
+
       // For each user, fetch their assigned societies
       const usersWithSocieties: UserWithSocieties[] = await Promise.all(
         (profiles || []).map(async (profile: Profile) => {
@@ -60,14 +92,18 @@ export default function UsersManagementPage() {
 
           if (userSocietiesError) {
             console.error('Error fetching user societies:', userSocietiesError);
-            return { ...profile, societies: [] };
+            return { ...profile, societies: [], requested_societies: [] };
           }
 
           const societies = (userSocieties || [])
             .map((us: any) => us.societies)
             .filter(Boolean);
 
-          return { ...profile, societies };
+          const requested_societies = (profile.requested_society_ids ?? [])
+            .map((id) => requestedSocietyMap[id])
+            .filter((society): society is RequestedSociety => Boolean(society));
+
+          return { ...profile, societies, requested_societies };
         })
       );
 

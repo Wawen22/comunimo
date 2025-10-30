@@ -22,6 +22,7 @@ export interface Profile {
   fiscal_code: string | null;
   role: UserRole;
   society_id: string | null; // Deprecated: use user_societies table instead
+  requested_society_ids: string[] | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -324,7 +325,12 @@ export interface NotificationRecipientWithNotification extends NotificationRecip
 // Form Types (for creating/updating)
 // ============================================================================
 
-export type CreateProfileInput = Omit<Profile, 'id' | 'created_at' | 'updated_at' | 'society_id'>;
+export type CreateProfileInput = Omit<
+  Profile,
+  'id' | 'created_at' | 'updated_at' | 'society_id' | 'requested_society_ids'
+> & {
+  requested_society_ids?: string[] | null;
+};
 export type UpdateProfileInput = Partial<Omit<Profile, 'id' | 'email' | 'created_at' | 'updated_at' | 'society_id'>>;
 
 export type CreateUserSocietyInput = Omit<UserSociety, 'id' | 'created_at' | 'updated_at'>;
