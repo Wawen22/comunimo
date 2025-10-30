@@ -54,6 +54,10 @@ const sanitizeConfig = {
   allowedSchemes: ['http', 'https', 'mailto']
 };
 
+function escapeHtml(value: string) {
+  return sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} });
+}
+
 function stripHtml(html: string): string {
   return html
     // Replace <br> and </p> with newlines
@@ -159,43 +163,43 @@ export async function createCustomEvent(
     const formattedTime = (event as any).event_time || '';
     const location = (event as any).location || '';
 
-    // Build notification HTML (without title since it's shown in DialogTitle)
-    let notificationHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: #f9fafb; border-left: 4px solid #7c3aed; padding: 16px; margin-bottom: 20px;">
-          <p style="margin: 0 0 12px 0;"><strong>📅 Data:</strong> ${formattedDate}</p>
-          ${formattedTime ? `<p style="margin: 0 0 12px 0;"><strong>🕐 Ora:</strong> ${formattedTime}</p>` : ''}
-          ${location ? `<p style="margin: 0 0 12px 0;"><strong>📍 Località:</strong> ${location}</p>` : ''}
-        </div>
-    `;
+    const safeDescription = (event as any).description
+      ? escapeHtml((event as any).description).replace(/\n/g, '<br />')
+      : '';
 
-    if ((event as any).description) {
-      notificationHtml += `
-        <div style="margin-bottom: 20px;">
-          <h3 style="color: #374151; font-size: 16px; margin-bottom: 8px;">Descrizione</h3>
-          <p style="color: #6b7280; line-height: 1.6;">${(event as any).description}</p>
+    const notificationHtml = `
+      <div style="background:#f5f3ff;border:1px solid #e0e7ff;border-radius:16px;padding:20px;font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;">
+          <span style="font-size:26px;">🎉</span>
+          <div>
+            <p style="margin:0;font-size:13px;color:#6366f1;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Nuovo evento creato</p>
+            <p style="margin:4px 0 0;font-size:18px;font-weight:700;color:#1e1b4b;">${escapeHtml(title)}</p>
+          </div>
         </div>
-      `;
-    }
-
-    notificationHtml += `
-        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-          <p style="color: #6b7280; font-size: 14px; margin: 0;">
-            Accedi alla dashboard per maggiori dettagli sull'evento.
-          </p>
+        <div style="background:#eef2ff;border-radius:12px;padding:16px;margin-bottom:18px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;color:#312e81;font-size:14px;">
+            <span style="font-size:18px;">📅</span>
+            <span><strong>Data:</strong> ${escapeHtml(formattedDate)}</span>
+          </div>
+          ${formattedTime ? `<div style="display:flex;align-items:center;gap:10px;color:#312e81;font-size:14px;"><span style="font-size:18px;">🕒</span><span><strong>Ora:</strong> ${escapeHtml(formattedTime)}</span></div>` : ''}
+          ${location ? `<div style="display:flex;align-items:center;gap:10px;color:#312e81;font-size:14px;"><span style="font-size:18px;">📍</span><span><strong>Luogo:</strong> ${escapeHtml(location)}</span></div>` : ''}
+        </div>
+        ${safeDescription ? `<div style="margin-bottom:18px;"><p style="margin:0 0 6px;font-size:14px;font-weight:600;color:#312e81;">Dettagli evento</p><p style="margin:0;font-size:13px;line-height:1.6;color:#4338ca;">${safeDescription}</p></div>` : ''}
+        <div style="margin-top:20px;padding-top:18px;border-top:1px solid #c7d2fe;display:flex;flex-direction:column;gap:8px;">
+          <p style="margin:0;font-size:12px;color:#4338ca;">Ricorda di verificare le iscrizioni e condividere l'evento con le società interessate.</p>
+          <p style="margin:0;font-size:12px;color:#312e81;">Apri la sezione Eventi della dashboard per consultare tutti i dettagli aggiornati.</p>
         </div>
       </div>
     `;
 
-    const sanitizedHtml = sanitizeHtml(notificationHtml, sanitizeConfig);
-    const plainText = stripHtml(sanitizedHtml);
+    const plainText = stripHtml(notificationHtml);
 
     // Create notification
     const { data: notificationRows, error: notificationError } = await (supabase
       .from('notifications') as any)
       .insert({
         title: `Nuovo Evento: ${title}`,
-        body_html: sanitizedHtml,
+        body_html: notificationHtml,
         body_text: plainText,
         sent_by: (profile as any).id,
       })
@@ -277,12 +281,12 @@ export async function createCustomEvent(
           continue;
         }
 
-        const result = await sendNotificationEmail({
-          to: recipient.email,
-          subject: `Nuovo Evento: ${title}`,
-          html: sanitizedHtml,
-          text: plainText,
-        });
+          const result = await sendNotificationEmail({
+            to: recipient.email,
+            subject: `Nuovo Evento: ${title}`,
+            html: notificationHtml,
+            text: plainText,
+          });
 
         if (result.success) {
           sentIds.push(recipientId);

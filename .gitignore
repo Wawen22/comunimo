@@ -49,3 +49,6 @@ next-env.d.ts
 .cache
 node_modules/.cache
 
+# OpenCode configuration with secrets
+opencode.json
+
