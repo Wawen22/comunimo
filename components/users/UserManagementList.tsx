@@ -42,6 +42,7 @@ export function UserManagementList({
   const [selectedUser, setSelectedUser] = useState<UserWithSocieties | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [expandedRequestsUserId, setExpandedRequestsUserId] = useState<string | null>(null);
 
   // Filter users
   const filteredUsers = users.filter(user => {
@@ -155,6 +156,8 @@ export function UserManagementList({
                   filteredUsers.map((user) => {
                     const isResetting = resettingUserId === user.id;
                     const requestedSocieties = user.requested_societies ?? [];
+                    const hasHandledRequests = requestedSocieties.length > 0 && user.societies.length > 0;
+                    const showLegacyRequests = expandedRequestsUserId === user.id;
                     return (
                       <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -182,7 +185,7 @@ export function UserManagementList({
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
-                        {requestedSocieties.length > 0 && (
+                        {requestedSocieties.length > 0 && !hasHandledRequests && (
                           <div className="mb-2">
                             <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
                               <Sparkles className="h-3 w-3" />
@@ -195,6 +198,34 @@ export function UserManagementList({
                                 </Badge>
                               ))}
                             </div>
+                          </div>
+                        )}
+
+                        {hasHandledRequests && (
+                          <div className="mb-2 space-y-2">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedRequestsUserId(showLegacyRequests ? null : user.id)}
+                              className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100"
+                              title="Mostra le richieste originarie"
+                            >
+                              <Sparkles className="h-3.5 w-3.5" />
+                              {showLegacyRequests ? 'Nascondi richieste' : `Richieste iniziali (${requestedSocieties.length})`}
+                            </button>
+                            {showLegacyRequests && (
+                              <div className="rounded-md border border-blue-100 bg-blue-50/40 p-2">
+                                <div className="text-[11px] font-semibold uppercase tracking-wide text-blue-700 mb-1">
+                                  Società richieste in fase di registrazione
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {requestedSocieties.map((society) => (
+                                    <Badge key={society.id} variant="secondary" className="text-[11px] bg-white text-blue-700 border-blue-200">
+                                      {society.society_code ? `${society.society_code} — ${society.name}` : society.name}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                         {user.role === 'society_admin' ? (
@@ -281,6 +312,8 @@ export function UserManagementList({
             <div className="divide-y divide-gray-200">
                 {filteredUsers.map((user) => {
                   const requestedSocieties = user.requested_societies ?? [];
+                  const hasHandledRequests = requestedSocieties.length > 0 && user.societies.length > 0;
+                  const showLegacyRequests = expandedRequestsUserId === user.id;
                   return (
                     <div key={user.id} className="px-4 py-5 space-y-4">
                   <div className="flex items-start gap-3">
@@ -316,7 +349,7 @@ export function UserManagementList({
                       Società
                     </div>
                     <div className="mt-2">
-                      {requestedSocieties.length > 0 && (
+                      {requestedSocieties.length > 0 && !hasHandledRequests && (
                         <div className="mb-2">
                           <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
                             <Sparkles className="h-3 w-3" />
@@ -329,6 +362,32 @@ export function UserManagementList({
                               </Badge>
                             ))}
                           </div>
+                        </div>
+                      )}
+                      {hasHandledRequests && (
+                        <div className="mb-2 space-y-2">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedRequestsUserId(showLegacyRequests ? null : user.id)}
+                            className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100"
+                          >
+                            <Sparkles className="h-3.5 w-3.5" />
+                            {showLegacyRequests ? 'Nascondi richieste' : `Richieste iniziali (${requestedSocieties.length})`}
+                          </button>
+                          {showLegacyRequests && (
+                            <div className="rounded-md border border-blue-100 bg-blue-50/40 p-2">
+                              <div className="text-[11px] font-semibold uppercase tracking-wide text-blue-700 mb-1">
+                                Società richieste in fase di registrazione
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {requestedSocieties.map((society) => (
+                                  <Badge key={society.id} variant="secondary" className="text-[11px] bg-white text-blue-700 border-blue-200">
+                                    {society.society_code ? `${society.society_code} — ${society.name}` : society.name}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                       {user.role === 'society_admin' ? (
