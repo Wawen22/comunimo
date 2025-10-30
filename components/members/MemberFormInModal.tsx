@@ -345,7 +345,10 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
     : [];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onError)} className="flex min-h-full flex-col">
+    <form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      className="flex min-h-full flex-col"
+    >
       <StepIndicator currentStep={currentStep} />
 
       <div className="flex-1 space-y-6 p-6">
@@ -594,7 +597,9 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
         )}
       </div>
 
-      <div className="sticky bottom-0 border-t border-slate-200 bg-white/95 px-6 py-4">
+      <div
+        className="sticky bottom-0 border-t border-slate-200 bg-white/95 px-6 py-4"
+      >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-xs text-slate-500">
             Step {currentStep} di {totalSteps}

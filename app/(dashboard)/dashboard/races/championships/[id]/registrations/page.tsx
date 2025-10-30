@@ -469,6 +469,7 @@ export default function ChampionshipRegistrationsPage() {
           <button
             type="button"
             onClick={() => setIsDropdownOpen(true)}
+            data-tour-anchor="championship-society-selector"
             className={cn(
               "flex h-14 w-full items-center justify-between rounded-xl border-2 px-5 py-3 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2",
               !hasAnySocietySelection
