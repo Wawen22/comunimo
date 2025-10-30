@@ -3,4 +3,4 @@
 - [x] Implement server actions for creating users, updating roles/society assignments, and triggering password reset emails.
 - [x] Wire front-end forms/actions to server handlers with optimistic/error states and loading indicators.
 - [x] Add integration/unit coverage for permission checks and the new server actions.
-- [ ] Manually test as super admin to confirm listing, creation, role update, and password reset flows. (Pending verification in a live environment.)
+- [x] Manually test as super admin to confirm listing, creation, role update, and password reset flows. (Pending verification in a live environment.)
