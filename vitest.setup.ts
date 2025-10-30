@@ -20,7 +20,6 @@ if (typeof window !== 'undefined' && !('ResizeObserver' in window)) {
 }
 
 if (typeof globalThis !== 'undefined' && !('ResizeObserver' in globalThis)) {
-  // @ts-expect-error - define minimal ResizeObserver for tests
   globalThis.ResizeObserver = MockResizeObserver;
 }
 
