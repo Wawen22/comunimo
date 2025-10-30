@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { supabase } from '@/lib/api/supabase';
 import { Member } from '@/lib/types/database';
 import { Button } from '@/components/ui/button';
@@ -19,6 +17,7 @@ import { SocietyMultiSelect } from './SocietyMultiSelect';
 import { MemberCard } from './MemberCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { MemberDetailModal } from './MemberDetailModal';
+import { MemberCreateModal } from './MemberCreateModal';
 
 interface MemberWithSociety extends Member {
   society?: {
@@ -37,7 +36,6 @@ interface MemberFiltersState {
 }
 
 export function MembersList() {
-  const router = useRouter();
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
@@ -48,6 +46,7 @@ export function MembersList() {
   const [showImportExcelDialog, setShowImportExcelDialog] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [showMemberModal, setShowMemberModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [filters, setFilters] = useState<MemberFiltersState>({
     search: '',
     societyIds: [],
@@ -270,12 +269,13 @@ export function MembersList() {
                 <FileSpreadsheet className="mr-2 h-4 w-4" />
                 Importa Excel
               </Button>
-              <Link href="/dashboard/members/new" className="w-full sm:w-auto">
-                <Button className="w-full">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Nuovo Atleta
-                </Button>
-              </Link>
+              <Button
+                className="w-full sm:w-auto"
+                onClick={() => setShowCreateModal(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nuovo Atleta
+              </Button>
             </>
           )}
         </div>
@@ -356,12 +356,10 @@ export function MembersList() {
                     : 'Inizia creando il primo atleta'}
                 </p>
                 {isAdmin && !filters.search && (
-                  <Link href="/dashboard/members/new">
-                    <Button className="mt-4">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Crea Primo Atleta
-                    </Button>
-                  </Link>
+                  <Button className="mt-4" onClick={() => setShowCreateModal(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Crea Primo Atleta
+                  </Button>
                 )}
               </div>
             </div>
@@ -483,6 +481,16 @@ export function MembersList() {
         onClose={() => setShowImportExcelDialog(false)}
         onSuccess={() => {
           setShowImportExcelDialog(false);
+          fetchMembers();
+        }}
+      />
+
+      {/* Member Create Modal */}
+      <MemberCreateModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+        onSuccess={() => {
+          setPage(1);
           fetchMembers();
         }}
       />
