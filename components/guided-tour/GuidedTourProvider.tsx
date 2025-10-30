@@ -505,10 +505,10 @@ function GuidedTourOverlay({
 
     const preferredPlacement = placement === 'auto' ? 'bottom' : placement;
 
-    const topPlacements = preferredPlacement === 'top' || preferredPlacement === 'auto';
-    const bottomPlacements = preferredPlacement === 'bottom' || preferredPlacement === 'auto';
+    const topPlacements = preferredPlacement === 'top';
+    const bottomPlacements = preferredPlacement === 'bottom';
     const leftPlacements = preferredPlacement === 'left';
-    const rightPlacements = preferredPlacement === 'right' || preferredPlacement === 'auto';
+    const rightPlacements = preferredPlacement === 'right';
 
     let top = targetRect.bottom + spacing;
     let left = targetRect.left;
