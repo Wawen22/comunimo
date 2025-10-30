@@ -102,7 +102,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="mt-2 text-gray-600">
@@ -112,9 +112,11 @@ export default function DashboardPage() {
             {profile?.role === 'super_admin' && ' - Super Amministratore'}
           </p>
         </div>
-        <div className="hidden md:flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 border border-blue-200">
-          <TrendingUp className="h-5 w-5 text-blue-600" />
-          <span className="text-sm font-medium text-blue-900">Tutto aggiornato</span>
+        <div className="flex flex-col items-end gap-3">
+          <div className="hidden md:flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 border border-blue-200">
+            <TrendingUp className="h-5 w-5 text-blue-600" />
+            <span className="text-sm font-medium text-blue-900">Tutto aggiornato</span>
+          </div>
         </div>
       </div>
 

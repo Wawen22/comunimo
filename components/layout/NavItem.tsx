@@ -11,9 +11,10 @@ interface NavItemProps {
   label: string;
   badge?: string | number;
   onClick?: () => void;
+  tourAnchor?: string;
 }
 
-export function NavItem({ href, icon: Icon, label, badge, onClick }: NavItemProps) {
+export function NavItem({ href, icon: Icon, label, badge, onClick, tourAnchor }: NavItemProps) {
   const pathname = usePathname();
 
   // Special handling for /dashboard to avoid matching all sub-routes
@@ -26,6 +27,7 @@ export function NavItem({ href, icon: Icon, label, badge, onClick }: NavItemProp
       <Link
         href={href}
         onClick={onClick}
+        data-tour-anchor={tourAnchor}
         className={cn(
           'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
           'hover:scale-[1.02] active:scale-[0.98]',
@@ -75,4 +77,3 @@ export function NavItem({ href, icon: Icon, label, badge, onClick }: NavItemProp
     </div>
   );
 }
-

@@ -5,6 +5,7 @@ import { Menu, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { usePathname } from 'next/navigation';
+import { GuidedRegistrationLauncher } from '@/components/dashboard/guided-registration/GuidedRegistrationLauncher';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -58,7 +59,10 @@ export function Header({ onMenuClick }: HeaderProps) {
       <div className="flex-1" />
 
       {/* Right side actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        <div className="hidden md:block">
+          <GuidedRegistrationLauncher orientation="horizontal" />
+        </div>
         {/* Search button - Optional for future */}
         <Button
           variant="ghost"

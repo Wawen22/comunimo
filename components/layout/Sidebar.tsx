@@ -112,6 +112,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 icon={Trophy}
                 label="Campionati"
                 onClick={onClose}
+                tourAnchor="nav-championships"
               />
 
               <NavItem

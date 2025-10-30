@@ -60,7 +60,9 @@ export function ChampionshipCard({ championship, onUpdate }: ChampionshipCardPro
 
   return (
     <>
-      <Card className="group relative overflow-hidden border-2 border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-yellow-500 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+      <Card
+        className="group relative overflow-hidden border-2 border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-yellow-500 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+      >
         {/* Decorative gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -117,11 +119,15 @@ export function ChampionshipCard({ championship, onUpdate }: ChampionshipCardPro
         </CardContent>
 
         <CardFooter className="relative flex gap-2 pt-4 border-t border-gray-200">
-          <Link href={`/dashboard/races/championships/${championship.id}/registrations`} className="flex-1">
+          <Link
+            href={`/dashboard/races/championships/${championship.id}/registrations`}
+            className="flex-1"
+          >
             <Button
               variant="outline"
               size="sm"
               className="w-full border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white group-hover:bg-yellow-500 group-hover:text-white transition-all"
+              data-tour-anchor="championship-manage-button"
             >
               <Eye className="h-4 w-4 mr-2" />
               Gestisci Iscrizioni
@@ -167,4 +173,3 @@ export function ChampionshipCard({ championship, onUpdate }: ChampionshipCardPro
     </>
   );
 }
-

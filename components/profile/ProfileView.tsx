@@ -7,12 +7,22 @@ import { ChangePasswordForm } from '@/components/forms/ChangePasswordForm';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { getRoleDisplayName } from '@/lib/utils/permissions';
-import { User, Mail, Phone, FileText, Shield, Edit } from 'lucide-react';
+import { useGuidedTour } from '@/components/guided-tour/GuidedTourProvider';
+import { GUIDED_REGISTRATION_TOUR_ID } from '@/components/dashboard/guided-registration/GuidedRegistrationTourManager';
+import { useToast } from '@/components/ui/toast';
+import { User, Mail, Phone, FileText, Shield, Edit, RefreshCcw } from 'lucide-react';
 
 export function ProfileView() {
   const { profile, loading } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const { toast } = useToast();
+  const {
+    reset: resetGuidedTour,
+    completion: guidedTourCompleted,
+    isActive: guidedTourActive,
+    activeTourId,
+  } = useGuidedTour(GUIDED_REGISTRATION_TOUR_ID);
 
   if (loading) {
     return (
@@ -155,8 +165,42 @@ export function ProfileView() {
             </Button>
           </div>
         )}
+
+        <div className="mt-8 rounded-lg border border-dashed border-slate-200 bg-slate-50/60 p-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h4 className="text-sm font-semibold text-slate-900">
+                Guida iscrizione campionato
+              </h4>
+              <p className="mt-1 text-sm text-slate-600">
+                Reimposta il tour guidato per ripercorrere i passaggi di iscrizione con la procedura interattiva.
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2 md:w-52">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  resetGuidedTour();
+                  toast({
+                    title: 'Guida ripristinata',
+                    description: 'La guida all’iscrizione verrà riproposta dal primo passo.',
+                  });
+                }}
+                disabled={guidedTourActive && activeTourId === GUIDED_REGISTRATION_TOUR_ID}
+                className="w-full justify-center gap-2 border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white"
+              >
+                <RefreshCcw className="h-4 w-4" />
+                Reimposta guida
+              </Button>
+              <span className="text-xs text-slate-500">
+                {guidedTourCompleted
+                  ? 'Stato: completata – puoi ripeterla in ogni momento.'
+                  : 'La guida non è ancora stata completata.'}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-

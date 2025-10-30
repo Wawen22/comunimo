@@ -1,0 +1,6 @@
+- [x] Inventory current athlete registration touchpoints (dashboard entry, competition listing, athlete form) and document required steps for the tour copy.
+- [x] Ship a reusable "Guided Tour" provider with modal/spotlight primitives and keyboard/mouse navigation support.
+- [x] Add a visible "Guida iscrizione campionato" launcher on the dashboard and wire it to start the tour.
+- [x] Define the step sequence for competition selection, athlete eligibility checks, roster creation, and submission confirmation with polished copy.
+- [x] Persist tour progress/dismissal per user and expose a reset action in settings for QA.
+- [x] Cover the new flow with unit tests for step configuration and an integration smoke test exercising the happy path.

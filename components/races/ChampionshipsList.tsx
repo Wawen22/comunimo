@@ -126,7 +126,7 @@ export function ChampionshipsList() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-tour-anchor="championships-list">
       {/* Search and Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 flex-1">
@@ -213,4 +213,3 @@ export function ChampionshipsList() {
     </div>
   );
 }
-

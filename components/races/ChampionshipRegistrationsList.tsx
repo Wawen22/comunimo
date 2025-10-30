@@ -251,6 +251,7 @@ export default function ChampionshipRegistrationsList({
                     STEP 2
                   </div>
                   <Button
+                    data-tour-anchor="championship-new-registration"
                     onClick={onNewRegistration}
                     size="lg"
                     className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold text-sm sm:text-base ring-2 ring-green-300 ring-offset-2"
@@ -316,6 +317,7 @@ export default function ChampionshipRegistrationsList({
                     STEP 2
                   </div>
                   <Button
+                    data-tour-anchor="championship-new-registration"
                     onClick={onNewRegistration}
                     size="lg"
                     className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-xl hover:shadow-2xl transition-all hover:scale-105 font-bold text-base px-8 py-6 ring-2 ring-green-300 ring-offset-2"
