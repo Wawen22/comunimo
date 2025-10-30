@@ -160,9 +160,9 @@ export function GuidedTourProvider({ children }: GuidedTourProviderProps) {
   );
 
   const activeTour = activeTourId ? toursRef.current.get(activeTourId) ?? null : null;
-  const activeStep =
+  const activeStep: GuidedTourStep | null =
     activeTour && activeStepIndex >= 0 && activeStepIndex < activeTour.steps.length
-      ? activeTour.steps[activeStepIndex]
+      ? activeTour.steps[activeStepIndex] ?? null
       : null;
 
   const hasCompleted = useCallback(
