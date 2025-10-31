@@ -14,9 +14,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { ArrowLeft, Save, Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { ArrowLeft, Save, Calendar, MapPin, Users, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { z } from 'zod';
+import { StageRankingUpload } from '@/components/races/StageRankingUpload';
 
 type RaceFormData = z.infer<typeof raceSchema>;
 
@@ -32,6 +33,7 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [nextEventNumber, setNextEventNumber] = useState<number>(1);
+  const [currentResultsUrl, setCurrentResultsUrl] = useState<string | null>(race?.results_url ?? null);
 
   const {
     register,
@@ -83,6 +85,10 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
     }
   }, [mode, championshipId]);
 
+  useEffect(() => {
+    setCurrentResultsUrl(race?.results_url ?? null);
+  }, [race?.results_url]);
+
   const fetchNextEventNumber = async () => {
     try {
       const { data, error } = await supabase
@@ -122,7 +128,7 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
         registration_end_date: values.registration_end_date || null,
         max_participants: values.max_participants || null,
         poster_url: values.poster_url || null,
-        results_url: values.results_url || null,
+        results_url: currentResultsUrl,
         created_by: mode === 'create' ? user?.id : undefined,
         updated_at: new Date().toISOString(),
       };
@@ -332,6 +338,32 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Classifica ufficiale
+          </CardTitle>
+          <CardDescription>
+            Gestisci il PDF della classifica per questa tappa.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {mode === 'edit' && race?.id ? (
+            <StageRankingUpload
+              championshipId={championshipId}
+              raceId={race.id}
+              currentUrl={currentResultsUrl}
+              onChange={setCurrentResultsUrl}
+            />
+          ) : (
+            <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/10 p-4 text-sm text-muted-foreground">
+              Salva la tappa e riapri la pagina di modifica per caricare la classifica in PDF.
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Action Buttons */}
       <div className="flex items-center justify-between">
         <Link href={`/dashboard/races/championships/${championshipId}/registrations`}>
@@ -349,4 +381,3 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
     </form>
   );
 }
-

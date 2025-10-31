@@ -39,7 +39,7 @@ export function PDFViewerModal({ isOpen, onClose, pdfUrl, title }: PDFViewerModa
                 variant="outline"
                 size="sm"
                 onClick={handleDownload}
-                title="Scarica PDF"
+                title="Apri PDF"
               >
                 <Download className="h-4 w-4" />
               </Button>
