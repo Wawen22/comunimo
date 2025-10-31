@@ -6,12 +6,13 @@ import { supabase } from '@/lib/api/supabase';
 import { Championship, Society, Race } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Loader2, Search, Check, ChevronsUpDown, UserPlus, X, Users, ArrowDown, Sparkles, Info, Flag } from 'lucide-react';
+import { ArrowLeft, Loader2, Search, Check, ChevronsUpDown, UserPlus, X, Users, ArrowDown, Sparkles, Info, Flag, BarChart3 } from 'lucide-react';
 import ChampionshipRegistrations from '@/components/races/ChampionshipRegistrations';
 import ChampionshipRegistrationsList from '@/components/races/ChampionshipRegistrationsList';
 import MemberSelectionDialog from '@/components/races/MemberSelectionDialog';
 import { ChampionshipInfoModal } from '@/components/races/ChampionshipInfoModal';
 import { ChampionshipStagesModal } from '@/components/races/ChampionshipStagesModal';
+import { ChampionshipRankingsModal } from '@/components/races/ChampionshipRankingsModal';
 import { useIsAdmin } from '@/lib/hooks/useUser';
 import { getUserSocieties } from '@/lib/utils/userSocietyUtils';
 import { cn } from '@/lib/utils';
@@ -43,6 +44,7 @@ export default function ChampionshipRegistrationsPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
+  const [showRankingsModal, setShowRankingsModal] = useState(false);
   const [raceRegistrationCounts, setRaceRegistrationCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -58,6 +60,9 @@ export default function ChampionshipRegistrationsPage() {
   const hasSpecificSocietySelected = !!societyId && societyId !== 'all';
   const isAllSocietiesSelected = societyId === 'all';
   const hasAnySocietySelection = !!societyId;
+  const stageRankingsCount = races.filter((race) => Boolean(race.results_url)).length;
+  const championshipRankingsCount = [championship?.society_ranking_url, championship?.individual_ranking_url].filter(Boolean).length;
+  const totalRankingsCount = stageRankingsCount + championshipRankingsCount;
 
   const fetchTotalRegistrations = async () => {
     try {
@@ -199,6 +204,37 @@ export default function ChampionshipRegistrationsPage() {
     }
   };
 
+  const handleChampionshipRankingChange = (kind: 'society' | 'individual', url: string | null) => {
+    setChampionship((prev) => {
+      if (!prev) return prev;
+
+      if (kind === 'society') {
+        return {
+          ...prev,
+          society_ranking_url: url,
+        };
+      }
+
+      return {
+        ...prev,
+        individual_ranking_url: url,
+      };
+    });
+  };
+
+  const handleStageRankingChange = (raceId: string, url: string | null) => {
+    setRaces((prev) =>
+      prev.map((race) =>
+        race.id === raceId
+          ? {
+              ...race,
+              results_url: url,
+            }
+          : race,
+      ),
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -318,8 +354,28 @@ export default function ChampionshipRegistrationsPage() {
                       <div className="flex items-center gap-2">
                         <div className="p-1 bg-white/20 rounded-lg">
                           <Flag className="h-5 w-5" />
+                      </div>
+                      <span>Tappe</span>
+                    </div>
+                  </Button>
+                  </div>
+                  <div className="flex-1 relative">
+                    {totalRankingsCount > 0 && (
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <div className="bg-emerald-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg">
+                          {totalRankingsCount}
                         </div>
-                        <span>Tappe</span>
+                      </div>
+                    )}
+                    <Button
+                      onClick={() => setShowRankingsModal(true)}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-bold ring-2 ring-emerald-300 ring-offset-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="p-1 bg-white/20 rounded-lg">
+                          <BarChart3 className="h-5 w-5" />
+                        </div>
+                        <span>Classifiche</span>
                       </div>
                     </Button>
                   </div>
@@ -344,7 +400,7 @@ export default function ChampionshipRegistrationsPage() {
                   </p>
 
                   {/* Action Buttons - Desktop */}
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 w-full">
                     <div className="relative">
                       <div className="absolute -top-2 -right-2 z-10">
                         <div className="bg-blue-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
@@ -377,7 +433,27 @@ export default function ChampionshipRegistrationsPage() {
                           <div className="p-1.5 bg-white/20 rounded-lg">
                             <Flag className="h-5 w-5" />
                           </div>
-                          <span>Tappe del Campionato</span>
+                        <span>Tappe del Campionato</span>
+                      </div>
+                    </Button>
+                    </div>
+                    <div className="relative ml-auto">
+                      {totalRankingsCount > 0 && (
+                        <div className="absolute -top-2 -right-2 z-10">
+                          <div className="bg-emerald-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg">
+                            {totalRankingsCount}
+                          </div>
+                        </div>
+                      )}
+                      <Button
+                        onClick={() => setShowRankingsModal(true)}
+                        className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-semibold px-6 ring-2 ring-emerald-300 ring-offset-2"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="p-1.5 bg-white/20 rounded-lg">
+                            <BarChart3 className="h-5 w-5" />
+                          </div>
+                          <span>Classifiche</span>
                         </div>
                       </Button>
                     </div>
@@ -724,6 +800,16 @@ export default function ChampionshipRegistrationsPage() {
           open={showStagesModal}
           onOpenChange={setShowStagesModal}
           registrationCounts={raceRegistrationCounts}
+        />
+
+        <ChampionshipRankingsModal
+          open={showRankingsModal}
+          onOpenChange={setShowRankingsModal}
+          championship={championship}
+          races={races}
+          isAdmin={Boolean(userIsAdmin || isAdmin)}
+          onUpdateChampionshipRanking={handleChampionshipRankingChange}
+          onUpdateRaceRanking={handleStageRankingChange}
         />
       </div>
     </div>

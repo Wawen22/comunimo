@@ -1,11 +1,12 @@
 'use client';
 
 import { differenceInCalendarDays } from 'date-fns';
-import { ArrowRight, CalendarDays, Clock, LogIn, MapPin, Sparkles } from 'lucide-react';
+import { ArrowRight, CalendarDays, Clock, FileText, LogIn, MapPin, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Championship, Event } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { getNextEvent } from '@/lib/utils/registrationUtils';
+import { CountdownTimer } from './CountdownTimer';
 
 interface HeroSectionProps {
   championship: Championship | null;
@@ -45,26 +46,6 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
       .filter((location): location is string => Boolean(location)),
   );
 
-  const quickStats = [
-    {
-      label: 'Tappe del campionato',
-      value: stages.length > 0 ? String(stages.length) : '—',
-      icon: CalendarDays,
-    },
-    {
-      label: 'Prossima tappa',
-      value: nextEventDate ? formatDate(nextEventDate) : 'Da annunciare',
-      icon: Clock,
-      description: nextEvent?.location ?? undefined,
-    },
-    {
-      label: 'Iscrizioni',
-      value: registrationStatus === 'open' ? 'Aperte' : 'Chiuse',
-      icon: Sparkles,
-      tone: registrationStatus === 'open' ? 'text-emerald-600' : 'text-amber-500',
-    },
-  ];
-
   const secondaryStats = [
     {
       label: 'Tappe imminenti',
@@ -73,10 +54,6 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
     {
       label: 'Location coinvolte',
       value: uniqueLocations.size,
-    },
-    {
-      label: 'Giorni alla prossima tappa',
-      value: nextEventDate ? Math.max(differenceInCalendarDays(nextEventDate, new Date()), 0) : null,
     },
   ];
 
@@ -120,6 +97,31 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
   const heroDescription = championship?.description
     ?? 'Resta aggiornato sulle iniziative ufficiali del Comitato Unitario Modena e preparati alle prossime gare.';
 
+  const nextEventFullDate = nextEventDate
+    ? new Intl.DateTimeFormat('it-IT', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }).format(nextEventDate)
+    : null;
+
+  const nextEventTimeLabel = nextEvent?.event_time
+    ? new Intl.DateTimeFormat('it-IT', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(`2000-01-01T${nextEvent.event_time}`))
+    : null;
+
+  const registrationDeadlineLabel = nextEvent?.registration_end_date
+    ? new Intl.DateTimeFormat('it-IT', {
+        day: '2-digit',
+        month: 'long',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(nextEvent.registration_end_date))
+    : null;
+
   return (
     <section className="relative isolate overflow-hidden bg-white text-slate-900">
       <div className="absolute inset-0 -z-10">
@@ -127,7 +129,7 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(239,68,68,0.12),_transparent_70%)]" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[68vh] max-w-6xl flex-col justify-center gap-12 px-4 py-24 sm:px-6">
+      <div className="relative mx-auto flex min-h-[68vh] max-w-6xl flex-col justify-center gap-12 px-4 py-16 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div className="space-y-8">
             <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600 shadow-sm">
@@ -168,11 +170,11 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
               )}
             </div>
 
-            <div className="mt-10 grid gap-4 text-sm text-slate-600 sm:grid-cols-3">
+            <div className="mt-10 grid grid-cols-2 gap-3 text-sm text-slate-600 sm:gap-4">
               {secondaryStats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <p className="text-xs uppercase tracking-wide text-slate-500">{stat.label}</p>
-                  <p className="mt-2 text-lg font-semibold text-slate-900">{stat.value ?? '—'}</p>
+                <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <p className="text-[11px] uppercase tracking-wide text-slate-500">{stat.label}</p>
+                  <p className="mt-2 text-base font-semibold text-slate-900">{stat.value ?? '—'}</p>
                 </div>
               ))}
             </div>
@@ -195,34 +197,97 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
               </span>
             </div>
 
-            <div className="mt-6 space-y-4">
-              {quickStats.map((item) => (
-                <div key={item.label} className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-blue/10 text-brand-blue">
-                    <item.icon className={`h-6 w-6 ${item.tone ?? ''}`} />
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-slate-500">{item.label}</p>
-                    <p className="mt-1 text-lg font-semibold text-slate-900">{item.value}</p>
-                    {item.description && (
-                      <p className="mt-1 flex items-center gap-1 text-sm text-slate-600">
-                        <MapPin className="h-4 w-4 text-slate-400" aria-hidden />
-                        {item.description}
-                      </p>
+            <div className="mt-6 space-y-5">
+              {nextEvent ? (
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-500">
+                    <span>Prossima tappa</span>
+                    {nextEvent.event_number && (
+                      <span className="rounded-full border border-slate-200 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                        Tappa {nextEvent.event_number}
+                      </span>
                     )}
                   </div>
+                  <h3 className="mt-3 text-lg font-semibold text-slate-900">{nextEvent.title}</h3>
+                  <p className="mt-2 text-sm text-slate-600 capitalize">
+                    {nextEventFullDate || 'Data da definire'}
+                    {nextEventTimeLabel ? ` · ore ${nextEventTimeLabel}` : ''}
+                  </p>
+                  {nextEvent.location && (
+                    <p className="mt-1 inline-flex items-center gap-2 text-sm text-slate-600">
+                      <MapPin className="h-4 w-4 text-brand-blue" />
+                      {nextEvent.location}
+                    </p>
+                  )}
+                  {registrationDeadlineLabel && (
+                    <p className="mt-4 text-xs text-slate-500">
+                      Iscrizioni aperte fino al{' '}
+                      <span className="font-semibold text-slate-900">{registrationDeadlineLabel}</span>
+                    </p>
+                  )}
+                  {nextEvent.poster_url && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50"
+                      onClick={() => window.open(nextEvent.poster_url!, '_blank', 'noopener,noreferrer')}
+                    >
+                      <FileText className="h-4 w-4" />
+                      Locandina ufficiale
+                    </Button>
+                  )}
+                  {nextEventDate && (
+                    <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3">
+                      <p className="text-xs uppercase tracking-wide text-blue-600">Countdown</p>
+                      <CountdownTimer
+                        targetDate={nextEventDate}
+                        variant="compact"
+                        className="mt-2"
+                      />
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-              {championship?.start_date && championship?.end_date ? (
-                <p>
-                  Dal {formatFullDate(championship.start_date)} al {formatFullDate(championship.end_date)}
-                </p>
               ) : (
-                <p>Il calendario completo sarà pubblicato a breve.</p>
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-sm text-slate-500">
+                  Non c'è ancora una prossima tappa programmata. Resta aggiornato!
+                </div>
               )}
+
+            <div className="space-y-3 text-sm text-slate-600">
+              <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
+                <span className="flex items-center gap-2 text-slate-600">
+                  <CalendarDays className="h-4 w-4 text-brand-blue" />
+                  Tappe del campionato
+                </span>
+                  <span className="font-semibold text-slate-900">{stages.length > 0 ? stages.length : '—'}</span>
+                </div>
+                <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
+                  <span className="flex items-center gap-2 text-slate-600">
+                    <MapPin className="h-4 w-4 text-brand-blue" />
+                    Location coinvolte
+                  </span>
+                  <span className="font-semibold text-slate-900">{uniqueLocations.size}</span>
+                </div>
+                <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
+                  <span className="flex items-center gap-2 text-slate-600">
+                    <Clock className="h-4 w-4 text-brand-blue" />
+                    Giorni alla prossima tappa
+                  </span>
+                  <span className="font-semibold text-slate-900">
+                    {nextEventDate ? Math.max(differenceInCalendarDays(nextEventDate, new Date()), 0) : '—'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                {championship?.start_date && championship?.end_date ? (
+                  <p>
+                    Dal {formatFullDate(championship.start_date)} al {formatFullDate(championship.end_date)}
+                  </p>
+                ) : (
+                  <p>Il calendario completo sarà pubblicato a breve.</p>
+                )}
+              </div>
             </div>
           </aside>
         </div>

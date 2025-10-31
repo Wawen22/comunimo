@@ -148,6 +148,10 @@ export interface Championship {
   // Status
   is_active: boolean;
 
+  // Rankings
+  society_ranking_url: string | null;
+  individual_ranking_url: string | null;
+
   // Audit
   created_at: string;
   updated_at: string;

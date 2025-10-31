@@ -1,9 +1,9 @@
 'use client';
 
 import { HeroSection } from '@/components/landing/HeroSection';
-import { NextEventSection } from '@/components/landing/NextEventSection';
 import { CalendarSection } from '@/components/landing/CalendarSection';
 import { InsightsSection } from '@/components/landing/InsightsSection';
+import { RankingSection } from '@/components/landing/RankingSection';
 import { EngagementSection } from '@/components/landing/EngagementSection';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ScrollProgress } from '@/components/landing/ScrollProgress';
@@ -53,14 +53,13 @@ export default function Home() {
           loading={loading}
         />
 
-        {/* Next Event Section */}
-        <NextEventSection events={stages} loading={loading} />
-
         {/* Calendar Section */}
         <CalendarSection stages={stages} loading={loading} />
 
         {/* Insights & Engagement */}
         <InsightsSection championship={championship} events={stages} />
+
+        <RankingSection championship={championship} events={stages} loading={loading} />
 
         <EngagementSection />
 
