@@ -1,0 +1,5 @@
+- [x] Studiare l'elenco iscritti al campionato per capire i dati già caricati (componenti React e query Supabase).
+- [x] Creare utility per generare il file `.xlsx` con le colonne richieste partendo da `championship_registrations` + `members` + `societies`.
+- [x] Aggiungere il pulsante "Esporta Excel" nell'elenco iscritti del campionato e collegarlo alla nuova utility.
+- [x] Gestire i casi senza dati mostrando un toast informativo.
+- [x] Test manuale: scaricare un file e verificare che le colonne contengano i valori nel formato richiesto.
