@@ -92,7 +92,7 @@ export function EventsManager() {
           </div>
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">Eventi in formato Cards</h1>
+              <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">Eventi Comitato Unitario Modena</h1>
               <p className="max-w-2xl text-sm text-gray-700 md:text-base">
                 Visualizza e gestisci eventi, tappe e gare con una panoramica a schede focalizzata sui prossimi
                 appuntamenti.

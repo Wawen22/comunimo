@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -489,6 +490,42 @@ function GuidedTourOverlay({
   const hasPrevious = stepIndex > 0;
   const isLastStep = stepIndex === totalSteps - 1;
 
+  const calloutRef = useRef<HTMLDivElement | null>(null);
+  const [calloutSize, setCalloutSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const node = calloutRef.current;
+    if (!node) return;
+
+    const updateSize = () => {
+      const rect = node.getBoundingClientRect();
+      setCalloutSize((prev) => {
+        const next = {
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        };
+
+        if (prev.width === next.width && prev.height === next.height) {
+          return prev;
+        }
+
+        return next;
+      });
+    };
+
+    updateSize();
+
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateSize) : null;
+    observer?.observe(node);
+
+    window.addEventListener('resize', updateSize);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', updateSize);
+    };
+  }, [step.id, stepIndex]);
+
   const calloutStyle = useMemo(() => {
     if (!targetRect) {
       return {
@@ -502,52 +539,61 @@ function GuidedTourOverlay({
     const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
     const spacing = 16;
     const maxWidth = Math.min(360, viewportWidth - 32);
-
+    const calloutHeight = calloutSize.height || 260;
+    const calloutWidth = Math.min(calloutSize.width || maxWidth, maxWidth);
     const preferredPlacement = placement === 'auto' ? 'bottom' : placement;
 
-    const topPlacements = preferredPlacement === 'top';
-    const bottomPlacements = preferredPlacement === 'bottom';
-    const leftPlacements = preferredPlacement === 'left';
-    const rightPlacements = preferredPlacement === 'right';
+    const isTop = preferredPlacement === 'top';
+    const isBottom = preferredPlacement === 'bottom';
+    const isLeft = preferredPlacement === 'left';
+    const isRight = preferredPlacement === 'right';
 
     let top = targetRect.bottom + spacing;
     let left = targetRect.left;
 
-    if (bottomPlacements && top + 200 > viewportHeight) {
-      top = targetRect.top - spacing;
-    }
-
-    if (topPlacements) {
-      top = targetRect.top - spacing;
-      if (top < 0) {
-        top = targetRect.bottom + spacing;
+    if (isTop) {
+      top = targetRect.top - spacing - calloutHeight;
+      if (top < 16) {
+        top = Math.min(targetRect.bottom + spacing, viewportHeight - calloutHeight - 16);
       }
+    } else if (isBottom) {
+      top = targetRect.bottom + spacing;
+      if (top + calloutHeight > viewportHeight - 16) {
+        const abovePosition = targetRect.top - spacing - calloutHeight;
+        top = abovePosition >= 16
+          ? abovePosition
+          : Math.max(16, viewportHeight - calloutHeight - 16);
+      }
+    } else {
+      // Left or right placement: align with target but keep inside viewport
+      top = targetRect.top + targetRect.height / 2 - calloutHeight / 2;
     }
 
-    if (leftPlacements) {
-      left = targetRect.left - maxWidth - spacing;
+    if (isLeft) {
+      left = targetRect.left - calloutWidth - spacing;
       if (left < 16) {
         left = targetRect.right + spacing;
       }
-    } else if (rightPlacements) {
+    } else if (isRight) {
       left = targetRect.right + spacing;
-      if (left + maxWidth > viewportWidth) {
-        left = targetRect.left - maxWidth - spacing;
+      if (left + calloutWidth > viewportWidth) {
+        left = targetRect.left - calloutWidth - spacing;
         if (left < 16) {
-          left = Math.max(16, viewportWidth / 2 - maxWidth / 2);
+          left = Math.max(16, viewportWidth / 2 - calloutWidth / 2);
         }
       }
     }
 
-    const clampedTop = Math.min(Math.max(top, 16), viewportHeight - 16);
-    const clampedLeft = Math.min(Math.max(left, 16), viewportWidth - maxWidth - 16);
+    const maxTop = viewportHeight - calloutHeight - 16;
+    const clampedTop = Math.min(Math.max(top, 16), Math.max(16, maxTop));
+    const clampedLeft = Math.min(Math.max(left, 16), viewportWidth - calloutWidth - 16);
 
     return {
       top: clampedTop,
       left: clampedLeft,
       maxWidth,
     } as CSSProperties;
-  }, [targetRect, placement]);
+  }, [targetRect, placement, calloutSize.height, calloutSize.width]);
 
   return (
     <div className="fixed inset-0 z-[90] pointer-events-none">
@@ -566,6 +612,7 @@ function GuidedTourOverlay({
       )}
 
       <div
+        ref={calloutRef}
         className="pointer-events-auto fixed z-[95] max-w-sm rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200"
         style={calloutStyle}
       >
