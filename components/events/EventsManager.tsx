@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Plus, Trophy, CalendarDays } from 'lucide-react';
+import { Trophy, CalendarDays } from 'lucide-react';
 import { useEventsData, type EventsFilters } from '@/lib/hooks/useEventsData';
 import { useUser } from '@/lib/hooks/useUser';
 import type { Event } from '@/types/database';
@@ -90,24 +90,11 @@ export function EventsManager() {
             <span className="h-2 w-2 animate-pulse rounded-full bg-purple-500" />
             Gestione Eventi
           </div>
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">Eventi Comitato Unitario Modena</h1>
-              <p className="max-w-2xl text-sm text-gray-700 md:text-base">
-                Visualizza e gestisci eventi, tappe e gare con una panoramica a schede focalizzata sui prossimi
-                appuntamenti.
-              </p>
-            </div>
-            {canCreateEvents && (
-              <Button
-                size="lg"
-                className="h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 text-base font-semibold text-white shadow-lg transition hover:from-purple-600 hover:to-pink-600 hover:shadow-xl"
-                onClick={() => setShowCreateDialog(true)}
-              >
-                <Plus className="mr-2 h-5 w-5" />
-                Nuovo Evento
-              </Button>
-            )}
+          <div className="flex flex-col gap-4">
+            <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">Eventi Comitato Unitario Modena</h1>
+            <p className="max-w-2xl text-sm text-gray-700 md:text-base">
+              Visualizza e gestisci eventi, tappe e gare con una panoramica a schede focalizzata sui prossimi appuntamenti.
+            </p>
           </div>
         </div>
       </div>
@@ -190,6 +177,7 @@ export function EventsManager() {
           onFiltersChange={setFilters}
           loading={loading}
           onEventClick={handleEventClick}
+          onCreateClick={canCreateEvents ? () => setShowCreateDialog(true) : undefined}
         />
       )}
 
