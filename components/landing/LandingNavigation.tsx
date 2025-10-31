@@ -65,7 +65,10 @@ export function LandingNavigation({ sections }: LandingNavigationProps) {
 
   useEffect(() => {
     if (!sectionIds.includes(activeSection) && sectionIds.length > 0) {
-      setActiveSection(sectionIds[0]);
+      const firstSection = sectionIds[0];
+      if (firstSection) {
+        setActiveSection(firstSection);
+      }
     }
   }, [activeSection, sectionIds]);
 
