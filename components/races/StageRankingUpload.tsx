@@ -27,6 +27,7 @@ function getFileNameFromUrl(url?: string | null) {
   if (!url) return null;
   try {
     const baseUrl = url.split('?')[0];
+    if (!baseUrl) return null;
     const segments = baseUrl.split('/');
     return segments[segments.length - 1] || null;
   } catch (error) {
