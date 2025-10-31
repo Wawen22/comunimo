@@ -50,12 +50,12 @@ export function LandingFooter() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/auth/login" className="hover:text-brand-blue">
+                    <Link href="/login" className="hover:text-brand-blue">
                       Accedi
                     </Link>
                   </li>
                   <li>
-                    <Link href="/auth/register" className="hover:text-brand-blue">
+                    <Link href="/register" className="hover:text-brand-blue">
                       Registrati
                     </Link>
                   </li>

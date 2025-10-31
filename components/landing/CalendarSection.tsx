@@ -14,6 +14,7 @@ import { PDFViewerModal } from '@/components/landing/PDFViewerModal';
 interface CalendarSectionProps {
   stages: Event[];
   loading: boolean;
+  sectionId?: string;
 }
 
 type DateFilter = 'all' | 'upcoming' | 'past';
@@ -30,7 +31,7 @@ function safeFormat(date: Date | null, pattern: string) {
   return format(date, pattern, { locale: it });
 }
 
-export function CalendarSection({ stages, loading }: CalendarSectionProps) {
+export function CalendarSection({ stages, loading, sectionId }: CalendarSectionProps) {
   const [filters, setFilters] = useState<Filters>({
     search: '',
     dateFilter: 'all',
@@ -105,7 +106,7 @@ export function CalendarSection({ stages, loading }: CalendarSectionProps) {
 
   if (loading) {
     return (
-      <section className="bg-white py-24 text-slate-900">
+      <section id={sectionId} className="bg-white py-24 text-slate-900">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="h-5 w-40 animate-pulse rounded-full bg-slate-200" />
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -120,7 +121,7 @@ export function CalendarSection({ stages, loading }: CalendarSectionProps) {
 
   if (!stages || stages.length === 0) {
     return (
-      <section className="bg-white py-24 text-slate-900">
+      <section id={sectionId} className="bg-white py-24 text-slate-900">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-12 text-center shadow-sm">
             <CalendarDays className="mx-auto h-12 w-12 text-slate-400" />
@@ -135,7 +136,10 @@ export function CalendarSection({ stages, loading }: CalendarSectionProps) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-slate-100 py-24 text-slate-900">
+    <section
+      id={sectionId}
+      className="relative overflow-hidden bg-slate-100 py-24 text-slate-900"
+    >
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,_rgba(148,163,184,0.35),_transparent_70%)]" />
       
@@ -452,5 +456,4 @@ export function CalendarSection({ stages, loading }: CalendarSectionProps) {
     </section>
   );
 }
-
 

@@ -130,7 +130,7 @@ async function setUserSocieties(userId: string, societyIds: string[]) {
 
 function getResetRedirect() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  return appUrl ? `${appUrl}/auth/reset-password` : undefined;
+  return appUrl ? `${appUrl}/reset-password` : undefined;
 }
 
 export async function createUserAccount(input: unknown): Promise<ActionResult> {

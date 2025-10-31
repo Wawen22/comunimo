@@ -7,10 +7,10 @@ export const ROUTES = {
   
   // Auth routes
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    FORGOT_PASSWORD: '/auth/forgot-password',
-    RESET_PASSWORD: '/auth/reset-password',
+    LOGIN: '/login',
+    REGISTER: '/register',
+    FORGOT_PASSWORD: '/forgot-password',
+    RESET_PASSWORD: '/reset-password',
   },
 
   // Dashboard routes
@@ -67,4 +67,3 @@ export function isAdminRoute(pathname: string): boolean {
   const adminRoutes: string[] = ['/admin'];
   return adminRoutes.some((route) => pathname.startsWith(route));
 }
-

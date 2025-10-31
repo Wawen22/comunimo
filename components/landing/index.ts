@@ -13,3 +13,4 @@ export { CountdownTimer } from './CountdownTimer';
 export { PDFViewerModal } from './PDFViewerModal';
 export { ScrollProgress } from './ScrollProgress';
 export { ScrollToTop } from './ScrollToTop';
+export { LandingNavigation } from './LandingNavigation';

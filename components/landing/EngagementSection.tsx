@@ -23,9 +23,16 @@ const benefits = [
   },
 ];
 
-export function EngagementSection() {
+interface EngagementSectionProps {
+  sectionId?: string;
+}
+
+export function EngagementSection({ sectionId }: EngagementSectionProps) {
   return (
-    <section className="relative isolate overflow-hidden bg-slate-100 py-24 text-slate-900">
+    <section
+      id={sectionId}
+      className="relative isolate overflow-hidden bg-slate-100 py-24 text-slate-900"
+    >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.15),_transparent_60%)]" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

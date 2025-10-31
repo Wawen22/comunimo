@@ -22,6 +22,7 @@ interface RankingSectionProps {
   championship: Championship | null;
   events: Event[];
   loading: boolean;
+  sectionId?: string;
 }
 
 const championshipCards = [
@@ -54,16 +55,16 @@ function formatStageDate(date: string | null | undefined) {
   }
 }
 
-export function RankingSection({ championship, events, loading }: RankingSectionProps) {
-  if (!championship) {
+export function RankingSection({ championship, events, loading, sectionId }: RankingSectionProps) {
+  if (!championship && !loading) {
     return null;
   }
 
   const championshipEntries = championshipCards.map((card) => {
     const url =
       card.key === 'society'
-        ? championship.society_ranking_url
-        : championship.individual_ranking_url;
+        ? championship?.society_ranking_url
+        : championship?.individual_ranking_url;
 
     return {
       ...card,
@@ -85,7 +86,10 @@ export function RankingSection({ championship, events, loading }: RankingSection
   const availableStageRankings = stageItems.filter((stage) => Boolean(stage.results_url)).length;
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-100 py-24">
+    <section
+      id={sectionId}
+      className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-100 py-24"
+    >
       <div className="absolute inset-0 opacity-70" aria-hidden>
         <div className="absolute -left-32 top-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
         <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-brand-blue/20 blur-3xl" />

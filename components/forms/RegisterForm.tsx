@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/lib/api/supabase';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/toast';
@@ -32,6 +33,8 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>;
 type SocietyOption = Pick<AllSociety, 'id' | 'name' | 'society_code'>;
 
+const SOCIETY_PAGE_SIZE = 30;
+
 export function RegisterForm() {
   const router = useRouter();
   const { toast } = useToast();
@@ -52,7 +55,30 @@ export function RegisterForm() {
   const [societyOptions, setSocietyOptions] = useState<SocietyOption[]>([]);
   const [societyLookup, setSocietyLookup] = useState<Record<string, SocietyOption>>({});
   const [isSocietyLoading, setIsSocietyLoading] = useState(false);
+  const [isSocietyLoadingMore, setIsSocietyLoadingMore] = useState(false);
   const [societyError, setSocietyError] = useState<string | null>(null);
+  const [hasMoreSocieties, setHasMoreSocieties] = useState(true);
+  const [societyPage, setSocietyPage] = useState(0);
+  const [isSocietyDialogOpen, setIsSocietyDialogOpen] = useState(false);
+
+  const handleSocietyDialogChange = (open: boolean) => {
+    setIsSocietyDialogOpen(open);
+    if (open) {
+      setSocietyPage(0);
+      setHasMoreSocieties(true);
+      setSocietyOptions([]);
+      setSocietyError(null);
+      setIsSocietyLoading(false);
+      setIsSocietyLoadingMore(false);
+    } else {
+      setSocietyOptions([]);
+      setSocietyError(null);
+      setIsSocietyLoading(false);
+      setIsSocietyLoadingMore(false);
+      setSocietyPage(0);
+      setHasMoreSocieties(true);
+    }
+  };
 
   const selectedSocietyIds = watch('societyIds');
   const selectedSocieties = useMemo(
@@ -64,19 +90,31 @@ export function RegisterForm() {
   );
 
   useEffect(() => {
+    if (!isSocietyDialogOpen) {
+      return undefined;
+    }
+
     let isCancelled = false;
+    const isInitialPage = societyPage === 0;
+
+    if (isInitialPage) {
+      setIsSocietyLoading(true);
+    } else {
+      setIsSocietyLoadingMore(true);
+    }
+    setSocietyError(null);
 
     const handler = setTimeout(async () => {
-      setIsSocietyLoading(true);
-      setSocietyError(null);
-
       try {
         const searchTerm = societySearch.trim();
+        const rangeStart = societyPage * SOCIETY_PAGE_SIZE;
+        const rangeEnd = rangeStart + SOCIETY_PAGE_SIZE - 1;
+
         let query = supabase
           .from('all_societies')
           .select('id, name, society_code')
           .order('name', { ascending: true })
-          .limit(25);
+          .range(rangeStart, rangeEnd);
 
         if (searchTerm) {
           const sanitized = searchTerm.replace(/[%_]/g, (char) => `\\${char}`);
@@ -92,7 +130,20 @@ export function RegisterForm() {
 
         const mappedSocieties = (data ?? []) as SocietyOption[];
 
-        setSocietyOptions(mappedSocieties);
+        setSocietyOptions((prev) => {
+          if (isInitialPage) {
+            return mappedSocieties;
+          }
+
+          if (!mappedSocieties.length) {
+            return prev;
+          }
+
+          const existingIds = new Set(prev.map((society) => society.id));
+          const merged = mappedSocieties.filter((society) => !existingIds.has(society.id));
+          return merged.length ? [...prev, ...merged] : prev;
+        });
+
         setSocietyLookup((prev) => {
           if (!mappedSocieties.length) return prev;
           const next = { ...prev };
@@ -101,14 +152,23 @@ export function RegisterForm() {
           });
           return next;
         });
+
+        setHasMoreSocieties(mappedSocieties.length === SOCIETY_PAGE_SIZE);
       } catch (error) {
         if (isCancelled) return;
         console.error('Society fetch error:', error);
-        setSocietyOptions([]);
+        if (isInitialPage) {
+          setSocietyOptions([]);
+        }
+        setHasMoreSocieties(false);
         setSocietyError('Impossibile caricare le società. Riprova.');
       } finally {
         if (!isCancelled) {
-          setIsSocietyLoading(false);
+          if (isInitialPage) {
+            setIsSocietyLoading(false);
+          } else {
+            setIsSocietyLoadingMore(false);
+          }
         }
       }
     }, 300);
@@ -117,7 +177,20 @@ export function RegisterForm() {
       isCancelled = true;
       clearTimeout(handler);
     };
-  }, [societySearch]);
+  }, [societySearch, societyPage, isSocietyDialogOpen]);
+
+  const handleSocietyListScroll = (event: UIEvent<HTMLUListElement>) => {
+    const target = event.currentTarget;
+    if (!hasMoreSocieties || isSocietyLoading || isSocietyLoadingMore) {
+      return;
+    }
+
+    const threshold = 64;
+    if (target.scrollHeight - target.scrollTop - target.clientHeight <= threshold) {
+      setIsSocietyLoadingMore(true);
+      setSocietyPage((prev) => prev + 1);
+    }
+  };
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
@@ -258,20 +331,11 @@ export function RegisterForm() {
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="societies-search">Società da associare</Label>
+      <div className="space-y-3">
+        <Label htmlFor="society-selector">Società da associare</Label>
         <p className="text-sm text-gray-600">
           Seleziona le società a cui desideri avere accesso; un amministratore approverà la richiesta.
         </p>
-        <Input
-          id="societies-search"
-          type="text"
-          placeholder="Cerca per nome o codice società"
-          autoComplete="off"
-          value={societySearch}
-          onChange={(event) => setSocietySearch(event.target.value)}
-          disabled={isLoading}
-        />
         <Controller
           name="societyIds"
           control={control}
@@ -285,8 +349,10 @@ export function RegisterForm() {
               }
             };
 
+            const selectedCount = Array.isArray(field.value) ? field.value.length : 0;
+
             return (
-              <div className="space-y-3">
+              <>
                 <div className="flex flex-wrap gap-2">
                   {selectedSocieties.length > 0 ? (
                     selectedSocieties.map((society) => (
@@ -314,57 +380,159 @@ export function RegisterForm() {
                   )}
                 </div>
 
-                <div className="rounded-md border border-gray-200">
-                  {isSocietyLoading ? (
-                    <div className="px-3 py-4 text-sm text-gray-500">
-                      Caricamento società...
-                    </div>
-                  ) : societyOptions.length > 0 ? (
-                    <ul className="max-h-56 overflow-y-auto divide-y divide-gray-100">
-                      {societyOptions.map((option) => {
-                        const checked = Array.isArray(field.value)
-                          ? field.value.includes(option.id)
-                          : false;
-                        return (
-                          <li key={option.id}>
-                            <label
-                              htmlFor={`society-${option.id}`}
-                              className="flex cursor-pointer items-start gap-3 px-3 py-2 hover:bg-gray-50"
-                            >
-                              <Checkbox
-                                id={`society-${option.id}`}
-                                checked={checked}
-                                onCheckedChange={(next) =>
-                                  toggleSelection(option.id, Boolean(next))
-                                }
-                                disabled={isLoading}
-                              />
-                              <div className="flex flex-col">
-                                <span className="text-sm font-medium text-gray-900">
-                                  {option.name}
-                                </span>
-                                {option.society_code && (
-                                  <span className="text-xs text-gray-500">
-                                    {option.society_code}
-                                  </span>
-                                )}
-                              </div>
-                            </label>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <div className="px-3 py-4 text-sm text-gray-500">
-                      {societyError
-                        ? societyError
-                        : societySearch.trim()
-                        ? 'Nessuna società trovata per questa ricerca.'
-                        : 'Digita per filtrare e selezionare la tua società.'}
-                    </div>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <Button
+                    id="society-selector"
+                    type="button"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                    onClick={() => handleSocietyDialogChange(true)}
+                    disabled={isLoading}
+                  >
+                    {selectedCount > 0
+                      ? `Modifica selezione (${selectedCount})`
+                      : 'Seleziona società'}
+                  </Button>
+
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      className="text-sm font-medium text-blue-600 transition hover:text-blue-800"
+                      onClick={() => field.onChange([])}
+                    >
+                      Svuota selezione
+                    </button>
                   )}
                 </div>
-              </div>
+
+                <Dialog open={isSocietyDialogOpen} onOpenChange={handleSocietyDialogChange}>
+                  <DialogContent className="max-w-2xl space-y-6">
+                    <DialogHeader>
+                      <DialogTitle>Seleziona società</DialogTitle>
+                      <DialogDescription>
+                        Cerca per nome o codice società e seleziona una o più opzioni da associare al tuo account.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                      <Input
+                        id="societies-search"
+                        type="text"
+                        placeholder="Cerca per nome o codice società"
+                        autoComplete="off"
+                        value={societySearch}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          setSocietySearch(value);
+                          setSocietyPage(0);
+                          setHasMoreSocieties(true);
+                          setSocietyOptions([]);
+                          setIsSocietyLoading(false);
+                          setIsSocietyLoadingMore(false);
+                          setSocietyError(null);
+                        }}
+                        autoFocus
+                        disabled={isLoading}
+                      />
+
+                      <div className="max-h-72 overflow-hidden rounded-xl border border-gray-200">
+                        {isSocietyLoading ? (
+                          <div className="flex items-center justify-center px-6 py-10 text-sm text-gray-500">
+                            Caricamento società...
+                          </div>
+                        ) : societyOptions.length > 0 ? (
+                          <ul
+                            className="max-h-72 overflow-y-auto divide-y divide-gray-100"
+                            onScroll={handleSocietyListScroll}
+                          >
+                            {societyOptions.map((option) => {
+                              const checked = Array.isArray(field.value)
+                                ? field.value.includes(option.id)
+                                : false;
+                              return (
+                                <li key={option.id}>
+                                  <label
+                                    htmlFor={`society-${option.id}`}
+                                    className="flex cursor-pointer items-start gap-3 px-4 py-3 transition hover:bg-gray-50"
+                                  >
+                                    <Checkbox
+                                      id={`society-${option.id}`}
+                                      checked={checked}
+                                      onCheckedChange={(next) =>
+                                        toggleSelection(option.id, Boolean(next))
+                                      }
+                                      disabled={isLoading}
+                                    />
+                                    <div className="flex flex-col">
+                                      <span className="text-sm font-medium text-gray-900">
+                                        {option.name}
+                                      </span>
+                                      {option.society_code && (
+                                        <span className="text-xs text-gray-500">
+                                          {option.society_code}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </label>
+                                </li>
+                              );
+                            })}
+                            {societyError && (
+                              <li
+                                key="society-error"
+                                className="px-4 py-3 text-xs text-red-600"
+                              >
+                                {societyError}
+                              </li>
+                            )}
+                            {isSocietyLoadingMore && (
+                              <li
+                                key="loading-more"
+                                className="flex justify-center px-4 py-3 text-xs text-gray-500"
+                              >
+                                Caricamento altre società...
+                              </li>
+                            )}
+                            {!hasMoreSocieties && societyOptions.length > 0 && !isSocietyLoadingMore && (
+                              <li
+                                key="end-of-results"
+                                className="px-4 py-3 text-xs text-gray-400"
+                              >
+                                Fine dell'elenco. Usa la ricerca per altre società.
+                              </li>
+                            )}
+                          </ul>
+                        ) : (
+                          <div className="px-6 py-10 text-sm text-gray-500">
+                            {societyError
+                              ? societyError
+                              : societySearch.trim()
+                              ? 'Nessuna società trovata per questa ricerca.'
+                              : 'Digita per filtrare e selezionare la tua società.'}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <DialogFooter className="gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => field.onChange([])}
+                        disabled={selectedCount === 0}
+                      >
+                        Svuota selezione
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => handleSocietyDialogChange(false)}
+                      >
+                        Conferma selezione
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </>
             );
           }}
         />

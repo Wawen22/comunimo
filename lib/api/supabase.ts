@@ -70,9 +70,8 @@ export async function signOut() {
  */
 export async function resetPassword(email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
   });
   if (error) throw error;
   return data;
 }
-

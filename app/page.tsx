@@ -1,13 +1,15 @@
 'use client';
 
+import { useMemo } from 'react';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { CalendarSection } from '@/components/landing/CalendarSection';
 import { InsightsSection } from '@/components/landing/InsightsSection';
 import { RankingSection } from '@/components/landing/RankingSection';
 import { EngagementSection } from '@/components/landing/EngagementSection';
+import { LandingNavigation } from '@/components/landing/LandingNavigation';
 import { LandingFooter } from '@/components/landing/LandingFooter';
-import { ScrollProgress } from '@/components/landing/ScrollProgress';
 import { ScrollToTop } from '@/components/landing/ScrollToTop';
+import { ScrollProgress } from '@/components/landing/ScrollProgress';
 import { useLandingData } from '@/lib/hooks/useLandingData';
 
 /**
@@ -16,6 +18,20 @@ import { useLandingData } from '@/lib/hooks/useLandingData';
  */
 export default function Home() {
   const { championship, stages, registrationStatus, loading, error } = useLandingData();
+  const navigationSections = useMemo(() => {
+    const sections = [
+      { id: 'landing-hero', label: 'Intro' },
+      { id: 'landing-calendar', label: 'Calendario' },
+      { id: 'landing-insights', label: 'Statistiche' },
+    ];
+
+    if (loading || championship) {
+      sections.push({ id: 'landing-rankings', label: 'Classifiche' });
+    }
+
+    sections.push({ id: 'landing-engagement', label: 'Community' });
+    return sections;
+  }, [championship, loading]);
 
   if (error && !loading) {
     return (
@@ -38,8 +54,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Scroll Progress Indicator */}
+      {/* Scroll progress bar */}
       <ScrollProgress />
+
+      {/* Landing navigation */}
+      <LandingNavigation sections={navigationSections} />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />
@@ -51,17 +70,28 @@ export default function Home() {
           stages={stages}
           registrationStatus={registrationStatus}
           loading={loading}
+          sectionId="landing-hero"
+          className="pt-14 sm:pt-20"
         />
 
         {/* Calendar Section */}
-        <CalendarSection stages={stages} loading={loading} />
+        <CalendarSection stages={stages} loading={loading} sectionId="landing-calendar" />
 
         {/* Insights & Engagement */}
-        <InsightsSection championship={championship} events={stages} />
+        <InsightsSection
+          championship={championship}
+          events={stages}
+          sectionId="landing-insights"
+        />
 
-        <RankingSection championship={championship} events={stages} loading={loading} />
+        <RankingSection
+          championship={championship}
+          events={stages}
+          loading={loading}
+          sectionId="landing-rankings"
+        />
 
-        <EngagementSection />
+        <EngagementSection sectionId="landing-engagement" />
 
         {/* Footer */}
         <LandingFooter />

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { Championship, Event } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { getNextEvent } from '@/lib/utils/registrationUtils';
+import { cn } from '@/lib/utils';
 import { CountdownTimer } from './CountdownTimer';
 
 interface HeroSectionProps {
@@ -13,6 +14,8 @@ interface HeroSectionProps {
   stages: Event[];
   registrationStatus: 'open' | 'closed';
   loading: boolean;
+  sectionId?: string;
+  className?: string;
 }
 
 const skeletonBlocks = ['h-6 w-28', 'h-12 w-full max-w-md', 'h-10 w-40', 'h-16 w-56'];
@@ -30,7 +33,14 @@ function formatFullDate(date: string | null | undefined) {
   return new Intl.DateTimeFormat('it-IT').format(new Date(date));
 }
 
-export function HeroSection({ championship, stages, registrationStatus, loading }: HeroSectionProps) {
+export function HeroSection({
+  championship,
+  stages,
+  registrationStatus,
+  loading,
+  sectionId,
+  className,
+}: HeroSectionProps) {
   const router = useRouter();
 
   const nextEvent = getNextEvent(stages);
@@ -57,9 +67,14 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
     },
   ];
 
+  const sectionClasses = cn(
+    'relative isolate overflow-hidden bg-white text-slate-900',
+    className,
+  );
+
   if (loading) {
     return (
-      <section className="relative isolate overflow-hidden bg-white text-slate-900">
+      <section id={sectionId} className={sectionClasses}>
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.25),_transparent_55%)]" />
         <div className="mx-auto flex min-h-[68vh] max-w-6xl flex-col justify-center gap-10 px-4 py-24 sm:px-6">
           <div className="space-y-6">
@@ -123,7 +138,7 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
     : null;
 
   return (
-    <section className="relative isolate overflow-hidden bg-white text-slate-900">
+    <section id={sectionId} className={sectionClasses}>
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(239,68,68,0.12),_transparent_70%)]" />
@@ -160,7 +175,7 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
               {!isOpen && (
                 <Button
                   variant="outline"
-                  onClick={() => router.push('/auth/register')}
+                  onClick={() => router.push('/register')}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-semibold text-slate-900 transition hover:border-brand-blue/40 hover:bg-brand-blue/5"
                   size="lg"
                 >
@@ -260,14 +275,7 @@ export function HeroSection({ championship, stages, registrationStatus, loading 
                   Tappe del campionato
                 </span>
                   <span className="font-semibold text-slate-900">{stages.length > 0 ? stages.length : '—'}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
-                  <span className="flex items-center gap-2 text-slate-600">
-                    <MapPin className="h-4 w-4 text-brand-blue" />
-                    Location coinvolte
-                  </span>
-                  <span className="font-semibold text-slate-900">{uniqueLocations.size}</span>
-                </div>
+                </div>              
                 <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
                   <span className="flex items-center gap-2 text-slate-600">
                     <Clock className="h-4 w-4 text-brand-blue" />

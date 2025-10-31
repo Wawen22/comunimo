@@ -10,6 +10,7 @@ import { supabase } from '@/lib/api/supabase';
 interface InsightsSectionProps {
   championship: Championship | null;
   events: Event[];
+  sectionId?: string;
 }
 
 interface LiveStats {
@@ -26,7 +27,7 @@ function formatPeriod(start?: string | null, end?: string | null) {
   return `${startDate} → ${endDate}`;
 }
 
-export function InsightsSection({ championship, events }: InsightsSectionProps) {
+export function InsightsSection({ championship, events, sectionId }: InsightsSectionProps) {
   const [liveStats, setLiveStats] = useState<LiveStats>({
     totalAthletes: 0,
     totalSocieties: 0,
@@ -123,7 +124,7 @@ export function InsightsSection({ championship, events }: InsightsSectionProps) 
   ];
 
   return (
-    <section className="bg-white py-24">
+    <section id={sectionId} className="bg-white py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
