@@ -68,25 +68,28 @@ export function ProfileView() {
     <div className="space-y-6">
       {/* Profile Card */}
       <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
             <Avatar
               fallback={profile.full_name || profile.email}
               className="h-20 w-20"
             />
-            <div>
+            <div className="text-center sm:text-left">
               <h2 className="text-2xl font-bold text-gray-900">
                 {profile.full_name || 'Utente'}
               </h2>
               <p className="mt-1 text-sm text-gray-600">{profile.email}</p>
-              <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
                 <Shield className="h-4 w-4" />
                 {getRoleDisplayName(profile.role)}
               </div>
             </div>
           </div>
-          <Button onClick={() => setIsEditing(true)}>
-            <Edit className="mr-2 h-4 w-4" />
+          <Button
+            onClick={() => setIsEditing(true)}
+            className="w-full justify-center gap-2 sm:w-auto sm:self-start"
+          >
+            <Edit className="h-4 w-4" />
             Modifica
           </Button>
         </div>

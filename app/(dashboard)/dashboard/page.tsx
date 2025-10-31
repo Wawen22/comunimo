@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/toast';
+import { GuidedRegistrationLauncher } from '@/components/dashboard/guided-registration/GuidedRegistrationLauncher';
 
 export default function DashboardPage() {
   const { profile } = useUser();
@@ -113,6 +114,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-col items-end gap-3">
+          <GuidedRegistrationLauncher className="md:hidden" />
           <div className="hidden md:flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 border border-blue-200">
             <TrendingUp className="h-5 w-5 text-blue-600" />
             <span className="text-sm font-medium text-blue-900">Tutto aggiornato</span>

@@ -18,11 +18,11 @@ import {
   Search,
   X,
   Calendar,
-  Filter,
   SlidersHorizontal,
   CalendarDays,
   History,
   TrendingUp,
+  Plus,
 } from 'lucide-react';
 
 interface EventsGridProps {
@@ -31,6 +31,7 @@ interface EventsGridProps {
   onFiltersChange: (filters: EventsFilters) => void;
   loading: boolean;
   onEventClick?: (event: Event) => void;
+  onCreateClick?: () => void;
 }
 
 /**
@@ -49,6 +50,7 @@ export function EventsGrid({
   onFiltersChange,
   loading,
   onEventClick,
+  onCreateClick,
 }: EventsGridProps) {
   const [showFilters, setShowFilters] = useState(false);
 
@@ -105,22 +107,34 @@ export function EventsGrid({
         {/* Filters Section */}
         <div className="mb-8 space-y-4">
           {/* Search Bar */}
-          <div className="relative max-w-2xl">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-            <Input
-              type="text"
-              placeholder="Cerca eventi per titolo, descrizione o località..."
-              value={filters.search}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="h-12 rounded-2xl border-2 border-slate-200 bg-white pl-12 pr-12 text-base shadow-sm transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-200"
-            />
-            {filters.search && (
-              <button
-                onClick={() => handleSearchChange('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600"
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-xl">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Cerca eventi per titolo, descrizione o località..."
+                value={filters.search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="h-12 rounded-2xl border-2 border-slate-200 bg-white pl-12 pr-12 text-base shadow-sm transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-200"
+              />
+              {filters.search && (
+                <button
+                  onClick={() => handleSearchChange('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+
+            {onCreateClick && (
+              <Button
+                onClick={onCreateClick}
+                className="h-12 w-full rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-base font-semibold text-white shadow-lg transition hover:from-purple-600 hover:to-pink-600 hover:shadow-xl sm:w-auto"
               >
-                <X className="h-5 w-5" />
-              </button>
+                <Plus className="mr-2 h-5 w-5" />
+                Nuovo Evento
+              </Button>
             )}
           </div>
 
