@@ -57,19 +57,19 @@ async function fetchDashboardInsights(): Promise<DashboardInsights> {
   if (newMembersRes.error) throw new Error(newMembersRes.error.message);
   if (upcomingEventsRes.error) throw new Error(upcomingEventsRes.error.message);
 
-  const activeSocieties = societiesRes.data ?? [];
-  const societiesByOrganizationMap = activeSocieties.reduce<Record<OrganizationCode | 'ALTRO', number>>((acc, society) => {
+  const activeSocieties = (societiesRes.data ?? []) as Array<Pick<Society, 'id' | 'organization'>>;
+  const societiesByOrganizationMap = activeSocieties.reduce<Partial<Record<OrganizationCode | 'ALTRO', number>>>((acc, society) => {
     const key = getOrganizationKey(society.organization);
     acc[key] = (acc[key] ?? 0) + 1;
     return acc;
-  }, { ALTRO: 0 });
+  }, {});
 
   const societiesByOrganization = Object.entries(societiesByOrganizationMap)
-    .filter(([_, count]) => count > 0)
-    .map(([organization, count]) => ({ organization: organization as OrganizationCode | 'ALTRO', count }))
+    .filter(([_, count]) => count && count > 0)
+    .map(([organization, count]) => ({ organization: organization as OrganizationCode | 'ALTRO', count: count as number }))
     .sort((a, b) => b.count - a.count);
 
-  const upcomingEvents = (upcomingEventsRes.data ?? []).map((event) => ({
+  const upcomingEvents = ((upcomingEventsRes.data ?? []) as Array<Pick<Event, 'id' | 'title' | 'event_date' | 'location' | 'registration_deadline'>>).map((event) => ({
     id: event.id,
     title: event.title,
     event_date: event.event_date,
