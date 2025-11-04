@@ -96,7 +96,7 @@ async function fetchResourceTypes(): Promise<string[]> {
     throw error;
   }
 
-  const types = (data ?? [])
+  const types = ((data ?? []) as Array<{ resource_type: string | null }>)
     .map((item) => item.resource_type)
     .filter((value, index, array): value is string => Boolean(value) && array.indexOf(value) === index);
 
@@ -104,10 +104,10 @@ async function fetchResourceTypes(): Promise<string[]> {
 }
 
 export function useAuditLogs(params: UseAuditLogsParams) {
-  return useQuery({
+  return useQuery<AuditLogsQueryResult>({
     queryKey: auditLogKeys.list(params),
     queryFn: () => fetchAuditLogs(params),
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 }
 
