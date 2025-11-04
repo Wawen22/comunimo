@@ -137,7 +137,7 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
     }
   };
 
-  const formatAddress = (value: MemberWithRelations | null) => {
+  const formatAddress = (value: Member | null) => {
     if (!value) return null;
 
     const parts = [
