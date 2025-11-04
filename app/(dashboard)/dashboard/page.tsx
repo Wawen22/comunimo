@@ -213,7 +213,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         {kpiCards.map((card) => {
           const Icon = card.icon;
-          const accent = accentStyles[card.accent];
+          const accent = accentStyles[card.accent] || accentStyles.blue;
           const content = (
             <div className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-gray-200 ${accent.card} p-6 shadow-sm transition-all hover:shadow-md ${accent.border}`}>
               <div className="flex items-start justify-between gap-3">
