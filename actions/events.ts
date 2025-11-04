@@ -148,6 +148,30 @@ export async function createCustomEvent(
 
     const event = eventRows[0];
 
+    await (supabase.from('audit_logs') as any)
+      .insert({
+        actor_id: (profile as any).id,
+        actor_email: (profile as any).email ?? currentUser.email ?? null,
+        actor_role: (profile as any).role ?? null,
+        action: 'event.create',
+        resource_type: 'event',
+        resource_id: (event as any).id,
+        resource_label: (event as any).title ?? null,
+        payload: {
+          event: {
+            title: (event as any).title,
+            event_date: (event as any).event_date,
+            event_time: (event as any).event_time,
+            location: (event as any).location,
+            max_participants: (event as any).max_participants ?? null,
+          },
+          sendNotification: input.sendNotification !== false,
+        },
+      } as any)
+      .catch((auditError: unknown) => {
+        console.error('[events] Unable to log event creation', auditError);
+      });
+
     // If sendNotification is false, return early
     if (input.sendNotification === false) {
       revalidatePath('/dashboard/events');
@@ -347,7 +371,7 @@ export async function updateCustomEvent(
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('id, role')
+    .select('id, role, email')
     .eq('id', currentUser.id)
     .single();
 
@@ -379,7 +403,7 @@ export async function updateCustomEvent(
 
   const { data: existingEvent, error: existingEventError } = await (supabase
     .from('events') as any)
-    .select('id, championship_id')
+    .select('id, title, description, event_date, event_time, location, championship_id')
     .eq('id', eventId)
     .single();
 
@@ -416,6 +440,31 @@ export async function updateCustomEvent(
     }
 
     revalidatePath('/dashboard/events');
+
+    await (supabase.from('audit_logs') as any)
+      .insert({
+        actor_id: (profile as any).id,
+        actor_email: (profile as any).email ?? currentUser.email ?? null,
+        actor_role: (profile as any).role ?? null,
+        action: 'event.update',
+        resource_type: 'event',
+        resource_id: eventId,
+        resource_label: title,
+        payload: {
+          before: existingEvent,
+          after: {
+            title,
+            description: sanitizedDescription,
+            event_date,
+            event_time: input.event_time?.trim() || null,
+            location: input.location?.trim() || null,
+            max_participants: input.max_participants || null,
+          },
+        },
+      } as any)
+      .catch((auditError: unknown) => {
+        console.error('[events] Unable to log event update', auditError);
+      });
 
     return { success: true };
   } catch (error) {

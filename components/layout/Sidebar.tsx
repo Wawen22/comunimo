@@ -14,6 +14,7 @@ import {
   UserCog,
   Megaphone,
   Sparkles,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -144,6 +145,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 <RequireRole role="super_admin">
                   <NavItem
+                    href="/dashboard/admin/audit-log"
+                    icon={ClipboardList}
+                    label="Audit Log"
+                    onClick={onClose}
+                  />
+                  <NavItem
                     href="/dashboard/users"
                     icon={UserCog}
                     label="Gestione Utenti"
@@ -166,12 +173,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 />
 
                 <RequireRole role="super_admin">
-                  <NavItem
-                    href="/dashboard/admin"
-                    icon={Shield}
-                    label="Admin Panel"
-                    onClick={onClose}
-                  />
+                  <div className="mt-1">
+                    <NavItem
+                      href="/dashboard/admin"
+                      icon={Shield}
+                      label="Admin Panel"
+                      onClick={onClose}
+                    />
+                  </div>
                 </RequireRole>
               </div>
             </RequireRole>

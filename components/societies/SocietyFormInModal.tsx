@@ -22,6 +22,8 @@ import {
 import { useToast } from '@/components/ui/toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { societiesQueryKeys } from '@/lib/react-query/societies';
+import { useUser } from '@/lib/hooks/useUser';
+import { logAuditEvent } from '@/lib/utils/auditLogger';
 
 // Validation schema
 const societySchema = z.object({
@@ -62,6 +64,7 @@ export function SocietyFormInModal({ society, onSuccess }: SocietyFormInModalPro
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
+  const { profile } = useUser();
 
   const {
     register,
@@ -90,15 +93,29 @@ export function SocietyFormInModal({ society, onSuccess }: SocietyFormInModalPro
     },
   });
 
+  const sanitizeSocietyData = (formData: SocietyFormData): Partial<Society> => {
+    const entries = Object.entries(formData).map(([key, value]) => {
+      if (typeof value === 'string') {
+        const trimmedValue = value.trim();
+        return [key, trimmedValue === '' ? null : trimmedValue];
+      }
+      return [key, value];
+    });
+
+    return Object.fromEntries(entries) as Partial<Society>;
+  };
+
   const onSubmit = async (data: SocietyFormData) => {
     setIsLoading(true);
+
+    const sanitizedData = sanitizeSocietyData(data);
 
     try {
       const { error } = await supabase
         .from('societies')
         // @ts-expect-error - Supabase type inference issue
         .update({
-          ...data,
+          ...sanitizedData,
           updated_at: new Date().toISOString(),
         })
         .eq('id', society.id);
@@ -116,6 +133,19 @@ export function SocietyFormInModal({ society, onSuccess }: SocietyFormInModalPro
       if (society.id) {
         await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(society.id) });
       }
+
+      await logAuditEvent({
+        action: 'society.update',
+        resourceType: 'society',
+        resourceId: society.id,
+        resourceLabel: sanitizedData.name ?? data.name,
+        payload: { before: society, after: { ...society, ...sanitizedData } },
+        actor: {
+          id: profile?.id ?? null,
+          email: profile?.email ?? null,
+          role: profile?.role ?? null,
+        },
+      });
 
       onSuccess();
     } catch (error: any) {

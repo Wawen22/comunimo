@@ -14,11 +14,14 @@ import { useIsAdmin } from '@/components/auth/RequireRole';
 import { DeleteSocietyDialog } from './DeleteSocietyDialog';
 import { SocietyDetailModal } from './SocietyDetailModal';
 import { useActiveSocieties, useDeactivateSociety } from '@/lib/react-query/societies';
+import { useUser } from '@/lib/hooks/useUser';
+import { logAuditEvent } from '@/lib/utils/auditLogger';
 
 export function SocietiesList() {
   const router = useRouter();
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
+  const { profile } = useUser();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -88,6 +91,21 @@ export function SocietiesList() {
         description: 'Società eliminata con successo',
         variant: 'success',
       });
+
+      await logAuditEvent({
+        action: 'society.deactivate',
+        resourceType: 'society',
+        resourceId: societyToDelete.id,
+        resourceLabel: societyToDelete.name,
+        payload: { society: societyToDelete },
+        actor: {
+          id: profile?.id ?? null,
+          email: profile?.email ?? null,
+          role: profile?.role ?? null,
+        },
+      });
+
+      void refetch();
     } catch (error) {
       console.error('Error deleting society:', error);
       toast({

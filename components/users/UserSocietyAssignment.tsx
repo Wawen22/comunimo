@@ -11,6 +11,8 @@ import { X, Plus, Trash2, Building2, Search } from 'lucide-react';
 import { assignUserToSociety, removeUserFromSociety } from '@/lib/utils/userSocietyUtils';
 import type { UserWithSocieties } from '@/app/(dashboard)/dashboard/users/page';
 import type { Society } from '@/types/database';
+import { useUser } from '@/lib/hooks/useUser';
+import { logAuditEvent } from '@/lib/utils/auditLogger';
 
 interface UserSocietyAssignmentProps {
   user: UserWithSocieties;
@@ -25,6 +27,7 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
   const [error, setError] = useState<string | null>(null);
   const [selectedSocietyIds, setSelectedSocietyIds] = useState<string[]>([]);
   const [societySearch, setSocietySearch] = useState('');
+  const { profile } = useUser();
 
   useEffect(() => {
     fetchSocieties();
@@ -60,6 +63,24 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
         if (!result.success) {
           throw new Error(result.error ?? 'Errore nell\'assegnazione');
         }
+
+        const societyDetails = societyLookup[societyId];
+        await logAuditEvent({
+          action: 'user_society.assign',
+          resourceType: 'user_society',
+          resourceId: societyId,
+          resourceLabel: `${user.full_name || user.email} → ${societyDetails?.name ?? societyId}`,
+          payload: {
+            userId: user.id,
+            societyId,
+            societyCode: societyDetails?.society_code ?? null,
+          },
+          actor: {
+            id: profile?.id ?? null,
+            email: profile?.email ?? null,
+            role: profile?.role ?? null,
+          },
+        });
       }
 
       setSelectedSocietyIds([]);
@@ -81,6 +102,25 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
       setError(null);
 
       await removeUserFromSociety(user.id, societyId);
+
+      const societyDetails = user.societies.find((s) => s.id === societyId) ?? societyLookup[societyId];
+
+      await logAuditEvent({
+        action: 'user_society.remove',
+        resourceType: 'user_society',
+        resourceId: societyId,
+        resourceLabel: `${user.full_name || user.email} ↦ ${societyDetails?.name ?? societyId}`,
+        payload: {
+          userId: user.id,
+          societyId,
+          societyCode: societyDetails?.society_code ?? null,
+        },
+        actor: {
+          id: profile?.id ?? null,
+          email: profile?.email ?? null,
+          role: profile?.role ?? null,
+        },
+      });
 
       onUpdate();
     } catch (err) {

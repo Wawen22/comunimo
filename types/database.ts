@@ -128,6 +128,24 @@ export interface Payment {
   created_by: string | null;
 }
 
+export interface AuditLog {
+  id: string;
+  actor_id: string | null;
+  actor_email: string | null;
+  actor_role: UserRole | null;
+  action: string;
+  resource_type: string;
+  resource_id: string | null;
+  resource_label: string | null;
+  payload: Record<string, unknown> | null;
+  ip_address: string | null;
+  created_at: string;
+}
+
+export interface AuditLogEnriched extends AuditLog {
+  actor_name: string | null;
+}
+
 export interface Championship {
   id: string;
 
@@ -387,6 +405,20 @@ export interface CreateNotificationRecipientInput {
 
 export type UpdateNotificationRecipientInput = Partial<CreateNotificationRecipientInput>;
 
+export interface CreateAuditLogInput {
+  actor_id?: string | null;
+  actor_email?: string | null;
+  actor_role?: UserRole | null;
+  action: string;
+  resource_type: string;
+  resource_id?: string | null;
+  resource_label?: string | null;
+  payload?: Record<string, unknown> | null;
+  ip_address?: string | null;
+}
+
+export type UpdateAuditLogInput = Partial<CreateAuditLogInput>;
+
 // ============================================================================
 // Database Response Types
 // ============================================================================
@@ -466,6 +498,16 @@ export interface Database {
         Row: NotificationRecipient;
         Insert: CreateNotificationRecipientInput;
         Update: UpdateNotificationRecipientInput;
+      };
+      audit_logs: {
+        Row: AuditLog;
+        Insert: CreateAuditLogInput;
+        Update: UpdateAuditLogInput;
+      };
+    };
+    Views: {
+      audit_logs_enriched: {
+        Row: AuditLogEnriched;
       };
     };
   };

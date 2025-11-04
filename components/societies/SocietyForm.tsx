@@ -12,8 +12,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useUser } from '@/lib/hooks/useUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { societiesQueryKeys } from '@/lib/react-query/societies';
+import { logAuditEvent } from '@/lib/utils/auditLogger';
 
 // Validation schema
 const societySchema = z.object({
@@ -48,6 +50,7 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { profile } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -96,8 +99,22 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
         },
   });
 
+  const sanitizeSocietyData = (formData: SocietyFormData): Partial<Society> => {
+    const entries = Object.entries(formData).map(([key, value]) => {
+      if (typeof value === 'string') {
+        const trimmedValue = value.trim();
+        return [key, trimmedValue === '' ? null : trimmedValue];
+      }
+      return [key, value];
+    });
+
+    return Object.fromEntries(entries) as Partial<Society>;
+  };
+
   const onSubmit = async (data: SocietyFormData) => {
     setIsLoading(true);
+
+    const sanitizedData = sanitizeSocietyData(data);
 
     try {
       if (mode === 'create') {
@@ -106,7 +123,7 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           .from('societies')
           .insert([
             {
-              ...data,
+              ...sanitizedData,
               created_by: user?.id,
             },
           ] as any)
@@ -127,6 +144,19 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(newSociety.id) });
         }
 
+        await logAuditEvent({
+          action: 'society.create',
+          resourceType: 'society',
+          resourceId: newSociety?.id ?? null,
+          resourceLabel: sanitizedData.name ?? data.name,
+          payload: { data: sanitizedData },
+          actor: {
+            id: user?.id ?? profile?.id,
+            email: user?.email ?? profile?.email ?? null,
+            role: profile?.role ?? null,
+          },
+        });
+
         router.push(`/dashboard/societies/${newSociety.id}`);
       } else {
         // Update existing society
@@ -134,7 +164,7 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           .from('societies')
           // @ts-expect-error - Supabase type inference issue
           .update({
-            ...data,
+            ...sanitizedData,
             updated_at: new Date().toISOString(),
           })
           .eq('id', society!.id);
@@ -152,6 +182,19 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
         if (society?.id) {
           await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(society.id) });
         }
+
+        await logAuditEvent({
+          action: 'society.update',
+          resourceType: 'society',
+          resourceId: society?.id ?? null,
+          resourceLabel: sanitizedData.name ?? data.name,
+          payload: { before: society, after: { ...society, ...sanitizedData } },
+          actor: {
+            id: user?.id ?? profile?.id,
+            email: user?.email ?? profile?.email ?? null,
+            role: profile?.role ?? null,
+          },
+        });
 
         router.push(`/dashboard/societies/${society!.id}`);
       }

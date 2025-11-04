@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useUser } from '@/lib/hooks/useUser';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +18,6 @@ interface CreateEventDialogProps {
 }
 
 export function CreateEventDialog({ open, onOpenChange, onSuccess }: CreateEventDialogProps) {
-  const { profile } = useUser();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState({
@@ -271,4 +269,3 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess }: CreateEvent
     </Dialog>
   );
 }
-
