@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Eye, Pencil, Trash2, Building2, MapPin, Mail, Phone, Globe } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
 import { Society } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,63 +13,48 @@ import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
 import { DeleteSocietyDialog } from './DeleteSocietyDialog';
 import { SocietyDetailModal } from './SocietyDetailModal';
+import { useActiveSocieties, useDeactivateSociety } from '@/lib/react-query/societies';
 
 export function SocietiesList() {
   const router = useRouter();
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
-  const [societies, setSocieties] = useState<Society[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [societyToDelete, setSocietyToDelete] = useState<Society | null>(null);
   const [selectedSocietyId, setSelectedSocietyId] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const {
+    data: societies = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useActiveSocieties();
+  const deactivateSociety = useDeactivateSociety();
 
-  // Fetch societies
   useEffect(() => {
-    fetchSocieties();
-  }, []);
-
-  const fetchSocieties = async () => {
-    try {
-      setLoading(true);
-
-      // Fetch all societies (RLS will filter based on user role)
-      // Admins can see all, regular users only see active ones
-      const { data, error } = await supabase
-        .from('societies')
-        .select('*')
-        .eq('is_active', true)
-        .order('name', { ascending: true });
-
-      if (error) throw error;
-
-      setSocieties(data || []);
-    } catch (error: any) {
-      console.error('Error fetching societies:', error);
+    if (isError && error) {
       toast({
         title: 'Errore',
         description: error.message || 'Impossibile caricare le società',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, error, toast]);
 
   // Filter societies by search query
-  const filteredSocieties = societies.filter((society) => {
+  const filteredSocieties = useMemo(() => {
     const query = searchQuery.toLowerCase();
-    return (
+    return societies.filter((society) =>
       society.name.toLowerCase().includes(query) ||
       society.society_code?.toLowerCase().includes(query) ||
       society.city?.toLowerCase().includes(query) ||
       society.email?.toLowerCase().includes(query) ||
-      society.organization?.toLowerCase().includes(query)
+      society.organization?.toLowerCase().includes(query),
     );
-  });
+  }, [societies, searchQuery]);
 
   // Helper function to get organization badge color
   const getOrganizationColor = (org: string | null) => {
@@ -97,27 +81,18 @@ export function SocietiesList() {
     if (!societyToDelete) return;
 
     try {
-      const { error } = await supabase
-        .from('societies')
-        // @ts-expect-error - Supabase type inference issue
-        .update({ is_active: false })
-        .eq('id', societyToDelete.id);
-
-      if (error) throw error;
+      await deactivateSociety.mutateAsync(societyToDelete.id);
 
       toast({
         title: 'Successo',
         description: 'Società eliminata con successo',
         variant: 'success',
       });
-
-      // Refresh list
-      fetchSocieties();
     } catch (error) {
       console.error('Error deleting society:', error);
       toast({
         title: 'Errore',
-        description: 'Impossibile eliminare la società',
+        description: error instanceof Error ? error.message : 'Impossibile eliminare la società',
         variant: 'destructive',
       });
     } finally {
@@ -126,7 +101,7 @@ export function SocietiesList() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
@@ -351,7 +326,7 @@ export function SocietiesList() {
           setShowDetailModal(open);
           if (!open) {
             setSelectedSocietyId(null);
-            fetchSocieties(); // Refresh list when modal closes
+            void refetch();
           }
         }}
       />

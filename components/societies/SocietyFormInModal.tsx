@@ -20,6 +20,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { societiesQueryKeys } from '@/lib/react-query/societies';
 
 // Validation schema
 const societySchema = z.object({
@@ -59,6 +61,7 @@ interface SocietyFormInModalProps {
 export function SocietyFormInModal({ society, onSuccess }: SocietyFormInModalProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -107,6 +110,12 @@ export function SocietyFormInModal({ society, onSuccess }: SocietyFormInModalPro
         description: 'Società aggiornata con successo',
         variant: 'success',
       });
+
+      await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.all });
+      await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.activeList });
+      if (society.id) {
+        await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(society.id) });
+      }
 
       onSuccess();
     } catch (error: any) {

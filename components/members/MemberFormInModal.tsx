@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +23,9 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { assignCategory, getCategoriesByGender, type Gender } from '@/lib/utils/categoryAssignment';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useActiveSocieties } from '@/lib/react-query/societies';
+import { membersQueryKeys } from '@/lib/react-query/members';
 
 // Validation schema
 const memberSchema = z.object({
@@ -96,9 +99,11 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [societies, setSocieties] = useState<Society[]>([]);
   const [justChangedStep, setJustChangedStep] = useState(false);
   const totalSteps = steps.length;
+  const queryClient = useQueryClient();
+  const { data: activeSocieties = [] } = useActiveSocieties();
+  const societies = useMemo(() => activeSocieties as Society[], [activeSocieties]);
 
   const {
     register,
@@ -175,10 +180,6 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
   const watchedGender = watch('gender');
 
   useEffect(() => {
-    fetchSocieties();
-  }, []);
-
-  useEffect(() => {
     if (justChangedStep) {
       setJustChangedStep(false);
       return;
@@ -203,21 +204,6 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
       }
     }
   }, [watchedBirthDate, watchedGender, setValue, justChangedStep]);
-
-  const fetchSocieties = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('societies')
-        .select('*')
-        .eq('is_active', true)
-        .order('name');
-
-      if (error) throw error;
-      setSocieties(data || []);
-    } catch (error) {
-      console.error('Error fetching societies:', error);
-    }
-  };
 
   const nextStep = (e?: React.MouseEvent<HTMLButtonElement>) => {
     if (e) {
@@ -298,6 +284,8 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
           variant: 'success',
         });
 
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.all });
+
         if (onSuccess) onSuccess();
       } else if (member) {
         const { error } = await supabase
@@ -316,6 +304,10 @@ export function MemberFormInModal({ member, mode = 'create', onSuccess, onCancel
           description: 'Atleta aggiornato con successo',
           variant: 'success',
         });
+
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.all });
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.detail(member.id) });
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.base(member.id) });
 
         if (onSuccess) onSuccess();
       }

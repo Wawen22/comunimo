@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Edit, Trophy, CheckCircle2, AlertTriangle, Flag } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
 import { Member } from '@/lib/types/database';
 import { useToast } from '@/components/ui/toast';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -10,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { MemberFormInModal } from './MemberFormInModal';
+import { useMember } from '@/lib/react-query/members';
 
 interface MemberEditModalProps {
   memberId: string | null;
@@ -20,42 +20,24 @@ interface MemberEditModalProps {
 
 export function MemberEditModal({ memberId, open, onOpenChange, onSuccess }: MemberEditModalProps) {
   const { toast } = useToast();
-  const [member, setMember] = useState<Member | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    data: member,
+    isLoading,
+    isError,
+    error,
+  } = useMember(open ? memberId : null);
 
   useEffect(() => {
-    if (memberId && open) {
-      fetchMember();
-    }
-  }, [memberId, open]);
-
-  const fetchMember = async () => {
-    if (!memberId) return;
-
-    try {
-      setIsLoading(true);
-
-      const { data, error } = await supabase
-        .from('members')
-        .select('*')
-        .eq('id', memberId)
-        .eq('is_active', true)
-        .single();
-
-      if (error) throw error;
-
-      setMember(data);
-    } catch (error: any) {
+    if (isError && error) {
       console.error('Error fetching member:', error);
       toast({
         title: 'Errore',
         description: "Impossibile caricare i dati dell'atleta",
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
+      onOpenChange(false);
     }
-  };
+  }, [isError, error, toast, onOpenChange]);
 
   const handleSuccess = () => {
     onOpenChange(false);

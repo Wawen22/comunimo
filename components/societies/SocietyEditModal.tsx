@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Edit, Hash, MapPin } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
-import { Society } from '@/types/database';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/toast';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { SocietyFormInModal } from './SocietyFormInModal';
+import { useSocietyDetail } from '@/lib/react-query/societies';
 
 interface SocietyEditModalProps {
   societyId: string;
@@ -19,28 +18,16 @@ interface SocietyEditModalProps {
 
 export function SocietyEditModal({ societyId, open, onOpenChange, onSuccess }: SocietyEditModalProps) {
   const { toast } = useToast();
-  const [society, setSociety] = useState<Society | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    data: society,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useSocietyDetail(open ? societyId : null);
 
   useEffect(() => {
-    if (open && societyId) {
-      fetchSociety();
-    }
-  }, [open, societyId]);
-
-  const fetchSociety = async () => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from('societies')
-        .select('*')
-        .eq('id', societyId)
-        .single();
-
-      if (error) throw error;
-
-      setSociety(data);
-    } catch (error: any) {
+    if (isError && error) {
       console.error('Error fetching society:', error);
       toast({
         title: 'Errore',
@@ -48,16 +35,15 @@ export function SocietyEditModal({ societyId, open, onOpenChange, onSuccess }: S
         variant: 'destructive',
       });
       onOpenChange(false);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [isError, error, toast, onOpenChange]);
 
   const handleSuccess = () => {
     onOpenChange(false);
     if (onSuccess) {
       onSuccess();
     }
+    void refetch();
   };
 
   const getOrganizationBadgeStyles = (org: string) => {

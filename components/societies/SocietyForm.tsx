@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useQueryClient } from '@tanstack/react-query';
+import { societiesQueryKeys } from '@/lib/react-query/societies';
 
 // Validation schema
 const societySchema = z.object({
@@ -47,6 +49,7 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -118,6 +121,12 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           variant: 'success',
         });
 
+        await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.all });
+        await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.activeList });
+        if (newSociety?.id) {
+          await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(newSociety.id) });
+        }
+
         router.push(`/dashboard/societies/${newSociety.id}`);
       } else {
         // Update existing society
@@ -137,6 +146,12 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
           description: 'Società aggiornata con successo',
           variant: 'success',
         });
+
+        await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.all });
+        await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.activeList });
+        if (society?.id) {
+          await queryClient.invalidateQueries({ queryKey: societiesQueryKeys.detail(society.id) });
+        }
 
         router.push(`/dashboard/societies/${society!.id}`);
       }
@@ -384,4 +399,3 @@ export function SocietyForm({ society, mode = 'create' }: SocietyFormProps) {
     </form>
   );
 }
-

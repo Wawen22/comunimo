@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -17,7 +17,6 @@ import {
   Copy,
   Info,
 } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
 import { Society } from '@/types/database';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,7 @@ import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
 import { formatDate } from '@/lib/utils';
 import { SocietyEditModal } from './SocietyEditModal';
+import { useSocietyDetail } from '@/lib/react-query/societies';
 
 interface SocietyDetailModalProps {
   societyId: string | null;
@@ -38,31 +38,17 @@ export function SocietyDetailModal({ societyId, open, onOpenChange }: SocietyDet
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
-  const [society, setSociety] = useState<Society | null>(null);
-  const [loading, setLoading] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const {
+    data: society,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useSocietyDetail(societyId);
 
   useEffect(() => {
-    if (open && societyId) {
-      fetchSociety();
-    }
-  }, [open, societyId]);
-
-  const fetchSociety = async () => {
-    if (!societyId) return;
-
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('societies')
-        .select('*')
-        .eq('id', societyId)
-        .single();
-
-      if (error) throw error;
-
-      setSociety(data);
-    } catch (error: any) {
+    if (isError && error) {
       console.error('Error fetching society:', error);
       toast({
         title: 'Errore',
@@ -70,10 +56,8 @@ export function SocietyDetailModal({ societyId, open, onOpenChange }: SocietyDet
         variant: 'destructive',
       });
       onOpenChange(false);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, error, toast, onOpenChange]);
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -81,7 +65,7 @@ export function SocietyDetailModal({ societyId, open, onOpenChange }: SocietyDet
 
   const handleEditSuccess = () => {
     setShowEditModal(false);
-    fetchSociety(); // Refresh data
+    void refetch();
   };
 
   const handleCopy = async (label: string, value?: string | null) => {
@@ -138,7 +122,7 @@ export function SocietyDetailModal({ societyId, open, onOpenChange }: SocietyDet
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-0 bg-slate-50">
-        {loading ? (
+        {isLoading ? (
           <div className="flex h-96 items-center justify-center bg-white/80 backdrop-blur-sm">
             <div className="text-center">
               <div className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>

@@ -25,7 +25,6 @@ import {
   Activity,
   Globe,
 } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
 import { Member } from '@/lib/types/database';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
@@ -34,14 +33,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { MemberEditModal } from './MemberEditModal';
-
-interface MemberWithRelations extends Member {
-  society?: {
-    id: string;
-    name: string;
-    society_code: string | null;
-  } | null;
-}
+import { useMemberDetail } from '@/lib/react-query/members';
 
 interface MemberDetailModalProps {
   memberId: string | null;
@@ -53,48 +45,26 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
-  const [member, setMember] = useState<MemberWithRelations | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    data: member,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useMemberDetail(open ? memberId : null);
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    if (memberId && open) {
-      fetchMember();
-    }
-  }, [memberId, open]);
-
-  const fetchMember = async () => {
-    if (!memberId) return;
-
-    try {
-      setIsLoading(true);
-
-      const { data, error } = await supabase
-        .from('members')
-        .select(
-          `
-          *,
-          society:societies(id, name, society_code)
-        `,
-        )
-        .eq('id', memberId)
-        .eq('is_active', true)
-        .single();
-
-      if (error) throw error;
-
-      setMember(data);
-    } catch (error: any) {
+    if (isError && error) {
       console.error('Error fetching member:', error);
       toast({
         title: 'Errore',
         description: "Impossibile caricare i dati dell'atleta",
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
+      onOpenChange(false);
     }
-  };
+  }, [isError, error, toast, onOpenChange]);
 
   const formatDate = (date: string | null) => {
     if (!date) return '-';
@@ -143,7 +113,8 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
   };
 
   const handleEditSuccess = () => {
-    fetchMember();
+    setShowEditModal(false);
+    void refetch();
   };
 
   const handleCopy = async (label: string, value?: string | null) => {

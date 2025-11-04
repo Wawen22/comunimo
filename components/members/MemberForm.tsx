@@ -14,6 +14,8 @@ import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 import { assignCategory, getCategoriesByGender, type Gender } from '@/lib/utils/categoryAssignment';
+import { useQueryClient } from '@tanstack/react-query';
+import { membersQueryKeys } from '@/lib/react-query/members';
 
 // Validation schema
 const memberSchema = z.object({
@@ -70,6 +72,7 @@ export function MemberForm({ member, mode = 'create' }: MemberFormProps) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
   const [societies, setSocieties] = useState<Society[]>([]);
   const [justChangedStep, setJustChangedStep] = useState(false);
@@ -253,6 +256,8 @@ export function MemberForm({ member, mode = 'create' }: MemberFormProps) {
           variant: 'success',
         });
 
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.all });
+
         router.push(`/dashboard/members/${newMember?.id}`);
       } else {
         console.log('Updating member with ID:', member!.id);
@@ -276,6 +281,12 @@ export function MemberForm({ member, mode = 'create' }: MemberFormProps) {
           description: 'Atleta aggiornato con successo',
           variant: 'success',
         });
+
+        await queryClient.invalidateQueries({ queryKey: membersQueryKeys.all });
+        if (member?.id) {
+          await queryClient.invalidateQueries({ queryKey: membersQueryKeys.detail(member.id) });
+          await queryClient.invalidateQueries({ queryKey: membersQueryKeys.base(member.id) });
+        }
 
         router.push(`/dashboard/members/${member!.id}`);
       }
@@ -669,4 +680,3 @@ export function MemberForm({ member, mode = 'create' }: MemberFormProps) {
     </form>
   );
 }
-

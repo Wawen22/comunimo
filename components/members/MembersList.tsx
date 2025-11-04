@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/api/supabase';
-import { Member } from '@/lib/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
@@ -18,30 +17,15 @@ import { MemberCard } from './MemberCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { MemberDetailModal } from './MemberDetailModal';
 import { MemberCreateModal } from './MemberCreateModal';
+import { useActiveSocieties } from '@/lib/react-query/societies';
+import { useMembersQuery, type MembersFilters } from '@/lib/react-query/members';
 
-interface MemberWithSociety extends Member {
-  society?: {
-    id: string;
-    name: string;
-    society_code: string | null;
-  } | null;
-}
-
-interface MemberFiltersState {
-  search: string;
-  societyIds: string[]; // Changed from societyId to societyIds (array)
-  category: string;
-  status: string;
-  showExpiring: boolean;
-}
+type MemberFiltersState = MembersFilters;
 
 export function MembersList() {
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
-  const [members, setMembers] = useState<MemberWithSociety[]>([]);
-  const [societies, setSocieties] = useState<{ id: string; name: string; society_code: string | null }[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [showImportExcelDialog, setShowImportExcelDialog] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
@@ -57,31 +41,33 @@ export function MembersList() {
 
   // Pagination
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
   const pageSize = 20;
-  const totalPages = Math.ceil(totalCount / pageSize);
 
-  useEffect(() => {
-    fetchSocieties();
-  }, []);
+  const { data: activeSocieties = [] } = useActiveSocieties();
+  const societies = useMemo(
+    () =>
+      activeSocieties.map(({ id, name, society_code }) => ({
+        id,
+        name,
+        society_code: society_code ?? null,
+      })),
+    [activeSocieties],
+  );
 
-  useEffect(() => {
-    fetchMembers();
-  }, [filters, page]);
+  const membersQuery = useMembersQuery({ page, pageSize, filters });
+  const members = membersQuery.data?.members ?? [];
+  const totalCount = membersQuery.data?.count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const loading = membersQuery.isLoading || (membersQuery.isFetching && members.length === 0);
 
-  const fetchSocieties = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('societies')
-        .select('id, name, society_code')
-        .eq('is_active', true)
-        .order('name');
+  const applyFilters = (nextFilters: MemberFiltersState) => {
+    setFilters(nextFilters);
+    setPage(1);
+  };
 
-      if (error) throw error;
-      setSocieties(data || []);
-    } catch (error: any) {
-      console.error('Error fetching societies:', error);
-    }
+  const updateFilters = (partial: Partial<MemberFiltersState>) => {
+    setFilters((prev) => ({ ...prev, ...partial }));
+    setPage(1);
   };
 
   const buildSearchFilter = (searchTerm: string) => {
@@ -117,64 +103,22 @@ export function MembersList() {
     }
   };
 
-  const fetchMembers = async () => {
-    try {
-      setIsLoading(true);
-
-      // Build query
-      let query = supabase
-        .from('members')
-        .select(`
-          *,
-          society:societies(id, name, society_code)
-        `, { count: 'exact' })
-        .eq('is_active', true)
-        .order('last_name', { ascending: true })
-        .range((page - 1) * pageSize, page * pageSize - 1);
-
-      // Apply filters
-      if (filters.search) {
-        const searchFilter = buildSearchFilter(filters.search);
-        if (searchFilter) {
-          query = query.or(searchFilter);
-        }
-      }
-
-      if (filters.societyIds.length > 0) {
-        query = query.in('society_id', filters.societyIds);
-      }
-
-      if (filters.category) {
-        query = query.eq('category', filters.category);
-      }
-
-      if (filters.status) {
-        query = query.eq('membership_status', filters.status);
-      }
-
-      if (filters.showExpiring) {
-        const thirtyDaysFromNow = new Date();
-        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-        query = query.lte('medical_certificate_expiry', thirtyDaysFromNow.toISOString());
-      }
-
-      const { data, error, count } = await query;
-
-      if (error) throw error;
-
-      setMembers(data || []);
-      setTotalCount(count || 0);
-    } catch (error: any) {
-      console.error('Error fetching members:', error);
+  useEffect(() => {
+    if (membersQuery.isError && membersQuery.error) {
+      console.error('Error fetching members:', membersQuery.error);
       toast({
         title: 'Errore',
-        description: 'Impossibile caricare gli atleti',
+        description: membersQuery.error.message || 'Impossibile caricare gli atleti',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [membersQuery.isError, membersQuery.error, toast]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   const handleExport = async () => {
     try {
@@ -290,7 +234,7 @@ export function MembersList() {
           </label>
           <SocietyMultiSelect
             selectedIds={filters.societyIds}
-            onSelectionChange={(ids) => setFilters({ ...filters, societyIds: ids })}
+            onSelectionChange={(ids) => updateFilters({ societyIds: ids })}
             societies={societies}
           />
         </div>
@@ -306,7 +250,7 @@ export function MembersList() {
               type="text"
               placeholder="Cerca per nome, cognome, codice fiscale o numero tessera..."
               value={filters.search}
-              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              onChange={(e) => updateFilters({ search: e.target.value })}
               className="pl-10"
             />
           </div>
@@ -328,12 +272,12 @@ export function MembersList() {
       {showFilters && (
         <MemberFilters
           filters={filters}
-          onFiltersChange={setFilters}
+          onFiltersChange={applyFilters}
         />
       )}
 
       {/* Members List */}
-      {isLoading ? (
+      {loading ? (
         <Card className="border-2 shadow-sm">
           <CardContent className="p-0">
             <div className="flex h-64 items-center justify-center">
@@ -481,7 +425,7 @@ export function MembersList() {
         onClose={() => setShowImportExcelDialog(false)}
         onSuccess={() => {
           setShowImportExcelDialog(false);
-          fetchMembers();
+          void membersQuery.refetch();
         }}
       />
 
@@ -491,7 +435,7 @@ export function MembersList() {
         onOpenChange={setShowCreateModal}
         onSuccess={() => {
           setPage(1);
-          fetchMembers();
+          void membersQuery.refetch();
         }}
       />
 

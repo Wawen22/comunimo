@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,8 +15,6 @@ import {
   User,
   Hash,
 } from 'lucide-react';
-import { supabase } from '@/lib/api/supabase';
-import { Society } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -25,6 +23,7 @@ import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
 import { DeleteSocietyDialog } from './DeleteSocietyDialog';
 import { formatDate } from '@/lib/utils';
+import { useSocietyDetail, useDeactivateSociety } from '@/lib/react-query/societies';
 
 interface SocietyDetailProps {
   societyId: string;
@@ -35,50 +34,32 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
   const { toast } = useToast();
   const isAdmin = useIsAdmin();
 
-  const [society, setSociety] = useState<Society | null>(null);
-  const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const {
+    data: society,
+    isLoading,
+    isError,
+    error,
+  } = useSocietyDetail(societyId);
+  const deactivateSociety = useDeactivateSociety();
 
   useEffect(() => {
-    fetchSociety();
-  }, [societyId]);
-
-  const fetchSociety = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('societies')
-        .select('*')
-        .eq('id', societyId)
-        .single();
-
-      if (error) throw error;
-
-      setSociety(data);
-    } catch (error) {
+    if (isError && error) {
       console.error('Error fetching society:', error);
       toast({
         title: 'Errore',
-        description: 'Impossibile caricare la società',
+        description: error.message || 'Impossibile caricare la società',
         variant: 'destructive',
       });
       router.push('/dashboard/societies');
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, error, toast, router]);
 
   const handleDelete = async () => {
     if (!society) return;
 
     try {
-      const { error } = await supabase
-        .from('societies')
-        // @ts-expect-error - Supabase type inference issue
-        .update({ is_active: false })
-        .eq('id', society.id);
-
-      if (error) throw error;
+      await deactivateSociety.mutateAsync(society.id);
 
       toast({
         title: 'Successo',
@@ -99,7 +80,7 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
