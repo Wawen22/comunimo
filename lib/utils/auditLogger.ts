@@ -42,7 +42,7 @@ async function resolveActor(
         .select('role')
         .eq('id', resolvedId)
         .maybeSingle();
-      resolvedRole = profileData?.role ?? null;
+      resolvedRole = (profileData as { role: UserRole | null } | null)?.role ?? null;
     }
   } catch (error) {
     console.error('Unable to resolve actor for audit logging:', error);
@@ -82,7 +82,8 @@ export async function logAuditEvent({
       ip_address: ipAddress,
     };
 
-    const { error } = await supabase.from('audit_logs').insert(insertPayload as Database['public']['Tables']['audit_logs']['Insert']);
+    // @ts-expect-error - Supabase type inference issue
+    const { error } = await supabase.from('audit_logs').insert(insertPayload);
 
     if (error) {
       console.error('Audit log insertion failed:', error);
