@@ -51,7 +51,7 @@ async function deactivateSociety(societyId: string) {
 export function useDeactivateSociety() {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, string>({
+  return useMutation<void, Error, string, { previousActive?: Society[] }>({
     mutationFn: deactivateSociety,
     onMutate: async (societyId) => {
       await queryClient.cancelQueries({ queryKey: societiesKeys.activeList });
