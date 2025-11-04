@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Building2, AlertCircle } from 'lucide-react';
 import { useUser } from '@/lib/hooks/useUser';
 import { getUserSocieties } from '@/lib/utils/userSocietyUtils';
-import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import type { Society } from '@/types/database';
 
 /**
@@ -93,12 +93,7 @@ export function ManagedSocietiesWidget() {
                   )}
                 </div>
                 {society.is_active && (
-                  <Badge
-                    variant="default"
-                    className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border-emerald-200/50 flex-shrink-0 shadow-sm"
-                  >
-                    Attiva
-                  </Badge>
+                  <StatusBadge variant="success" size="sm" showIcon={false} className="flex-shrink-0 shadow-sm" />
                 )}
               </div>
             </div>
@@ -114,4 +109,3 @@ export function ManagedSocietiesWidget() {
     </div>
   );
 }
-

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -250,9 +251,12 @@ export function UserManagementList({
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge variant={user.is_active ? 'default' : 'secondary'}>
-                          {user.is_active ? 'Attivo' : 'Disattivato'}
-                        </Badge>
+                        <StatusBadge
+                          variant={user.is_active ? 'success' : 'inactive'}
+                          label={user.is_active ? 'Attivo' : 'Disattivato'}
+                          size="sm"
+                          showIcon={false}
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2">
@@ -338,9 +342,12 @@ export function UserManagementList({
                       {getRoleIcon(user.role)}
                       {getRoleDisplayName(user.role)}
                     </Badge>
-                    <Badge variant={user.is_active ? 'default' : 'secondary'}>
-                      {user.is_active ? 'Attivo' : 'Disattivato'}
-                    </Badge>
+                    <StatusBadge
+                      variant={user.is_active ? 'success' : 'inactive'}
+                      label={user.is_active ? 'Attivo' : 'Disattivato'}
+                      size="sm"
+                      showIcon={false}
+                    />
                   </div>
 
                   <div>

@@ -8,6 +8,7 @@ import { Society } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
@@ -275,16 +276,12 @@ export function SocietiesList() {
                     <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getOrganizationColor(society.organization)}`}>
                       {society.organization}
                     </span>
-                    <Badge
-                      variant="secondary"
-                      className={`text-xs font-semibold uppercase tracking-wide rounded-full px-3 py-1 ${
-                        society.is_active
-                          ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 border-transparent hover:bg-emerald-200'
-                          : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200 border-transparent hover:bg-rose-200'
-                      }`}
-                    >
-                      {society.is_active ? 'Attiva' : 'Inattiva'}
-                    </Badge>
+                    <StatusBadge
+                      variant={society.is_active ? 'success' : 'inactive'}
+                      label={society.is_active ? 'Attiva' : 'Inattiva'}
+                      size="sm"
+                      showIcon={false}
+                    />
                   </div>
                 )}
 

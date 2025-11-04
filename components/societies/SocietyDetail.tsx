@@ -19,6 +19,7 @@ import { supabase } from '@/lib/api/supabase';
 import { Society } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
@@ -194,16 +195,12 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
                         {society.organization}
                       </span>
                     )}
-                    <Badge
-                      variant="secondary"
-                      className={`text-sm font-semibold uppercase tracking-wide rounded-full px-3 py-1 ${
-                        society.is_active
-                          ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 border-transparent hover:bg-emerald-200'
-                          : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200 border-transparent hover:bg-rose-200'
-                      }`}
-                    >
-                      {society.is_active ? 'Attiva' : 'Inattiva'}
-                    </Badge>
+                    <StatusBadge
+                      variant={society.is_active ? 'success' : 'inactive'}
+                      label={society.is_active ? 'Attiva' : 'Inattiva'}
+                      size="md"
+                      showIcon={false}
+                    />
                   </div>
                   {society.description && (
                     <p className="mt-4 text-gray-600 leading-relaxed">{society.description}</p>

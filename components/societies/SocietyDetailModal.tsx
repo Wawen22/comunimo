@@ -13,10 +13,8 @@ import {
   User,
   Edit,
   Calendar,
-  CheckCircle2,
   ExternalLink,
   Copy,
-  CircleSlash,
   Info,
 } from 'lucide-react';
 import { supabase } from '@/lib/api/supabase';
@@ -24,6 +22,7 @@ import { Society } from '@/types/database';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { useToast } from '@/components/ui/toast';
 import { useIsAdmin } from '@/components/auth/RequireRole';
 import { formatDate } from '@/lib/utils';
@@ -196,26 +195,11 @@ export function SocietyDetailModal({ societyId, open, onOpenChange }: SocietyDet
                         </Badge>
                       )}
 
-                      <Badge
-                        variant="secondary"
-                        className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-                          society.is_active
-                            ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200'
-                            : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200'
-                        }`}
-                      >
-                        {society.is_active ? (
-                          <>
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            Attiva
-                          </>
-                        ) : (
-                          <>
-                            <CircleSlash className="h-3.5 w-3.5" />
-                            Inattiva
-                          </>
-                        )}
-                      </Badge>
+                      <StatusBadge
+                        variant={society.is_active ? 'success' : 'inactive'}
+                        label={society.is_active ? 'Attiva' : 'Inattiva'}
+                        size="sm"
+                      />
 
                       {society.city && (
                         <Badge

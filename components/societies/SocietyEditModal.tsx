@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Edit, Hash, MapPin, CheckCircle2, CircleSlash } from 'lucide-react';
+import { Edit, Hash, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/api/supabase';
 import { Society } from '@/types/database';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/toast';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { SocietyFormInModal } from './SocietyFormInModal';
 
 interface SocietyEditModalProps {
@@ -128,26 +129,11 @@ export function SocietyEditModal({ societyId, open, onOpenChange, onSuccess }: S
                         </Badge>
                       )}
 
-                      <Badge
-                        variant="secondary"
-                        className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-                          society.is_active
-                            ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200'
-                            : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200'
-                        }`}
-                      >
-                        {society.is_active ? (
-                          <>
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            Attiva
-                          </>
-                        ) : (
-                          <>
-                            <CircleSlash className="h-3.5 w-3.5" />
-                            Inattiva
-                          </>
-                        )}
-                      </Badge>
+                      <StatusBadge
+                        variant={society.is_active ? 'success' : 'inactive'}
+                        label={society.is_active ? 'Attiva' : 'Inattiva'}
+                        size="sm"
+                      />
 
                       {society.city && (
                         <Badge

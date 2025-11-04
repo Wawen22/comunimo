@@ -4,9 +4,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { X, Plus, Trash2, Building2, Check, Search } from 'lucide-react';
+import { X, Plus, Trash2, Building2, Search } from 'lucide-react';
 import { assignUserToSociety, removeUserFromSociety } from '@/lib/utils/userSocietyUtils';
 import type { UserWithSocieties } from '@/app/(dashboard)/dashboard/users/page';
 import type { Society } from '@/types/database';
@@ -295,10 +296,7 @@ export function UserSocietyAssignment({ user, onClose, onUpdate }: UserSocietyAs
                             {society.society_code}
                           </Badge>
                           {society.is_active && (
-                            <Badge variant="default" className="text-xs bg-green-100 text-green-800 border-green-200">
-                              <Check className="h-3 w-3 mr-1" />
-                              Attiva
-                            </Badge>
+                            <StatusBadge variant="success" label="Attiva" size="sm" />
                           )}
                         </div>
                       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { UserMenu } from './UserMenu';
-import { Menu, Search } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { usePathname } from 'next/navigation';
@@ -61,15 +61,6 @@ export function Header({ onMenuClick }: HeaderProps) {
       {/* Right side actions */}
       <div className="flex items-center gap-3">
         <GuidedRegistrationLauncher orientation="horizontal" className="hidden md:flex" />
-        {/* Search button - Optional for future */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hidden md:flex hover:bg-white/60 hover:scale-105 transition-all duration-200 rounded-xl"
-        >
-          <Search className="h-5 w-5 text-slate-600" />
-        </Button>
-
         <NotificationBell />
         <UserMenu />
       </div>

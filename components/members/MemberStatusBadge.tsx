@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, XCircle, AlertCircle, Ban } from 'lucide-react';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { MembershipStatus } from '@/lib/types/database';
 
 interface MemberStatusBadgeProps {
@@ -26,19 +26,19 @@ export function MemberStatusBadge({ status }: MemberStatusBadgeProps) {
       case 'expired':
         return {
           label: 'Scaduto',
-          variant: 'destructive' as const,
+          variant: 'danger' as const,
           icon: XCircle,
         };
       case 'cancelled':
         return {
           label: 'Annullato',
-          variant: 'secondary' as const,
+          variant: 'inactive' as const,
           icon: Ban,
         };
       default:
         return {
           label: status,
-          variant: 'secondary' as const,
+          variant: 'neutral' as const,
           icon: AlertCircle,
         };
     }
@@ -48,10 +48,12 @@ export function MemberStatusBadge({ status }: MemberStatusBadgeProps) {
   const Icon = config.icon;
 
   return (
-    <Badge variant={config.variant} className="inline-flex items-center gap-1">
-      <Icon className="h-3 w-3" />
-      {config.label}
-    </Badge>
+    <StatusBadge
+      variant={config.variant}
+      label={config.label}
+      size="sm"
+      icon={<Icon className="h-3.5 w-3.5" aria-hidden="true" />}
+      className="inline-flex"
+    />
   );
 }
-
