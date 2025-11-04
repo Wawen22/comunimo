@@ -275,7 +275,14 @@ export function SocietiesList() {
                     <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getOrganizationColor(society.organization)}`}>
                       {society.organization}
                     </span>
-                    <Badge variant={society.is_active ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant="secondary"
+                      className={`text-xs font-semibold uppercase tracking-wide rounded-full px-3 py-1 ${
+                        society.is_active
+                          ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 border-transparent hover:bg-emerald-200'
+                          : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200 border-transparent hover:bg-rose-200'
+                      }`}
+                    >
                       {society.is_active ? 'Attiva' : 'Inattiva'}
                     </Badge>
                   </div>
@@ -354,4 +361,3 @@ export function SocietiesList() {
     </div>
   );
 }
-

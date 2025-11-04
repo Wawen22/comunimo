@@ -322,44 +322,49 @@ export default function ChampionshipRegistrationsPage() {
                 </div>
 
                 {/* Action Buttons - Mobile */}
-                <div className="flex gap-3">
-                  <div className="flex-1 relative">
-                    <div className="absolute -top-2 -right-2 z-10">
-                      <div className="bg-blue-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg animate-pulse">
-                        INFO
-                      </div>
-                    </div>
-                    <Button
-                      onClick={() => setShowInfoModal(true)}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-bold ring-2 ring-blue-300 ring-offset-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="p-1 bg-white/20 rounded-lg">
-                          <Info className="h-5 w-5" />
+                <div className="space-y-3">
+                  {/* Prima riga: INFO e TAPPE */}
+                  <div className="flex gap-3">
+                    <div className="flex-1 relative">
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <div className="bg-blue-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg animate-pulse">
+                          INFO
                         </div>
-                        <span>Info</span>
+                      </div>
+                      <Button
+                        onClick={() => setShowInfoModal(true)}
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-bold ring-2 ring-blue-300 ring-offset-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="p-1 bg-white/20 rounded-lg">
+                            <Info className="h-5 w-5" />
+                          </div>
+                          <span>Info</span>
+                        </div>
+                      </Button>
+                    </div>
+                    <div className="flex-1 relative">
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <div className="bg-orange-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg">
+                          {championship.race_count}
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => setShowStagesModal(true)}
+                        className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-bold ring-2 ring-orange-300 ring-offset-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="p-1 bg-white/20 rounded-lg">
+                            <Flag className="h-5 w-5" />
+                        </div>
+                        <span>Tappe</span>
                       </div>
                     </Button>
-                  </div>
-                  <div className="flex-1 relative">
-                    <div className="absolute -top-2 -right-2 z-10">
-                      <div className="bg-orange-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg">
-                        {championship.race_count}
-                      </div>
                     </div>
-                    <Button
-                      onClick={() => setShowStagesModal(true)}
-                      className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border-0 h-12 font-bold ring-2 ring-orange-300 ring-offset-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="p-1 bg-white/20 rounded-lg">
-                          <Flag className="h-5 w-5" />
-                      </div>
-                      <span>Tappe</span>
-                    </div>
-                  </Button>
                   </div>
-                  <div className="flex-1 relative">
+                  
+                  {/* Seconda riga: CLASSIFICHE */}
+                  <div className="relative">
                     {totalRankingsCount > 0 && (
                       <div className="absolute -top-2 -right-2 z-10">
                         <div className="bg-emerald-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg">

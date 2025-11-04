@@ -195,8 +195,12 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
                       </span>
                     )}
                     <Badge
-                      variant={society.is_active ? 'default' : 'secondary'}
-                      className={society.is_active ? 'bg-green-500 hover:bg-green-600' : ''}
+                      variant="secondary"
+                      className={`text-sm font-semibold uppercase tracking-wide rounded-full px-3 py-1 ${
+                        society.is_active
+                          ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 border-transparent hover:bg-emerald-200'
+                          : 'bg-rose-100 text-rose-700 ring-1 ring-rose-200 border-transparent hover:bg-rose-200'
+                      }`}
                     >
                       {society.is_active ? 'Attiva' : 'Inattiva'}
                     </Badge>
@@ -368,4 +372,3 @@ export function SocietyDetail({ societyId }: SocietyDetailProps) {
     </div>
   );
 }
-
