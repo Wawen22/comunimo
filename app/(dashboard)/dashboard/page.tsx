@@ -138,7 +138,8 @@ export default function DashboardPage() {
     [insights?.activeSocieties, insights?.activeMembers, insights?.upcomingEventsCount, unreadCount, societyLabel, insightsLoading, notificationsLoading],
   );
 
-  const accentStyles: Record<string, { card: string; border: string; icon: string; text: string }> = {
+  type AccentType = 'blue' | 'green' | 'purple' | 'orange';
+  const accentStyles: Record<AccentType, { card: string; border: string; icon: string; text: string }> = {
     blue: {
       card: 'bg-gradient-to-br from-blue-50 to-white',
       border: 'hover:border-blue-300',
@@ -213,7 +214,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         {kpiCards.map((card) => {
           const Icon = card.icon;
-          const accent = accentStyles[card.accent] || accentStyles.blue;
+          const accent = accentStyles[card.accent] ?? accentStyles.blue;
           const content = (
             <div className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-gray-200 ${accent.card} p-6 shadow-sm transition-all hover:shadow-md ${accent.border}`}>
               <div className="flex items-start justify-between gap-3">
