@@ -165,7 +165,7 @@ export function useMembersQuery(params: MembersQueryParams) {
   return useQuery<MembersQueryResult, Error>({
     queryKey: membersKeys.list(params),
     queryFn: () => fetchMembers(params),
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 }
 
