@@ -257,51 +257,7 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
                         <InfoRow icon={Mail} label="Email" value={member.email} />
                         <InfoRow icon={Phone} label="Telefono" value={member.phone} />
                         <InfoRow icon={Phone} label="Cellulare" value={member.mobile} />
-                        <div className="md:col-span-2">
-                          <InfoRow icon={MapPin} label="Indirizzo" value={formatAddress(member)} />
-                        </div>
-                      </div>
-                    </SectionCard>
-
-                    <SectionCard
-                      icon={ClipboardList}
-                      title="Tesseramento"
-                      description="Stato e dettagli del tesseramento"
-                    >
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                        <InfoRow
-                          icon={CheckCircle2}
-                          label="Stato tesseramento"
-                          value={membershipStatusStyles[member.membership_status || 'active']?.label ?? 'N/D'}
-                          highlightClass={
-                            membershipStatusStyles[member.membership_status || 'active']?.className
-                          }
-                        />
-                        <InfoRow icon={CreditCard} label="Numero tessera" value={member.membership_number} />
-                        <InfoRow icon={Calendar} label="Data tesseramento" value={formatDate(member.membership_date)} />
-                        <InfoRow icon={ClipboardList} label="Tipo tesseramento" value={member.membership_type} />
-                        <InfoRow
-                          icon={Building2}
-                          label="Società"
-                          value={
-                            member.society
-                              ? `${member.society.name}${member.society.society_code ? ` (${member.society.society_code})` : ''}`
-                              : null
-                          }
-                        />
-                      </div>
-                    </SectionCard>
-
-                    <SectionCard
-                      icon={Activity}
-                      title="Dati atletici"
-                      description="Categoria di appartenenza e informazioni sportive"
-                    >
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                        <InfoRow icon={Trophy} label="Categoria" value={member.category} />
-                        <InfoRow icon={Calendar} label="Anno" value={member.year ? String(member.year) : null} />
-                        <InfoRow icon={Flag} label="Codice regionale" value={member.regional_code} />
-                        <InfoRow icon={Globe} label="Atleta straniero" value={member.is_foreign ? 'Sì' : 'No'} />
+                        <InfoRow icon={MapPin} label="Indirizzo" value={formatAddress(member)} />
                       </div>
                     </SectionCard>
 
@@ -335,49 +291,61 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
                         </div>
                       )}
                     </SectionCard>
-                  </div>
-
-                  <aside className="space-y-6">
-                    <SectionCard
-                      icon={Phone}
-                      title="Contatti rapidi"
-                      description="Collegamenti immediati per comunicare con l’atleta"
-                    >
-                      <div className="space-y-3">
-                        <ContactRow
-                          icon={Phone}
-                          label="Telefono"
-                          value={member.phone}
-                          href={member.phone ? `tel:${member.phone}` : undefined}
-                          onCopy={handleCopy}
-                        />
-                        <ContactRow
-                          icon={Phone}
-                          label="Cellulare"
-                          value={member.mobile}
-                          href={member.mobile ? `tel:${member.mobile}` : undefined}
-                          onCopy={handleCopy}
-                        />
-                        <ContactRow
-                          icon={Mail}
-                          label="Email"
-                          value={member.email}
-                          href={member.email ? `mailto:${member.email}` : undefined}
-                          onCopy={handleCopy}
-                        />
-                      </div>
-                    </SectionCard>
 
                     <SectionCard
                       icon={Calendar}
                       title="Cronologia"
                       description="Date di creazione e ultimo aggiornamento"
                     >
-                      <div className="space-y-3 text-sm text-slate-600">
+                      <div className="grid grid-cols-1 gap-3 text-sm text-slate-600 md:grid-cols-2">
                         <MetaRow icon={Calendar} label="Creato il" value={formatDate(member.created_at)} />
                         <MetaRow icon={Calendar} label="Ultima modifica" value={formatDate(member.updated_at)} />
                       </div>
                     </SectionCard>
+                  </div>
+
+                  <aside className="space-y-6">
+                    <SectionCard
+                      icon={ClipboardList}
+                      title="Tesseramento"
+                      description="Stato e dettagli del tesseramento"
+                    >
+                      <div className="grid grid-cols-1 gap-3">
+                        <InfoRow
+                          icon={Building2}
+                          label="Società"
+                          value={
+                            member.society
+                              ? `${member.society.name}${member.society.society_code ? ` (${member.society.society_code})` : ''}`
+                              : null
+                          }
+                        />
+                        <InfoRow icon={CreditCard} label="Numero tessera" value={member.membership_number} />
+                        <InfoRow icon={Calendar} label="Data tesseramento" value={formatDate(member.membership_date)} />
+                        <InfoRow
+                          icon={CheckCircle2}
+                          label="Stato tesseramento"
+                          value={membershipStatusStyles[member.membership_status || 'active']?.label ?? 'N/D'}
+                          highlightClass={
+                            membershipStatusStyles[member.membership_status || 'active']?.className
+                          }
+                        />
+                      </div>
+                    </SectionCard>
+
+                    <SectionCard
+                      icon={Activity}
+                      title="Dati atletici"
+                      description="Categoria di appartenenza e informazioni sportive"
+                    >
+                      <div className="grid grid-cols-1 gap-3">
+                        <InfoRow icon={Trophy} label="Categoria" value={member.category} />
+                        <InfoRow icon={Calendar} label="Anno" value={member.year ? String(member.year) : null} />
+                        <InfoRow icon={Flag} label="Codice regionale" value={member.regional_code} />
+                        <InfoRow icon={Globe} label="Atleta straniero" value={member.is_foreign ? 'Sì' : 'No'} />
+                      </div>
+                    </SectionCard>
+
                   </aside>
                 </div>
               </div>

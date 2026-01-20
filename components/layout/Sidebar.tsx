@@ -79,14 +79,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <NavItem
                 href="/dashboard/societies"
                 icon={Building2}
-                label="Società"
+                label="Società gestite"
                 onClick={onClose}
               />
 
               <NavItem
                 href="/dashboard/members"
                 icon={Users}
-                label="Atleti"
+                label="Atleti gestiti"
                 onClick={onClose}
               />
             </div>
