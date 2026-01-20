@@ -24,6 +24,7 @@ export function ChampionshipsList() {
   const [championships, setChampionships] = useState<ChampionshipWithRaces[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [view, setView] = useState<'active' | 'archived'>('active');
   
   // Pagination
   const [page, setPage] = useState(1);
@@ -33,13 +34,14 @@ export function ChampionshipsList() {
 
   useEffect(() => {
     fetchChampionships();
-  }, [searchQuery, page]);
+  }, [searchQuery, page, view]);
 
   const fetchChampionships = async () => {
     try {
       setIsLoading(true);
 
       // Build query
+      const today = new Date().toISOString().split('T')[0];
       let query = supabase
         .from('championships')
         .select('*', { count: 'exact' })
@@ -47,6 +49,12 @@ export function ChampionshipsList() {
         .order('year', { ascending: false })
         .order('created_at', { ascending: false })
         .range((page - 1) * pageSize, page * pageSize - 1);
+
+      if (view === 'archived') {
+        query = query.lt('end_date', today);
+      } else {
+        query = query.or(`end_date.is.null,end_date.gte.${today}`);
+      }
 
       // Apply search filter
       if (searchQuery) {
@@ -92,6 +100,11 @@ export function ChampionshipsList() {
     setPage(1); // Reset to first page on search
   };
 
+  const handleViewChange = (nextView: 'active' | 'archived') => {
+    setView(nextView);
+    setPage(1);
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -106,6 +119,14 @@ export function ChampionshipsList() {
                 value=""
                 readOnly
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <Button size="sm" disabled>
+                In corso
+              </Button>
+              <Button size="sm" variant="outline" disabled>
+                Archivio
+              </Button>
             </div>
           </div>
           {isAdmin && (
@@ -139,6 +160,22 @@ export function ChampionshipsList() {
               className="pl-10"
             />
           </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant={view === 'active' ? 'default' : 'outline'}
+              onClick={() => handleViewChange('active')}
+            >
+              In corso
+            </Button>
+            <Button
+              size="sm"
+              variant={view === 'archived' ? 'default' : 'outline'}
+              onClick={() => handleViewChange('archived')}
+            >
+              Archivio
+            </Button>
+          </div>
         </div>
         
         {isAdmin && (
@@ -159,9 +196,11 @@ export function ChampionshipsList() {
           <p className="text-muted-foreground mt-2">
             {searchQuery
               ? 'Prova a modificare i criteri di ricerca'
-              : 'Inizia creando il tuo primo campionato'}
+              : view === 'archived'
+                ? 'Non ci sono campionati archiviati'
+                : 'Inizia creando il tuo primo campionato'}
           </p>
-          {isAdmin && !searchQuery && (
+          {isAdmin && !searchQuery && view === 'active' && (
             <Link href="/dashboard/races/championships/new">
               <Button className="mt-4">
                 <Plus className="h-4 w-4 mr-2" />
@@ -186,7 +225,7 @@ export function ChampionshipsList() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between border-t pt-4">
               <div className="text-sm text-muted-foreground">
-                Pagina {page} di {totalPages} ({totalCount} campionati totali)
+                Pagina {page} di {totalPages} ({totalCount} campionati {view === 'archived' ? 'archiviati' : 'in corso'})
               </div>
               <div className="flex gap-2">
                 <Button
