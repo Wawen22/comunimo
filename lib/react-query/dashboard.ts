@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { supabase } from '@/lib/api/supabase';
-import type { Event, OrganizationCode, Society } from '@/types/database';
+import type { Event, OrganizationCode, Society, UserRole } from '@/types/database';
+import { getUserSocietyIds } from '@/lib/utils/userSocietyUtils';
 
 const dashboardKeys = {
   insights: ['dashboard', 'insights'] as const,
@@ -17,39 +18,71 @@ export interface DashboardInsights {
   lastUpdatedAt: string;
 }
 
+export interface DashboardInsightsOptions {
+  userId?: string | null;
+  role?: UserRole | null;
+}
+
 function getOrganizationKey(organization: Society['organization']): OrganizationCode | 'ALTRO' {
   return organization ?? 'ALTRO';
 }
 
-async function fetchDashboardInsights(): Promise<DashboardInsights> {
+async function fetchDashboardInsights(options: DashboardInsightsOptions): Promise<DashboardInsights> {
+  const { userId, role } = options;
+  const isSocietyAdmin = role === 'society_admin';
+  const societyIds = isSocietyAdmin && userId ? await getUserSocietyIds(userId) : [];
   const now = new Date();
   const fourteenDaysAgo = new Date(now);
   fourteenDaysAgo.setDate(now.getDate() - 14);
   const thirtyDaysAhead = new Date(now);
   thirtyDaysAhead.setDate(now.getDate() + 30);
 
+  if (isSocietyAdmin && societyIds.length === 0) {
+    return {
+      activeSocieties: 0,
+      activeMembers: 0,
+      newMembersLast14Days: 0,
+      upcomingEventsCount: 0,
+      upcomingEvents: [],
+      societiesByOrganization: [],
+      lastUpdatedAt: new Date().toISOString(),
+    };
+  }
+
+  const societiesQuery = supabase
+    .from('societies')
+    .select('id, organization')
+    .eq('is_active', true);
+  const membersQuery = supabase
+    .from('members')
+    .select('id', { count: 'exact', head: true })
+    .eq('is_active', true);
+  const newMembersQuery = supabase
+    .from('members')
+    .select('id', { count: 'exact', head: true })
+    .eq('is_active', true)
+    .gte('created_at', fourteenDaysAgo.toISOString());
+  const upcomingEventsQuery = supabase
+    .from('events')
+    .select('id, title, event_date, location, registration_deadline')
+    .eq('is_active', true)
+    .gte('event_date', now.toISOString())
+    .lte('event_date', thirtyDaysAhead.toISOString())
+    .order('event_date', { ascending: true })
+    .limit(5);
+
+  if (isSocietyAdmin) {
+    societiesQuery.in('id', societyIds);
+    membersQuery.in('society_id', societyIds);
+    newMembersQuery.in('society_id', societyIds);
+    upcomingEventsQuery.or(`society_id.is.null,society_id.in.(${societyIds.join(',')})`);
+  }
+
   const [societiesRes, membersRes, newMembersRes, upcomingEventsRes] = await Promise.all([
-    supabase
-      .from('societies')
-      .select('id, organization')
-      .eq('is_active', true),
-    supabase
-      .from('members')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_active', true),
-    supabase
-      .from('members')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_active', true)
-      .gte('created_at', fourteenDaysAgo.toISOString()),
-    supabase
-      .from('events')
-      .select('id, title, event_date, location, registration_deadline')
-      .eq('is_active', true)
-      .gte('event_date', now.toISOString())
-      .lte('event_date', thirtyDaysAhead.toISOString())
-      .order('event_date', { ascending: true })
-      .limit(5),
+    societiesQuery,
+    membersQuery,
+    newMembersQuery,
+    upcomingEventsQuery,
   ]);
 
   if (societiesRes.error) throw new Error(societiesRes.error.message);
@@ -88,12 +121,15 @@ async function fetchDashboardInsights(): Promise<DashboardInsights> {
   };
 }
 
-export function useDashboardInsights() {
+export function useDashboardInsights(options: DashboardInsightsOptions = {}) {
+  const userId = options.userId ?? null;
+  const role = options.role ?? null;
   return useQuery<DashboardInsights, Error>({
-    queryKey: dashboardKeys.insights,
-    queryFn: fetchDashboardInsights,
+    queryKey: [...dashboardKeys.insights, userId, role],
+    queryFn: () => fetchDashboardInsights({ userId, role }),
     staleTime: 1000 * 60 * 5,
     refetchInterval: 1000 * 60 * 5,
+    enabled: Boolean(userId),
   });
 }
 
