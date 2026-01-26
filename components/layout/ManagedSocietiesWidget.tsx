@@ -83,7 +83,10 @@ export function ManagedSocietiesWidget() {
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate">
+                  <p
+                    className="text-sm font-medium bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate"
+                    title={society.name}
+                  >
                     {society.name}
                   </p>
                   {society.society_code && (
