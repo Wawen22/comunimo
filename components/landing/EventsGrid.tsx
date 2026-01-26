@@ -27,6 +27,7 @@ import {
 
 interface EventsGridProps {
   events: Event[];
+  pastYears: number[];
   filters: EventsFilters;
   onFiltersChange: (filters: EventsFilters) => void;
   loading: boolean;
@@ -46,6 +47,7 @@ interface EventsGridProps {
  */
 export function EventsGrid({
   events,
+  pastYears,
   filters,
   onFiltersChange,
   loading,
@@ -53,6 +55,8 @@ export function EventsGrid({
   onCreateClick,
 }: EventsGridProps) {
   const [showFilters, setShowFilters] = useState(false);
+  const defaultDateFilter: EventsFilters['dateFilter'] = 'upcoming';
+  const defaultSortBy: EventsFilters['sortBy'] = 'date-asc';
 
   const handleSearchChange = (value: string) => {
     onFiltersChange({ ...filters, search: value });
@@ -62,6 +66,10 @@ export function EventsGrid({
     onFiltersChange({ ...filters, dateFilter: value });
   };
 
+  const handlePastYearChange = (value: string) => {
+    onFiltersChange({ ...filters, pastYear: value });
+  };
+
   const handleSortChange = (value: 'date-asc' | 'date-desc' | 'title') => {
     onFiltersChange({ ...filters, sortBy: value });
   };
@@ -69,15 +77,17 @@ export function EventsGrid({
   const clearFilters = () => {
     onFiltersChange({
       search: '',
-      dateFilter: 'all',
-      sortBy: 'date-asc',
+      dateFilter: defaultDateFilter,
+      sortBy: defaultSortBy,
+      pastYear: 'all',
     });
   };
 
   const activeFiltersCount = [
     filters.search,
-    filters.dateFilter !== 'all',
-    filters.sortBy !== 'date-asc',
+    filters.dateFilter !== defaultDateFilter,
+    filters.sortBy !== defaultSortBy,
+    filters.dateFilter === 'past' && filters.pastYear !== 'all',
   ].filter(Boolean).length;
 
   if (loading) {
@@ -219,20 +229,40 @@ export function EventsGrid({
                     Ordinamento
                   </label>
                   <Select value={filters.sortBy} onValueChange={handleSortChange}>
+                  <SelectTrigger className="h-10 border-2 border-slate-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="date-asc">Data (prima i più vicini)</SelectItem>
+                    <SelectItem value="date-desc">Data (prima i più lontani)</SelectItem>
+                    <SelectItem value="title">Titolo (A-Z)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {filters.dateFilter === 'past' && (
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Anno
+                  </label>
+                  <Select value={filters.pastYear} onValueChange={handlePastYearChange}>
                     <SelectTrigger className="h-10 border-2 border-slate-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="date-asc">Data (prima i più vicini)</SelectItem>
-                      <SelectItem value="date-desc">Data (prima i più lontani)</SelectItem>
-                      <SelectItem value="title">Titolo (A-Z)</SelectItem>
+                      <SelectItem value="all">Tutti gli anni</SelectItem>
+                      {pastYears.map((year) => (
+                        <SelectItem key={year} value={String(year)}>
+                          {year}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
         {/* Results Count */}
         <div className="mb-6">
@@ -256,7 +286,7 @@ export function EventsGrid({
               Nessun evento disponibile
             </h3>
             <p className="mt-2 text-slate-600">
-              {filters.search || filters.dateFilter !== 'all'
+              {activeFiltersCount > 0
                 ? 'Prova a modificare i filtri di ricerca'
                 : 'Al momento non ci sono eventi in programma'}
             </p>

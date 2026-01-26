@@ -8,6 +8,7 @@ export interface EventsFilters {
   search: string;
   dateFilter: 'all' | 'upcoming' | 'past';
   sortBy: 'date-asc' | 'date-desc' | 'title';
+  pastYear: 'all' | string;
 }
 
 interface UseEventsDataOptions {
@@ -29,6 +30,7 @@ export interface UseEventsDataReturn {
     past: number;
     thisMonth: number;
   };
+  pastYears: number[];
   refresh: () => Promise<void>;
 }
 
@@ -43,8 +45,9 @@ export function useEventsData(options: UseEventsDataOptions = {}): UseEventsData
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<EventsFilters>({
     search: '',
-    dateFilter: 'all',
+    dateFilter: 'upcoming',
     sortBy: 'date-asc',
+    pastYear: 'all',
   });
 
   const fetchEvents = useCallback(async () => {
@@ -104,7 +107,14 @@ export function useEventsData(options: UseEventsDataOptions = {}): UseEventsData
       if (filters.dateFilter === 'upcoming') {
         return eventDate >= now;
       } else if (filters.dateFilter === 'past') {
-        return eventDate < now;
+        if (eventDate >= now) return false;
+        if (filters.pastYear !== 'all') {
+          const parsedYear = Number.parseInt(filters.pastYear, 10);
+          if (!Number.isNaN(parsedYear) && eventDate.getFullYear() !== parsedYear) {
+            return false;
+          }
+        }
+        return true;
       }
 
       return true;
@@ -145,6 +155,15 @@ export function useEventsData(options: UseEventsDataOptions = {}): UseEventsData
     }).length,
   };
 
+  const pastYears = Array.from(
+    new Set(
+      events
+        .map((event) => new Date(event.event_date))
+        .filter((eventDate) => eventDate < now)
+        .map((eventDate) => eventDate.getFullYear()),
+    ),
+  ).sort((a, b) => b - a);
+
   return {
     events,
     filteredEvents,
@@ -155,6 +174,7 @@ export function useEventsData(options: UseEventsDataOptions = {}): UseEventsData
     filters,
     setFilters,
     stats,
+    pastYears,
     refresh: fetchEvents,
   };
 }

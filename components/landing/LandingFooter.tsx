@@ -27,11 +27,11 @@ export function LandingFooter() {
                 <h3 className="text-base font-semibold text-slate-900">Contatti rapidi</h3>
                 <p className="flex items-start gap-2">
                   <Mail className="mt-0.5 h-4 w-4 text-brand-blue" />
-                  <a href="mailto:info@comitatounitariomodena.eu" className="hover:text-brand-blue">
-                    info@comitatounitariomodena.eu
+                  <a href="mailto:info@comitatounitariomodena.com" className="hover:text-brand-blue">
+                    info@comitatounitariomodena.com
                   </a>
                 </p>
-                <p className="flex items-start gap-2">
+                <p style={{ display: 'none' }} className="flex items-start gap-2">
                   <Phone className="mt-0.5 h-4 w-4 text-brand-blue" />
                   <span>+39 059 000000</span>
                 </p>
@@ -71,7 +71,7 @@ export function LandingFooter() {
             </p>
             <div className="mt-6 space-y-2 text-sm text-slate-600">
               <p>📅 Disponibilità: lun–ven 09:00 → 18:00</p>
-              <p>📧 Indirizzo dedicato: <a href="mailto:supporto@comunimo.it" className="font-semibold text-brand-blue">supporto@comunimo.it</a></p>
+              <p>📧 Indirizzo dedicato: <a href="mailto:supporto@comunimo.it" className="font-semibold text-brand-blue">info@comitatounitariomodena.com</a></p>
             </div>
           </aside>
         </div>

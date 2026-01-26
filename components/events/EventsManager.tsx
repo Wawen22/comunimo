@@ -30,6 +30,7 @@ export function EventsManager() {
     loading,
     error,
     stats,
+    pastYears,
     refresh,
   } = useEventsData({ scope: 'dashboard' });
 
@@ -173,6 +174,7 @@ export function EventsManager() {
       ) : (
         <EventsGrid
           events={eventsFilteredByType}
+          pastYears={pastYears}
           filters={filters}
           onFiltersChange={setFilters}
           loading={loading}
