@@ -172,16 +172,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   onClick={onClose}
                 />
 
-                <RequireRole role="super_admin">
-                  <div className="mt-1">
-                    <NavItem
-                      href="/dashboard/admin"
-                      icon={Shield}
-                      label="Admin Panel"
-                      onClick={onClose}
-                    />
-                  </div>
-                </RequireRole>
               </div>
             </RequireRole>
           </nav>
