@@ -311,6 +311,7 @@ export function BulkImportExcelDialog({
                     <th className="px-4 py-2 text-left">Tessera</th>
                     <th className="px-4 py-2 text-left">Cognome</th>
                     <th className="px-4 py-2 text-left">Nome</th>
+                    <th className="px-4 py-2 text-left">Data Nascita</th>
                     <th className="px-4 py-2 text-left">Società</th>
                     <th className="px-4 py-2 text-left">Stato</th>
                   </tr>
@@ -322,6 +323,7 @@ export function BulkImportExcelDialog({
                       <td className="px-4 py-2">{item.data.membership_number || '-'}</td>
                       <td className="px-4 py-2">{item.data.last_name || '-'}</td>
                       <td className="px-4 py-2">{item.data.first_name || '-'}</td>
+                      <td className="px-4 py-2">{item.data.birth_date ? item.data.birth_date.split('-').reverse().join('/') : '-'}</td>
                       <td className="px-4 py-2">{item.data.society_code || '-'}</td>
                       <td className="px-4 py-2">
                         {item.isValid ? (

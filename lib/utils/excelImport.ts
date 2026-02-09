@@ -252,8 +252,20 @@ export function parseDate(dateStr: string | number | Date | undefined): string |
       return result;
     }
 
-    // If it's a number, it's an Excel serial date
+    // If it's a number, check if it's a YYYYMMDD compact date (e.g., 20251231)
+    // or an Excel serial date
     if (typeof dateStr === 'number') {
+      // YYYYMMDD numbers are >= 10000101 and <= 99991231
+      if (dateStr >= 10000101 && dateStr <= 99991231) {
+        const str = String(dateStr);
+        const year = str.substring(0, 4);
+        const month = str.substring(4, 6);
+        const day = str.substring(6, 8);
+        const result = `${year}-${month}-${day}`;
+        console.log('📅 YYYYMMDD numeric date parsed:', dateStr, '→', result);
+        return result;
+      }
+      // Otherwise treat as Excel serial date
       const excelDate = XLSX.SSF.parse_date_code(dateStr);
       const year = excelDate.y;
       const month = String(excelDate.m).padStart(2, '0');
@@ -297,6 +309,17 @@ export function parseDate(dateStr: string | number | Date | undefined): string |
         }
         return `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       }
+    }
+
+    // If it's in YYYYMMDD compact format (e.g., 20251231 → 2025-12-31)
+    // Used by newer FIDAL Excel exports for DAT_MOV, DAT_NAS, DAT_SYS
+    if (dateString.match(/^\d{8}$/)) {
+      const year = dateString.substring(0, 4);
+      const month = dateString.substring(4, 6);
+      const day = dateString.substring(6, 8);
+      const result = `${year}-${month}-${day}`;
+      console.log('📅 YYYYMMDD compact date parsed:', dateString, '→', result);
+      return result;
     }
 
     // If it's already in YYYY-MM-DD format
