@@ -71,7 +71,7 @@ export function LandingFooter() {
             </p>
             <div className="mt-6 space-y-2 text-sm text-slate-600">
               <p>📅 Disponibilità: lun–ven 09:00 → 18:00</p>
-              <p>📧 Indirizzo dedicato: <a href="mailto:supporto@comunimo.it" className="font-semibold text-brand-blue">info@comitatounitariomodena.com</a></p>
+              <p>📧 Indirizzo dedicato: <a href="mailto:info@comitatounitariomodena.com" className="font-semibold text-brand-blue">info@comitatounitariomodena.com</a></p>
             </div>
           </aside>
         </div>
