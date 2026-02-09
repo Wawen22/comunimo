@@ -138,34 +138,51 @@ export default function ChampionshipRegistrationForm({
         if (reactivated) insertedRegistrations.push(...reactivated);
       }
 
-      // Create new registrations for members without cancelled registrations
+      // Create new registrations for members without cancelled registrations (with retry for bib number conflicts)
       if (newMemberIds.length > 0) {
-        // Get next bib numbers only for new registrations
-        const bibNumbers = await getNextBibNumbers(
-          championship.id,
-          newMemberIds.length
-        );
+        const MAX_RETRIES = 3;
+        let newRegistrations: any[] | null = null;
 
-        const championshipRegistrations = newMemberIds.map((memberId, index) => {
-          const member = members.find((m) => m.id === memberId);
-          return {
-            championship_id: championship.id,
-            member_id: memberId,
-            society_id: societyId,
-            bib_number: bibNumbers[index],
-            organization: member?.organization || null,
-            category: member?.category || null,
-            status: 'confirmed' as const,
-            created_by: user?.id || null,
-          };
-        });
+        for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+          // Get next bib numbers (re-fetched on each retry)
+          const bibNumbers = await getNextBibNumbers(
+            championship.id,
+            newMemberIds.length
+          );
 
-        const { data: newRegistrations, error: champRegError } = await supabase
-          .from('championship_registrations')
-          .insert(championshipRegistrations as any)
-          .select() as { data: any[] | null; error: any };
+          const championshipRegistrations = newMemberIds.map((memberId, index) => {
+            const member = members.find((m) => m.id === memberId);
+            return {
+              championship_id: championship.id,
+              member_id: memberId,
+              society_id: societyId,
+              bib_number: bibNumbers[index],
+              organization: member?.organization || null,
+              category: member?.category || null,
+              status: 'confirmed' as const,
+              created_by: user?.id || null,
+            };
+          });
 
-        if (champRegError) throw champRegError;
+          const { data: insertedData, error: champRegError } = await supabase
+            .from('championship_registrations')
+            .insert(championshipRegistrations as any)
+            .select() as { data: any[] | null; error: any };
+
+          if (!champRegError) {
+            newRegistrations = insertedData;
+            break; // Success
+          }
+
+          // If it's a duplicate key error on bib_number, retry with fresh bib numbers
+          if (champRegError.code === '23505' && attempt < MAX_RETRIES - 1) {
+            console.warn(`Bib number conflict (attempt ${attempt + 1}), retrying...`);
+            continue;
+          }
+
+          throw champRegError; // Non-retryable error or last attempt
+        }
+
         if (newRegistrations) insertedRegistrations.push(...newRegistrations);
       }
 

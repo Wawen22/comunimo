@@ -6,42 +6,41 @@
 import { supabase } from '@/lib/api/supabase';
 
 /**
- * Get the next available bib number for a championship
+ * Get the next available bib number for a championship.
+ * Fetches ALL existing bib numbers and computes the numeric max in JS
+ * to avoid text-ordering bugs (e.g. "9" > "10" in lexicographic order).
  * @param championshipId - Championship ID
  * @returns Next bib number as string (e.g., "001", "002", ...)
  */
 export async function getNextBibNumber(championshipId: string): Promise<string> {
-
   try {
-    // Fetch the highest bib number for this championship
+    // Fetch ALL bib numbers for this championship (including cancelled)
     const { data, error } = await supabase
       .from('championship_registrations')
       .select('bib_number')
-      .eq('championship_id', championshipId)
-      .order('bib_number', { ascending: false })
-      .limit(1) as { data: any[] | null; error: any };
+      .eq('championship_id', championshipId) as { data: any[] | null; error: any };
 
     if (error) {
-      console.error('Error fetching max bib number:', error);
-      return '001'; // Default to 001 if error
+      console.error('Error fetching bib numbers:', error);
+      return '001';
     }
 
     if (!data || data.length === 0) {
       return '001'; // First registration
     }
 
-    // Parse the bib number and increment
-    const lastBibNumber = data[0]?.bib_number;
-    if (!lastBibNumber) return '001';
-    const lastNumber = parseInt(lastBibNumber, 10);
+    // Parse all bib numbers as integers and find the true numeric max
+    const numericBibs = data
+      .map((d) => parseInt(String(d.bib_number), 10))
+      .filter((n) => !isNaN(n));
 
-    if (isNaN(lastNumber)) {
-      console.error('Invalid bib number format:', lastBibNumber);
+    if (numericBibs.length === 0) {
       return '001';
     }
 
-    const nextNumber = lastNumber + 1;
-    return String(nextNumber).padStart(3, '0'); // Pad with zeros (001, 002, ...)
+    const maxBib = Math.max(...numericBibs);
+    const nextNumber = maxBib + 1;
+    return String(nextNumber).padStart(3, '0');
   } catch (error) {
     console.error('Error in getNextBibNumber:', error);
     return '001';
@@ -130,41 +129,41 @@ export function isValidBibNumber(bibNumber: string): boolean {
 }
 
 /**
- * Get the next available bib number for a standalone event
+ * Get the next available bib number for a standalone event.
+ * Fetches ALL existing bib numbers and computes the numeric max in JS
+ * to avoid text-ordering bugs.
  * @param eventId - Event ID
  * @returns Next bib number as string (e.g., "001", "002", ...)
  */
 export async function getNextEventBibNumber(eventId: string): Promise<string> {
   try {
-    // Fetch the highest bib number for this event
+    // Fetch ALL bib numbers for this event (including cancelled)
     const { data, error } = await supabase
       .from('event_registrations')
       .select('bib_number')
-      .eq('event_id', eventId)
-      .order('bib_number', { ascending: false })
-      .limit(1) as { data: any[] | null; error: any };
+      .eq('event_id', eventId) as { data: any[] | null; error: any };
 
     if (error) {
-      console.error('Error fetching max bib number for event:', error);
-      return '001'; // Default to 001 if error
+      console.error('Error fetching bib numbers for event:', error);
+      return '001';
     }
 
     if (!data || data.length === 0) {
       return '001'; // First registration
     }
 
-    // Parse the bib number and increment
-    const lastBibNumber = data[0]?.bib_number;
-    if (!lastBibNumber) return '001';
-    const lastNumber = parseInt(lastBibNumber, 10);
+    // Parse all bib numbers as integers and find the true numeric max
+    const numericBibs = data
+      .map((d) => parseInt(String(d.bib_number), 10))
+      .filter((n) => !isNaN(n));
 
-    if (isNaN(lastNumber)) {
-      console.error('Invalid bib number format:', lastBibNumber);
+    if (numericBibs.length === 0) {
       return '001';
     }
 
-    const nextNumber = lastNumber + 1;
-    return String(nextNumber).padStart(3, '0'); // Pad with zeros (001, 002, ...)
+    const maxBib = Math.max(...numericBibs);
+    const nextNumber = maxBib + 1;
+    return String(nextNumber).padStart(3, '0');
   } catch (error) {
     console.error('Error in getNextEventBibNumber:', error);
     return '001';

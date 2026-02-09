@@ -161,33 +161,50 @@ export default function MemberSelectionDialog({
         }
       }
 
-      // Insert new registrations
+      // Insert new registrations (with retry for bib number conflicts)
       if (membersToInsert.length > 0) {
-        // Get next available bib numbers only for new registrations
-        const nextBibNumbers = await getNextBibNumbers(
-          championship.id,
-          membersToInsert.length
-        );
+        const MAX_RETRIES = 3;
+        let inserted: any[] | null = null;
 
-        const championshipRegistrations = membersToInsert.map((memberId, index) => {
-          const member = members.find((m) => m.id === memberId);
-          return {
-            championship_id: championship.id,
-            member_id: memberId,
-            society_id: societyId,
-            bib_number: nextBibNumbers[index],
-            organization: member?.organization || null,
-            category: member?.category || null,
-            status: 'confirmed',
-          };
-        });
+        for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+          // Get next available bib numbers (re-fetched on each retry)
+          const nextBibNumbers = await getNextBibNumbers(
+            championship.id,
+            membersToInsert.length
+          );
 
-        const { data: inserted, error: insertError } = await supabase
-          .from('championship_registrations')
-          .insert(championshipRegistrations as any)
-          .select() as { data: any[] | null; error: any };
+          const championshipRegistrations = membersToInsert.map((memberId, index) => {
+            const member = members.find((m) => m.id === memberId);
+            return {
+              championship_id: championship.id,
+              member_id: memberId,
+              society_id: societyId,
+              bib_number: nextBibNumbers[index],
+              organization: member?.organization || null,
+              category: member?.category || null,
+              status: 'confirmed',
+            };
+          });
 
-        if (insertError) throw insertError;
+          const { data: insertedData, error: insertError } = await supabase
+            .from('championship_registrations')
+            .insert(championshipRegistrations as any)
+            .select() as { data: any[] | null; error: any };
+
+          if (!insertError) {
+            inserted = insertedData;
+            break; // Success
+          }
+
+          // If it's a duplicate key error on bib_number, retry with fresh bib numbers
+          if (insertError.code === '23505' && attempt < MAX_RETRIES - 1) {
+            console.warn(`Bib number conflict (attempt ${attempt + 1}), retrying...`);
+            continue;
+          }
+
+          throw insertError; // Non-retryable error or last attempt
+        }
+
         if (inserted) champRegData.push(...inserted);
       }
 
