@@ -15,7 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Loader2, UserPlus } from 'lucide-react';
 import MemberSelectionList from './MemberSelectionList';
-import { getNextBibNumbers } from '@/lib/utils/bibNumberUtils';
+import { getNextBibNumbersAction } from '@/actions/championships';
 
 interface MemberSelectionDialogProps {
   open: boolean;
@@ -167,11 +167,17 @@ export default function MemberSelectionDialog({
         let inserted: any[] | null = null;
 
         for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-          // Get next available bib numbers (re-fetched on each retry)
-          const nextBibNumbers = await getNextBibNumbers(
+          // Get next available bib numbers via server action (bypasses RLS to see all societies)
+          const bibResult = await getNextBibNumbersAction(
             championship.id,
             membersToInsert.length
           );
+
+          if (!bibResult.success) {
+            throw new Error(bibResult.error);
+          }
+
+          const nextBibNumbers = bibResult.bibNumbers;
 
           const championshipRegistrations = membersToInsert.map((memberId, index) => {
             const member = members.find((m) => m.id === memberId);

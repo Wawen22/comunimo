@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
 import { Loader2, UserPlus } from 'lucide-react';
 import MemberSelectionList from './MemberSelectionList';
-import { getNextBibNumbers } from '@/lib/utils/bibNumberUtils';
+import { getNextBibNumbersAction } from '@/actions/championships';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface ChampionshipRegistrationFormProps {
@@ -144,11 +144,17 @@ export default function ChampionshipRegistrationForm({
         let newRegistrations: any[] | null = null;
 
         for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-          // Get next bib numbers (re-fetched on each retry)
-          const bibNumbers = await getNextBibNumbers(
+          // Get next bib numbers via server action (bypasses RLS to see all societies)
+          const bibResult = await getNextBibNumbersAction(
             championship.id,
             newMemberIds.length
           );
+
+          if (!bibResult.success) {
+            throw new Error(bibResult.error);
+          }
+
+          const bibNumbers = bibResult.bibNumbers;
 
           const championshipRegistrations = newMemberIds.map((memberId, index) => {
             const member = members.find((m) => m.id === memberId);
