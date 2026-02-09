@@ -31,6 +31,7 @@ import {
   type ParsedUISPData,
   type ImportResult,
 } from '@/lib/utils/excelImport';
+import { logAuditEvent } from '@/lib/utils/auditLogger';
 
 interface BulkImportExcelDialogProps {
   isOpen: boolean;
@@ -156,6 +157,27 @@ export function BulkImportExcelDialog({
     }
 
     setResult(importResult);
+
+    // Log audit event
+    const totalImported = importResult.inserted + importResult.updated;
+    if (totalImported > 0) {
+      await logAuditEvent({
+        action: 'bulk_import_excel',
+        resourceType: 'members',
+        resourceLabel: `Import ${importType} - ${totalImported} atleti`,
+        payload: {
+          import_type: importType,
+          file_name: file?.name,
+          total_rows: parsedData.length,
+          valid_rows: validData.length,
+          inserted: importResult.inserted,
+          updated: importResult.updated,
+          skipped: importResult.skipped,
+          errors: importResult.errors,
+        },
+      });
+    }
+
     setIsProcessing(false);
     setStep(5);
   };
