@@ -795,16 +795,18 @@ export async function upsertMemberFromFIDAL(
       societyId = await getOrCreateManagedSociety(allSociety);
     }
 
-    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
+    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date + organization
+    //    We filter by organization so the same person can exist as separate FIDAL/UISP records
     let existing: Member | null = null;
 
     if (memberData.first_name && memberData.last_name && memberData.birth_date) {
       const { data } = await supabase
         .from('members')
-        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date')
+        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date, organization')
         .eq('first_name', memberData.first_name)
         .eq('last_name', memberData.last_name)
         .eq('birth_date', memberData.birth_date)
+        .eq('organization', 'FIDAL')
         .maybeSingle();
       existing = (data as Member | null);
     }
@@ -880,16 +882,18 @@ export async function upsertMemberFromUISP(
       societyId = await getOrCreateManagedSociety(allSociety);
     }
 
-    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date
+    // 4. Check if member exists by NATURAL KEY: first_name + last_name + birth_date + organization
+    //    We filter by organization so the same person can exist as separate FIDAL/UISP records
     let existing: Member | null = null;
 
     if (memberData.first_name && memberData.last_name && memberData.birth_date) {
       const { data } = await supabase
         .from('members')
-        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date')
+        .select('id, card_date, membership_number, fiscal_code, first_name, last_name, birth_date, organization')
         .eq('first_name', memberData.first_name)
         .eq('last_name', memberData.last_name)
         .eq('birth_date', memberData.birth_date)
+        .eq('organization', 'UISP')
         .maybeSingle();
       existing = (data as Member | null);
     }
