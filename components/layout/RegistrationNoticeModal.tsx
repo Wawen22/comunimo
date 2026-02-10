@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Sparkles, CheckCircle2, ArrowRight, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -30,7 +30,7 @@ export function RegistrationNoticeModal() {
       return;
     }
 
-    if (pathname?.startsWith('/register') || pathname?.startsWith('/login')) {
+    if (pathname?.startsWith('/register') || pathname?.startsWith('/login') || pathname?.startsWith('/registrations')) {
       setOpen(false);
       return;
     }
@@ -78,6 +78,19 @@ export function RegistrationNoticeModal() {
               <CheckCircle2 className="mt-0.5 h-4 w-4 text-blue-600" />
               <p>La registrazione richiede meno di un minuto.</p>
             </div>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-amber-100 bg-amber-50/60 px-4 py-3">
+            <Link
+              href="/registrations"
+              className="group flex items-center gap-2 text-sm font-medium text-amber-800 transition hover:text-amber-900"
+            >
+              <UserPlus className="h-4 w-4 text-amber-600" />
+              <span>
+                Devi iscrivere un atleta? <span className="underline underline-offset-2">Usa il form di iscrizione libera</span>
+              </span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
 
           <DialogFooter className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

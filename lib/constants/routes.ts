@@ -35,6 +35,7 @@ export const ROUTES = {
     PRIVACY: '/privacy',
     TERMS: '/terms',
     EVENTS: '/eventi',
+    REGISTRATIONS: '/registrations',
   },
 } as const;
 
@@ -55,6 +56,8 @@ export function isPublicRoute(pathname: string): boolean {
     ROUTES.PUBLIC.PRIVACY,
     ROUTES.PUBLIC.TERMS,
     ROUTES.PUBLIC.EVENTS,
+    ROUTES.PUBLIC.REGISTRATIONS,
+    '/registrations',
   ];
 
   return publicRoutes.includes(pathname);

@@ -51,6 +51,14 @@ export function RegistrationCard({
   const member = registration.member as any;
   const society = registration.society as any;
 
+  // Fallback: extract society info from registration notes (public registrations)
+  const fallbackSociety = !society && registration.notes
+    ? (() => {
+        const match = registration.notes.match(/^Societ\u00e0:\s*(.+?)\s*\((.+?)\)$/);
+        return match ? { name: match[1], code: match[2] } : null;
+      })()
+    : null;
+
   const getOrganizationColor = (org: string | null) => {
     switch (org) {
       case 'FIDAL':
@@ -197,6 +205,11 @@ export function RegistrationCard({
                     <p className="text-xs text-gray-600 font-mono">Cod. {society.society_code}</p>
                   )}
                 </div>
+              ) : fallbackSociety ? (
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 truncate">{fallbackSociety.name}</p>
+                  <p className="text-xs text-gray-600 font-mono">Cod. {fallbackSociety.code}</p>
+                </div>
               ) : (
                 <p className="text-sm text-gray-400">-</p>
               )}
@@ -328,6 +341,8 @@ export function RegistrationCard({
               </div>
               {society ? (
                 <p className="text-sm font-semibold text-gray-900 truncate">{society.name}</p>
+              ) : fallbackSociety ? (
+                <p className="text-sm font-semibold text-gray-900 truncate">{fallbackSociety.name}</p>
               ) : (
                 <p className="text-sm text-gray-400">-</p>
               )}
@@ -459,16 +474,20 @@ export function RegistrationCard({
             )}
 
             {/* Society */}
-            {society && (
+            {(society || fallbackSociety) && (
               <div className="flex items-start gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100">
                   <Building2 className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-500">Società</p>
-                  <p className="text-sm font-semibold text-gray-900 truncate">{society.name}</p>
-                  {society.society_code && (
-                    <p className="text-xs text-gray-600 font-mono">{society.society_code}</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {society?.name || fallbackSociety?.name}
+                  </p>
+                  {(society?.society_code || fallbackSociety?.code) && (
+                    <p className="text-xs text-gray-600 font-mono">
+                      {society?.society_code || fallbackSociety?.code}
+                    </p>
                   )}
                 </div>
               </div>
