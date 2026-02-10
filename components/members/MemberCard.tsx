@@ -16,6 +16,7 @@ import {
   Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 
 interface MemberCardProps {
   member: Member & {
@@ -102,6 +103,7 @@ export function MemberCard({ member, onClick, compact = true }: MemberCardProps)
 
   const age = calculateAge(member.birth_date);
   const certStatus = getExpiryStatus(member.medical_certificate_expiry);
+  const displayCategory = member.category || calculateDisplayCategory(member.birth_date, member.gender);
 
   if (compact) {
     return (
@@ -162,7 +164,7 @@ export function MemberCard({ member, onClick, compact = true }: MemberCardProps)
                 <p className="text-xs text-gray-500">Categoria</p>
               </div>
               <p className="text-sm font-semibold text-gray-900">
-                {member.category || '-'}
+                {displayCategory || '-'}
               </p>
             </div>
 
@@ -287,7 +289,7 @@ export function MemberCard({ member, onClick, compact = true }: MemberCardProps)
                 <p className="text-xs text-gray-500 font-medium">Categoria</p>
               </div>
               <p className="text-sm font-semibold text-gray-900">
-                {member.category || '-'}
+                {displayCategory || '-'}
               </p>
             </div>
 

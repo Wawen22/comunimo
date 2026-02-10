@@ -12,6 +12,7 @@ import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import { MemberCard } from './MemberCard';
 import { DeleteMemberDialog } from './DeleteMemberDialog';
 import { PhotoUpload } from './PhotoUpload';
+import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 
 interface MemberWithRelations extends Member {
   society?: {
@@ -268,7 +269,7 @@ export function MemberDetail({ memberId }: MemberDetailProps) {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Categoria</p>
-                <p className="mt-1 text-sm text-gray-900">{member.category || '-'}</p>
+                <p className="mt-1 text-sm text-gray-900">{member.category || calculateDisplayCategory(member.birth_date, member.gender) || '-'}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Codice Società</p>

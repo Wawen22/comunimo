@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/api/supabase';
 import { ChampionshipRegistrationWithDetails } from '@/types/database';
+import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -159,8 +160,12 @@ export default function ChampionshipRegistrationsList({
     }
   };
 
-  // Get available categories
-  const availableCategories = Array.from(new Set(registrations.map(r => r.category).filter(Boolean))) as string[];
+  // Get available categories (including calculated ones)
+  const availableCategories = Array.from(new Set(registrations.map(r => {
+    if (r.category) return r.category;
+    const member = r.member as any;
+    return calculateDisplayCategory(member?.birth_date, member?.gender);
+  }).filter(Boolean))) as string[];
 
   // Filter registrations
   const filteredRegistrations = registrations.filter((reg) => {
@@ -178,7 +183,10 @@ export default function ChampionshipRegistrationsList({
       (reg.organization && selectedOrganizations.includes(reg.organization));
 
     const matchesCategory = selectedCategories.length === 0 ||
-      (reg.category && selectedCategories.includes(reg.category));
+      (() => {
+        const cat = reg.category || calculateDisplayCategory(member?.birth_date, member?.gender);
+        return cat && selectedCategories.includes(cat);
+      })();
 
     return matchesSearch && matchesOrganization && matchesCategory;
   });

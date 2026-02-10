@@ -32,6 +32,7 @@ import { useIsAdmin } from '@/lib/hooks/useUser';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 import { MemberEditModal } from './MemberEditModal';
 import { useMemberDetail } from '@/lib/react-query/members';
 
@@ -198,10 +199,10 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
                         </Badge>
                       )}
 
-                      {member.category && (
+                      {(member.category || calculateDisplayCategory(member.birth_date, member.gender)) && (
                         <Badge className="flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
                           <Trophy className="h-3.5 w-3.5" />
-                          {member.category}
+                          {member.category || calculateDisplayCategory(member.birth_date, member.gender)}
                         </Badge>
                       )}
 
@@ -339,7 +340,7 @@ export function MemberDetailModal({ memberId, open, onOpenChange }: MemberDetail
                       description="Categoria di appartenenza e informazioni sportive"
                     >
                       <div className="grid grid-cols-1 gap-3">
-                        <InfoRow icon={Trophy} label="Categoria" value={member.category} />
+                        <InfoRow icon={Trophy} label="Categoria" value={member.category || calculateDisplayCategory(member.birth_date, member.gender)} />
                         <InfoRow icon={Calendar} label="Anno" value={member.year ? String(member.year) : null} />
                         <InfoRow icon={Flag} label="Codice regionale" value={member.regional_code} />
                         <InfoRow icon={Globe} label="Atleta straniero" value={member.is_foreign ? 'Sì' : 'No'} />

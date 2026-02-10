@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 
 interface RegistrationCardProps {
   registration: any;
@@ -98,6 +99,7 @@ export function RegistrationCard({
   };
 
   const age = calculateAge(member?.birth_date);
+  const displayCategory = registration.category || calculateDisplayCategory(member?.birth_date, member?.gender);
 
   if (compact) {
     return (
@@ -167,7 +169,7 @@ export function RegistrationCard({
                 <p className="text-xs text-gray-500">Categoria</p>
               </div>
               <p className="text-sm font-semibold text-gray-900">
-                {registration.category || '-'}
+                {displayCategory || '-'}
               </p>
             </div>
 
@@ -303,7 +305,7 @@ export function RegistrationCard({
                 <p className="text-xs text-gray-500 font-medium">Categoria</p>
               </div>
               <p className="text-sm font-semibold text-gray-900">
-                {registration.category || '-'}
+                {displayCategory || '-'}
               </p>
             </div>
 
@@ -431,14 +433,14 @@ export function RegistrationCard({
             )}
 
             {/* Category */}
-            {registration.category && (
+            {displayCategory && (
               <div className="flex items-start gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
                   <Trophy className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-500">Categoria</p>
-                  <p className="text-sm font-semibold text-gray-900">{registration.category}</p>
+                  <p className="text-sm font-semibold text-gray-900">{displayCategory}</p>
                 </div>
               </div>
             )}
