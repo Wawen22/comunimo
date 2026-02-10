@@ -31,7 +31,7 @@ export default function LoginPage() {
         >
           <UserPlus className="h-4 w-4 text-slate-400 group-hover:text-blue-500" />
           <span>
-            Devi iscrivere un atleta?{' '}
+            Devi iscrivere un atleta non presente in lista?{' '}
             <span className="font-medium text-blue-600 underline underline-offset-2 group-hover:text-blue-700">
               Iscrizione libera
             </span>

@@ -65,7 +65,7 @@ export function RegistrationNoticeModal() {
               Registrazione richiesta
             </DialogTitle>
             <DialogDescription className="text-sm text-slate-600">
-              Per accedere alla nuova versione del portale e necessario registrarsi di nuovo.
+              Per accedere alla nuova versione del portale è necessario registrarsi di nuovo.
             </DialogDescription>
           </DialogHeader>
 

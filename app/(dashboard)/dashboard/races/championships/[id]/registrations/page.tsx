@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/api/supabase';
 import { Championship, Society, Race } from '@/types/database';
 import { Button } from '@/components/ui/button';
@@ -477,6 +478,19 @@ export default function ChampionshipRegistrationsPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Public Registration CTA */}
+        <div className="mb-4">
+          <Link
+            href="/registrations"
+            target="_blank"
+            className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors group"
+          >
+            <UserPlus className="h-4 w-4" />
+            <span className="group-hover:underline">Devi iscrivere un atleta non presente in lista? Usa il form di iscrizione pubblica</span>
+            <span className="text-blue-400 group-hover:translate-x-0.5 transition-transform">→</span>
+          </Link>
         </div>
 
         {/* Society Selector Card - for Admins and Multi-Society Users */}
