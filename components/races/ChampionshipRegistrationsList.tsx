@@ -87,7 +87,11 @@ export default function ChampionshipRegistrationsList({
 
       if (error) throw error;
 
-      setRegistrations(data as any || []);
+      // Filter out registrations with null members (deleted or orphaned references)
+      const validData = ((data as any) || []).filter(
+        (reg: any) => reg.member !== null && reg.member !== undefined
+      );
+      setRegistrations(validData);
     } catch (error) {
       console.error('Error fetching registrations:', error);
       toast({
@@ -164,18 +168,20 @@ export default function ChampionshipRegistrationsList({
   const availableCategories = Array.from(new Set(registrations.map(r => {
     if (r.category) return r.category;
     const member = r.member as any;
+    if (!member) return null;
     return calculateDisplayCategory(member?.birth_date, member?.gender);
   }).filter(Boolean))) as string[];
 
   // Filter registrations
   const filteredRegistrations = registrations.filter((reg) => {
     const member = reg.member as any;
-    const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
+    if (!member) return false;
+    const fullName = `${member.first_name ?? ''} ${member.last_name ?? ''}`.toLowerCase();
     const query = searchQuery.toLowerCase();
 
     const matchesSearch =
       fullName.includes(query) ||
-      reg.bib_number.includes(query) ||
+      reg.bib_number?.includes(query) ||
       member.fiscal_code?.toLowerCase().includes(query) ||
       member.membership_number?.toLowerCase().includes(query);
 
