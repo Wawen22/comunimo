@@ -17,6 +17,7 @@ import { ChampionshipRankingsModal } from '@/components/races/ChampionshipRankin
 import { useIsAdmin } from '@/lib/hooks/useUser';
 import { getUserSocieties } from '@/lib/utils/userSocietyUtils';
 import { cn } from '@/lib/utils';
+import { isRegistrationOpen } from '@/lib/utils/registrationUtils';
 import {
   Dialog,
   DialogContent,
@@ -47,6 +48,7 @@ export default function ChampionshipRegistrationsPage() {
   const [showStagesModal, setShowStagesModal] = useState(false);
   const [showRankingsModal, setShowRankingsModal] = useState(false);
   const [raceRegistrationCounts, setRaceRegistrationCounts] = useState<Record<string, number>>({});
+  const [registrationOpen, setRegistrationOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -118,6 +120,7 @@ export default function ChampionshipRegistrationsPage() {
       if (racesError) throw racesError;
 
       setRaces(racesData || []);
+      setRegistrationOpen(isRegistrationOpen(racesData || []));
 
       // Fetch registration counts for each race
       if (racesData && racesData.length > 0) {
@@ -728,6 +731,7 @@ export default function ChampionshipRegistrationsPage() {
               societyId={societyId}
               onUpdate={() => setRefreshKey((prev) => prev + 1)}
               onNewRegistration={societyId !== 'all' ? () => setIsDialogOpen(true) : undefined}
+              isRegistrationOpen={registrationOpen}
             />
           </div>
         ) : (

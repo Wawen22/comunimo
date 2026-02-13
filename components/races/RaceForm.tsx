@@ -35,6 +35,16 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
   const [nextEventNumber, setNextEventNumber] = useState<number>(1);
   const [currentResultsUrl, setCurrentResultsUrl] = useState<string | null>(race?.results_url ?? null);
 
+  const toDateInputValue = (value?: string | null) => {
+    if (!value) return '';
+    return value.length >= 10 ? value.slice(0, 10) : value;
+  };
+
+  const toTimeInputValue = (value?: string | null) => {
+    if (!value) return '';
+    return value.length >= 5 ? value.slice(0, 5) : value;
+  };
+
   const {
     register,
     handleSubmit,
@@ -47,12 +57,12 @@ export function RaceForm({ race, championshipId, mode = 'create' }: RaceFormProp
           society_id: race.society_id || '',
           title: race.title || '',
           description: race.description || '',
-          event_date: race.event_date || '',
-          event_time: race.event_time || '',
+          event_date: toDateInputValue(race.event_date),
+          event_time: toTimeInputValue(race.event_time),
           location: race.location || '',
           event_number: race.event_number || 1,
-          registration_start_date: race.registration_start_date || '',
-          registration_end_date: race.registration_end_date || '',
+          registration_start_date: toDateInputValue(race.registration_start_date),
+          registration_end_date: toDateInputValue(race.registration_end_date),
           max_participants: race.max_participants || null,
           poster_url: race.poster_url || '',
           results_url: race.results_url || '',

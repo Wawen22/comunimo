@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,8 +17,11 @@ import {
 import { useToast } from '@/components/ui/toast';
 import { calculateDisplayCategory } from '@/lib/utils/categoryCalculator';
 import { publicRegisterAthleteAction } from '@/actions/public-registration';
-import { CheckCircle2, Loader2, UserPlus, ArrowLeft, Hash } from 'lucide-react';
+import { CheckCircle2, Loader2, UserPlus, ArrowLeft, Hash, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { supabase } from '@/lib/api/supabase';
+import type { Event } from '@/types/database';
+import { isRegistrationOpen } from '@/lib/utils/registrationUtils';
 
 const registrationSchema = z.object({
   first_name: z
@@ -63,6 +66,8 @@ export function PublicRegistrationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [assignedBibNumber, setAssignedBibNumber] = useState<string | null>(null);
+  const [registrationOpen, setRegistrationOpen] = useState(true);
+  const [isStatusLoading, setIsStatusLoading] = useState(true);
 
   const {
     register,
@@ -86,6 +91,46 @@ export function PublicRegistrationForm() {
   const birthDate = watch('birth_date');
   const gender = watch('gender');
 
+  useEffect(() => {
+    const fetchRegistrationStatus = async () => {
+      try {
+        setIsStatusLoading(true);
+        const { data: championshipData, error: championshipError } = await supabase
+          .from('championships')
+          .select('id')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (championshipError || !championshipData) {
+          setRegistrationOpen(false);
+          return;
+        }
+
+        const { data: eventsData, error: eventsError } = await supabase
+          .from('events')
+          .select('*')
+          .eq('championship_id', championshipData.id)
+          .eq('is_active', true);
+
+        if (eventsError) {
+          setRegistrationOpen(false);
+          return;
+        }
+
+        setRegistrationOpen(isRegistrationOpen((eventsData as Event[]) || []));
+      } catch (error) {
+        console.error('Error fetching registration status:', error);
+        setRegistrationOpen(false);
+      } finally {
+        setIsStatusLoading(false);
+      }
+    };
+
+    fetchRegistrationStatus();
+  }, []);
+
   // Auto-calculate category
   const calculatedCategory = useMemo(() => {
     if (!birthDate || !gender) return null;
@@ -93,6 +138,15 @@ export function PublicRegistrationForm() {
   }, [birthDate, gender]);
 
   const onSubmit = async (data: RegistrationFormData) => {
+    if (!registrationOpen) {
+      toast({
+        title: 'Iscrizioni chiuse',
+        description: 'Le iscrizioni al campionato sono attualmente chiuse.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -182,6 +236,15 @@ export function PublicRegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {!isStatusLoading && !registrationOpen && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold">Iscrizioni chiuse</p>
+            <p className="text-xs text-amber-700">Le iscrizioni al campionato sono attualmente chiuse. Non è possibile inviare nuove richieste.</p>
+          </div>
+        </div>
+      )}
       {/* Name fields */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
@@ -192,7 +255,7 @@ export function PublicRegistrationForm() {
             id="first_name"
             placeholder="Mario"
             {...register('first_name')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.first_name && (
             <p className="text-sm text-red-600">{errors.first_name.message}</p>
@@ -207,7 +270,7 @@ export function PublicRegistrationForm() {
             id="last_name"
             placeholder="Rossi"
             {...register('last_name')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.last_name && (
             <p className="text-sm text-red-600">{errors.last_name.message}</p>
@@ -225,7 +288,7 @@ export function PublicRegistrationForm() {
             id="birth_date"
             type="date"
             {...register('birth_date')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.birth_date && (
             <p className="text-sm text-red-600">{errors.birth_date.message}</p>
@@ -238,7 +301,7 @@ export function PublicRegistrationForm() {
           </Label>
           <Select
             onValueChange={(value) => setValue('gender', value as 'M' | 'F')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           >
             <SelectTrigger>
               <SelectValue placeholder="Seleziona..." />
@@ -276,7 +339,7 @@ export function PublicRegistrationForm() {
             id="membership_number"
             placeholder="es. 12345"
             {...register('membership_number')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.membership_number && (
             <p className="text-sm text-red-600">{errors.membership_number.message}</p>
@@ -291,7 +354,7 @@ export function PublicRegistrationForm() {
             onValueChange={(value) =>
               setValue('membership_type', value as 'UISP' | 'FIDAL' | 'ALTRO')
             }
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           >
             <SelectTrigger>
               <SelectValue placeholder="Seleziona..." />
@@ -318,7 +381,7 @@ export function PublicRegistrationForm() {
             id="society_name"
             placeholder="es. ASD Atletica Modena"
             {...register('society_name')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.society_name && (
             <p className="text-sm text-red-600">{errors.society_name.message}</p>
@@ -333,7 +396,7 @@ export function PublicRegistrationForm() {
             id="society_code"
             placeholder="es. MO001"
             {...register('society_code')}
-            disabled={isLoading}
+            disabled={isLoading || !registrationOpen}
           />
           {errors.society_code && (
             <p className="text-sm text-red-600">{errors.society_code.message}</p>
@@ -341,8 +404,13 @@ export function PublicRegistrationForm() {
         </div>
       </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? (
+      <Button type="submit" disabled={isLoading || !registrationOpen} className="w-full">
+        {!registrationOpen ? (
+          <>
+            <AlertTriangle className="mr-2 h-4 w-4" />
+            Iscrizioni chiuse
+          </>
+        ) : isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Registrazione in corso...

@@ -28,16 +28,18 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/toast';
-import { Search, Loader2, UserX, Users, LayoutGrid, List, UserPlus, Sparkles, Download } from 'lucide-react';
+import { Search, Loader2, UserX, Users, LayoutGrid, List, UserPlus, Sparkles, Download, AlertTriangle } from 'lucide-react';
 import { RegistrationCard } from './RegistrationCard';
 import { RegistrationsFilters } from './RegistrationsFilters';
 import { exportChampionshipRegistrationsToExcel } from '@/lib/utils/championshipRegistrationsExport';
+import { cn } from '@/lib/utils';
 
 interface ChampionshipRegistrationsListProps {
   championshipId: string;
   societyId: string;
   onUpdate?: () => void;
   onNewRegistration?: () => void;
+  isRegistrationOpen?: boolean;
 }
 
 export default function ChampionshipRegistrationsList({
@@ -45,6 +47,7 @@ export default function ChampionshipRegistrationsList({
   societyId,
   onUpdate,
   onNewRegistration,
+  isRegistrationOpen = true,
 }: ChampionshipRegistrationsListProps) {
   const { toast } = useToast();
 
@@ -57,6 +60,7 @@ export default function ChampionshipRegistrationsList({
   const [registrationToCancel, setRegistrationToCancel] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const registrationClosed = !isRegistrationOpen;
 
   useEffect(() => {
     fetchRegistrations();
@@ -317,7 +321,7 @@ export default function ChampionshipRegistrationsList({
 
               {/* New Registration Button Row - Full Width on Mobile */}
               {societyId !== 'all' && onNewRegistration && (
-                <div className="relative">
+                <div className="relative flex flex-wrap items-center gap-3">
                   {/* Step 2 Badge - Floating above button */}
                   <div className="absolute -top-3 -left-2 z-10 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
                     <Sparkles className="h-3 w-3" />
@@ -327,11 +331,21 @@ export default function ChampionshipRegistrationsList({
                     data-tour-anchor="championship-new-registration"
                     onClick={onNewRegistration}
                     size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold text-sm sm:text-base ring-2 ring-green-300 ring-offset-2"
+                    disabled={registrationClosed}
+                    className={cn(
+                      'w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold text-sm sm:text-base ring-2 ring-green-300 ring-offset-2',
+                      registrationClosed && 'cursor-not-allowed opacity-60 hover:scale-100',
+                    )}
                   >
                     <UserPlus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Nuova Iscrizione
                   </Button>
+                  {registrationClosed && (
+                    <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                      <AlertTriangle className="h-3.5 w-3.5" />
+                      Iscrizioni chiuse
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -383,7 +397,7 @@ export default function ChampionshipRegistrationsList({
               {!(searchQuery || selectedOrganizations.length > 0 || selectedCategories.length > 0) &&
                societyId !== 'all' &&
                onNewRegistration && (
-                <div className="relative inline-block">
+                <div className="relative inline-flex flex-wrap items-center gap-3">
                   {/* Step 2 Badge - Floating above button */}
                   <div className="absolute -top-3 -left-3 z-10 bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5" />
@@ -393,11 +407,21 @@ export default function ChampionshipRegistrationsList({
                     data-tour-anchor="championship-new-registration"
                     onClick={onNewRegistration}
                     size="lg"
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-xl hover:shadow-2xl transition-all hover:scale-105 font-bold text-base px-8 py-6 ring-2 ring-green-300 ring-offset-2"
+                    disabled={registrationClosed}
+                    className={cn(
+                      'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-xl hover:shadow-2xl transition-all hover:scale-105 font-bold text-base px-8 py-6 ring-2 ring-green-300 ring-offset-2',
+                      registrationClosed && 'cursor-not-allowed opacity-60 hover:scale-100',
+                    )}
                   >
                     <UserPlus className="mr-2 h-6 w-6" />
                     Nuova Iscrizione
                   </Button>
+                  {registrationClosed && (
+                    <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                      <AlertTriangle className="h-3.5 w-3.5" />
+                      Iscrizioni chiuse
+                    </div>
+                  )}
                 </div>
               )}
             </div>
