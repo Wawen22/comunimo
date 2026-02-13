@@ -15,6 +15,13 @@ function formatDate(date: string | null | undefined): string {
   return parsed.toLocaleDateString('it-IT');
 }
 
+function formatDateIso(date: string | null | undefined): string {
+  if (!date) return '';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toISOString().slice(0, 10);
+}
+
 function formatMembershipNumber(
   registrationOrg?: string | null,
   memberOrg?: string | null,
@@ -142,9 +149,9 @@ export function exportChampionshipRegistrationsToExcel(
       member?.gender && member.gender !== 'other' ? member.gender : '',
       registration.category ?? member?.category ?? '',
       registration.bib_number ?? '',
-      formatDate(member?.medical_certificate_expiry),
-      formatDate(member?.birth_date),
-      formatDate(extendedMember.card_expiry_date ?? null),
+      formatDateIso(member?.medical_certificate_expiry),
+      formatDateIso(member?.birth_date),
+      formatDateIso(extendedMember.card_expiry_date ?? null),
       championship?.year ? String(championship.year) : '',
       formatRegistrationSource(society?.name ?? null, registration.registration_date),
     ];
@@ -154,7 +161,7 @@ export function exportChampionshipRegistrationsToExcel(
 
   const worksheet = XLSX.utils.aoa_to_sheet(data);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Iscritti');
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
   const defaultNameBase = sorted[0]?.championship?.slug
     ? sorted[0].championship.slug
