@@ -50,6 +50,20 @@ function formatSocietyDetails(
   return values.join(', ');
 }
 
+function formatRegistrationSource(societyName?: string | null, registrationDate?: string | null): string {
+  const dateLabel = formatDate(registrationDate);
+  if (societyName && dateLabel) {
+    return `${societyName}, il: ${dateLabel}`;
+  }
+  if (societyName) {
+    return societyName;
+  }
+  if (dateLabel) {
+    return `il: ${dateLabel}`;
+  }
+  return '';
+}
+
 function getSpecialtyLabel(type?: string | null): string {
   if (!type) return '';
   return SPECIALTY_LABELS[type] || type;
@@ -94,11 +108,11 @@ export function exportChampionshipRegistrationsToExcel(
     'Sesso',
     'Categoria',
     'Pettorale',
-    'Scadenza',
+    'Scadenza certificato da Archivio',
     'Data di nascita',
     'Scadenza tessera',
     'Anno in corso',
-    'Data iscrizione',
+    'Provenienza Iscrizione',
   ];
 
   const rows = sorted.map((registration) => {
@@ -132,7 +146,7 @@ export function exportChampionshipRegistrationsToExcel(
       formatDate(member?.birth_date),
       formatDate(extendedMember.card_expiry_date ?? null),
       championship?.year ? String(championship.year) : '',
-      formatDate(registration.registration_date),
+      formatRegistrationSource(society?.name ?? null, registration.registration_date),
     ];
   });
 
