@@ -41,6 +41,7 @@ export default function ChampionshipRegistrationsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const [userIsSuperAdmin, setUserIsSuperAdmin] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -162,7 +163,9 @@ export default function ChampionshipRegistrationsPage() {
         .single() as { data: { role: string } | null };
 
       const isUserAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+      const isUserSuperAdmin = profile?.role === 'super_admin';
       setUserIsAdmin(isUserAdmin);
+      setUserIsSuperAdmin(isUserSuperAdmin);
 
       if (isUserAdmin) {
         // Admin can manage all registrations - fetch all societies
@@ -731,7 +734,7 @@ export default function ChampionshipRegistrationsPage() {
               societyId={societyId}
               onUpdate={() => setRefreshKey((prev) => prev + 1)}
               onNewRegistration={societyId !== 'all' ? () => setIsDialogOpen(true) : undefined}
-              isRegistrationOpen={registrationOpen}
+              isRegistrationOpen={registrationOpen || userIsSuperAdmin}
             />
           </div>
         ) : (
